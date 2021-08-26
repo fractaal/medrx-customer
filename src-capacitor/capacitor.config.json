@@ -1,0 +1,7 @@
+{
+  "appId": "org.cleio.medrx",
+  "appName": "MedRx",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "www"
+}

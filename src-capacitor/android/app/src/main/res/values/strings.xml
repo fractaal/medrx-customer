@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MedRx</string>
+    <string name="title_activity_main">MedRx</string>
+    <string name="package_name">org.cleio.medrx</string>
+    <string name="custom_url_scheme">org.cleio.medrx</string>
+</resources>

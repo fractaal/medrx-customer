@@ -1,0 +1,10 @@
+{
+  "appId": "org.cleio.medrx",
+  "appName": "MedRx",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "www",
+  "server": {
+    "url": "http://192.168.18.68:8080"
+  }
+}
