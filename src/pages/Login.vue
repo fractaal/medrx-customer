@@ -2,9 +2,11 @@
   <q-page class="p-8">
     <div class="text-6xl font-black mt-32">Welcome to MedRx!</div>
     <div class="p-4">
-      <q-input label="Username"/>
-      <q-input label="Password" type="password"/>
-      <q-btn class="mt-4 px-8" rounded outline label="Log in"/>
+      <q-input v-model="email" label="Email" type="email" placeholder="username@mail.com"/>
+      <q-input v-model="password" label="Password" type="password" />
+      <q-btn color='green' class="mt-4 px-8" rounded outline label="Log in"/>
+      <q-btn color='green' class="mt-4 px-8" rounded outline label="Sign-up"/>
+   
     </div>
   </q-page>
 </template>
