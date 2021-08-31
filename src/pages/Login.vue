@@ -15,21 +15,25 @@
 <script>
 import { defineComponent, ref } from 'vue';
 import { } from 'src/firebase.ts';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword} from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { Notify } from 'quasar';
+import { useRouter } from 'vue-router';
 
 
 export default defineComponent({
   name: 'PageIndex',
   setup () {
+    const router = useRouter();
     const email = ref('');
     const password = ref(''); 
 
     const signIn = async () => {
       const auth = getAuth()
+      
       try {
         await signInWithEmailAndPassword(auth, email.value, password.value)
         Notify.create('Login successful!')
+        router.push('/home')    
       } catch(err) {
         Notify.create(`Failed to log in! ${err}`)
       }
@@ -45,8 +49,6 @@ export default defineComponent({
       }
     }
 
-
-
     return {
       signIn,
       signUp,
@@ -55,6 +57,5 @@ export default defineComponent({
     }
   }
 })
-
 
 </script>
