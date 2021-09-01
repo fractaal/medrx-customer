@@ -48,6 +48,7 @@ export const register = async (email: string, password: string) => {
       registrationDate: new Date()
     })
     Notify.create('Successfully created an account!')
+    router.push('/home')
   } catch(err) {
     Notify.create(`An error occured: ${err}`)
   }
