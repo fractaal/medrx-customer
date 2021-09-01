@@ -14,40 +14,16 @@
 
 <script>
 import { defineComponent, ref } from 'vue';
-import { } from 'src/firebase.ts';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { Notify } from 'quasar';
-import { useRouter } from 'vue-router';
-
+import { login, register } from 'src/firebase';
 
 export default defineComponent({
   name: 'PageIndex',
   setup () {
-    const router = useRouter();
     const email = ref('');
     const password = ref(''); 
 
-    const signIn = async () => {
-      const auth = getAuth()
-      
-      try {
-        await signInWithEmailAndPassword(auth, email.value, password.value)
-        Notify.create('Login successful!')
-        router.push('/home')    
-      } catch(err) {
-        Notify.create(`Failed to log in! ${err}`)
-      }
-    }
-
-    const signUp = async () => {
-      const auth = getAuth()
-      try {
-        await createUserWithEmailAndPassword(auth, email.value, password.value)
-        Notify.create('Successfully created an account!')
-      } catch(err) {
-        Notify.create(`An error occured: ${err}`)
-      }
-    }
+    const signIn = () => login(email.value, password.value)
+    const signUp = () => register(email.value, password.value)
 
     return {
       signIn,
