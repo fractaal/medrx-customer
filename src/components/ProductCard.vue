@@ -1,8 +1,8 @@
 <template>
-  <q-card v-ripple>
+  <q-card v-ripple class="shadow-lg">
     <q-item>
       <q-item-section>
-        <q-item-label>{{name}}</q-item-label>
+        <q-item-label class="text-2xl">{{name}}</q-item-label>
         <q-item-label caption>{{description}}</q-item-label>
       </q-item-section>
     </q-item>
