@@ -1,7 +1,7 @@
 <template>
   <q-page class='bg-body'>
     
-      <q-uploader
+      <test
         color='bg-uploadheader'
         class='fixed-center'
         style="max-width: 300px"
@@ -20,9 +20,11 @@
 <script>
 import { defineComponent } from 'vue';
 import { ref } from 'vue';
+import Test from './Test.vue';
 
 export default defineComponent({
   name: 'PageIndex',
+  components: { Test },
   setup () {
     return {
       tab: ref('mails')
