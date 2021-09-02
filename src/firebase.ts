@@ -4,7 +4,6 @@ import { getAnalytics } from 'firebase/analytics';
 import { getFirestore, setDoc, doc, collection } from 'firebase/firestore'
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { Notify } from 'quasar'
-import { useRouter } from 'vue-router';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -26,17 +25,16 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore()
 getAnalytics(app);
 
-const router = useRouter();
-
 export const login = async (email: string, password: string) => {
   const auth = getAuth()
 
   try {
     await signInWithEmailAndPassword(auth, email, password)
     Notify.create('Login successful!')
-    router.push('/home')    
+    return true
   } catch(err) {
     Notify.create(`Failed to log in! ${err}`)
+    return false
   }
 }
 
@@ -48,8 +46,9 @@ export const register = async (email: string, password: string) => {
       registrationDate: new Date()
     })
     Notify.create('Successfully created an account!')
-    router.push('/home')
+    return true
   } catch(err) {
     Notify.create(`An error occured: ${err}`)
+    return false
   }
 }
