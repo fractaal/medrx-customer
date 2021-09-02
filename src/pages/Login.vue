@@ -1,12 +1,17 @@
 <template>
   <q-page class="p-8">
-    <div class="text-6xl font-black mt-32">Welcome to MedRx!</div>
+    <div class="text-6xl font-black mt-32">{{$t('Welcome')}}</div>
     <div class="p-4">
       <q-input v-model="email" id='email' label="Email" type="email" placeholder="username@mail.com"/>
       <q-input v-model="password" id='password' label="Password" type="password" />
       <q-btn color='green' class="mt-4 px-8" @click='signIn()' outline label="Log in"/>
       <q-btn color='green' class="mt-4 px-8" @click='signUp()' rounded outline label="Sign-up"/>
-      
+      <q-select 
+      class='fixed-bottom px-12' 
+      v-model='lang'
+      :label="$t('quasarLanguage')" 
+      :options="langOptions" 
+      style = "max-width:270px"/>
    
     </div>
   </q-page>
@@ -20,22 +25,24 @@ import { Notify } from 'quasar';
 import { useRouter } from 'vue-router';
 
 
+
 export default defineComponent({
   name: 'PageIndex',
   setup () {
     const router = useRouter();
     const email = ref('');
     const password = ref(''); 
+    
 
     const signIn = async () => {
       const auth = getAuth()
       
       try {
         await signInWithEmailAndPassword(auth, email.value, password.value)
-        Notify.create('Login successful!')
+        Notify.create( 'success' )
         router.push('/home')    
       } catch(err) {
-        Notify.create(`Failed to log in! ${err}`)
+        Notify.create(` yawa ${err}`)
       }
     }
 
@@ -49,11 +56,28 @@ export default defineComponent({
       }
     }
 
+
     return {
       signIn,
       signUp,
       email, 
       password
+    }
+  },
+
+  data() {
+    return {
+      lang: this.$i18n.locale,
+      langOptions: [
+        { value: 'en-US', label: 'English' },
+        { value: 'TGL', label: 'TGL'}
+      ]
+    }
+  },
+  watch: {
+    lang(lang) {
+      this.$i18n.locale = lang
+      this.$q.localStorage.set('lang',lang)
     }
   }
 })
