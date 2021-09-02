@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
+import { FirebaseApp, initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import { getFirestore, setDoc, doc, collection } from 'firebase/firestore'
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, setDoc, doc, collection, Firestore } from 'firebase/firestore'
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, browserSessionPersistence } from 'firebase/auth';
 import { Notify } from 'quasar'
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -20,10 +20,15 @@ const firebaseConfig = {
   measurementId: 'G-G2Y85HXLNM'
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore()
-getAnalytics(app);
+let app: FirebaseApp
+let db: Firestore
+
+export const init = () => {
+  app = initializeApp(firebaseConfig);
+  db = getFirestore()
+  getAnalytics(app);
+  getAuth().setPersistence(browserSessionPersistence)
+}
 
 export const login = async (email: string, password: string) => {
   const auth = getAuth()
@@ -52,3 +57,5 @@ export const register = async (email: string, password: string) => {
     return false
   }
 }
+
+console.log('Firebase app initialized!')
