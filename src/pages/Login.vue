@@ -15,15 +15,17 @@
 <script>
 import { defineComponent, ref } from 'vue';
 import { login, register } from 'src/firebase';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'PageIndex',
   setup () {
+    const router = useRouter();
     const email = ref('');
     const password = ref(''); 
 
-    const signIn = () => login(email.value, password.value)
-    const signUp = () => register(email.value, password.value)
+    const signIn = async () => await login(email.value, password.value) ? router.push('/home') : null;
+    const signUp = async () => await register(email.value, password.value) ? router.push('/home') : null;
 
     return {
       signIn,
