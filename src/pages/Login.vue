@@ -41,6 +41,7 @@ export default defineComponent({
     }
   },
 
+  // TODO: Update i18n for Vue 3 composition API 
   data() {
     return {
       lang: this.$i18n.locale,
