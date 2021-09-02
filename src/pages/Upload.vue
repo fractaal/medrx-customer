@@ -1,33 +1,37 @@
 <template>
   <q-page class='bg-body'>
+      
     
-      <test
+    <transition name="fade" mode="out-in">
+      <firebase-uploader
+        v-if="!uploadComplete"
         color='bg-uploadheader'
         class='fixed-center'
-        style="max-width: 300px"
-        url="http://localhost:4444/upload"
-        label="Upload your images here:"
-        multiple
+        style="max-width: 500px"
+        label="Upload your prescription here."
         accept=".jpg, image/*"
-        @rejected="onRejected"
+        @uploaded="uploadComplete = true"
       />
-    
- 
+      <div v-else class="text-h1 font-black text-center pt-64">FUCK YOU</div>
+    </transition>
+  
+
 
   </q-page>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
-import { ref } from 'vue';
-import Test from './Test.vue';
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+import FirebaseUploader from 'src/components/FirebaseUploader';
 
 export default defineComponent({
   name: 'PageIndex',
-  components: { Test },
+  components: { FirebaseUploader },
   setup () {
+    const uploadComplete = ref(false)
     return {
-      tab: ref('mails')
+      tab: ref('mails'),
+      uploadComplete,
     }
   }
 })
