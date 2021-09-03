@@ -19,7 +19,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue';
-import { login, register } from 'src/firebase';
+import { login, register } from 'src/api/firebase';
 import { useRouter } from 'vue-router';
 
 
