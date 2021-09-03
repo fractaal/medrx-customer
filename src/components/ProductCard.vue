@@ -1,5 +1,5 @@
 <template>
-  <q-card v-ripple class="shadow-lg">
+  <q-card v-ripple class="shadow-lg" style="width: 12rem; min-width: 12rem;">
     <q-item>
       <q-item-section>
         <q-item-label class="text-2xl">{{name}}</q-item-label>
