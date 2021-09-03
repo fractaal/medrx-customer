@@ -5,13 +5,11 @@
       <horizontal-scroller>
         <product-card v-for="i in 100" :key="i" name="Name" description="Test" :price="69.420"/>
       </horizontal-scroller>
-    
   </q-page>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
-import { ref } from 'vue';
 import ProductCard from 'src/components/ProductCard.vue';
 import HorizontalScroller from 'src/components/HorizontalScroller.vue';
 
@@ -20,7 +18,7 @@ export default defineComponent({
   components: { ProductCard, HorizontalScroller },
   setup () {
     return {
-      tab: ref('mails')
+    
     }
   }
 })
@@ -29,8 +27,4 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.bg-body {
-  background: #97f4e6;
-}
-
 </style>
