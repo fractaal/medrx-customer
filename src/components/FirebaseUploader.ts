@@ -59,6 +59,7 @@ export default createUploaderComponent({
         helpers.uploadedSize.value = snapshot.bytesTransferred
       }, (err) => {
         Notify.create({type: 'negative', message: `Something went wrong... ${err.message}`})
+        isUploading.value = false
         emit('failed')
       }, 
       () => {
