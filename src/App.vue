@@ -2,10 +2,10 @@
   <router-view />
 </template>
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue'
+import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
 import { getAuth } from 'firebase/auth'
-import { init } from 'src/firebase'
+import { init } from 'src/api/firebase'
 
 export default defineComponent({
   name: 'App',
