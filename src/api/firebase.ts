@@ -2,6 +2,7 @@
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getFirestore, setDoc, doc, collection, Firestore } from 'firebase/firestore'
+import { Database, getDatabase } from 'firebase/database'
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, browserSessionPersistence } from 'firebase/auth';
 import { Notify } from 'quasar'
 
@@ -17,22 +18,24 @@ const firebaseConfig = {
   storageBucket: 'medrx-test.appspot.com',
   messagingSenderId: '535999064122',
   appId: '1:535999064122:web:06cced6ce33d009b22ed03',
-  measurementId: 'G-G2Y85HXLNM'
+  measurementId: 'G-G2Y85HXLNM',
+  databaseUrl: 'https://medrx-test-default-rtdb.asia-southeast1.firebasedatabase.app/'
 };
 
-let app: FirebaseApp
-let db: Firestore
+export let app: FirebaseApp
+export let firestore: Firestore
+export let database: Database
 
 export const init = () => {
   app = initializeApp(firebaseConfig);
-  db = getFirestore()
+  firestore = getFirestore(app)
+  database = getDatabase(app, 'https://medrx-test-default-rtdb.asia-southeast1.firebasedatabase.app/')
   getAnalytics(app);
   getAuth().setPersistence(browserSessionPersistence)
 }
 
 export const login = async (email: string, password: string) => {
   const auth = getAuth()
-
   try {
     await signInWithEmailAndPassword(auth, email, password)
     Notify.create('Login successful!')
@@ -47,7 +50,7 @@ export const register = async (email: string, password: string) => {
   const auth = getAuth()
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-    setDoc(doc(collection(db, 'users'), userCredential.user.uid), {
+    setDoc(doc(collection(firestore, 'users'), userCredential.user.uid), {
       registrationDate: new Date()
     })
     Notify.create('Successfully created an account!')
