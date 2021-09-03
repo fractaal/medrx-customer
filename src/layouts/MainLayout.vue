@@ -1,12 +1,16 @@
 <template>
   <q-layout view="hHh lpR fFf">
 
-    <q-header elevated class="bg-toolbar">
+    <q-header unelevated class="top mx-auto w-full md:w-3/4 lg:w-3/5 py-4">
       <q-toolbar>
-        <q-btn dense flat round icon='menu' @click="toggleLeftDrawer">
+        <q-btn dense flat round @click="toggleLeftDrawer">
+          <q-avatar color="primary" text-color="white" size="96px" @click="randomizeSeed" class="shadow-xl">
+            <img :src="`https://avatars.dicebear.com/api/micah/${seed}.svg`"/>
+          </q-avatar>
         </q-btn>
+        <div class="ml-4 text-h4 font-black">Hello, PENIS!</div>
 
-        <q-toolbar-title style='text-align:center'>
+        <q-toolbar-title style="text-align:center">
           <q-avatar>
             <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
           </q-avatar>
@@ -14,23 +18,18 @@
         </q-toolbar-title>
 
          <q-btn dense flat round @click="toggleRightDrawer">
-          <img src='../../public/icons/cart.svg'>
+          <q-icon name="shopping_cart" size="2rem" class="p-4"/>
         </q-btn>
       </q-toolbar>
-   
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-      <!-- drawer content -->
-    </q-drawer>
-
-    <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
+    <q-drawer overlay v-model="leftDrawerOpen" side="left">
       <!-- drawer content -->
     </q-drawer>
 
     <q-page-container>
 
-      <router-view/>
+      <router-view class="mx-auto w-full md:w-3/4 lg:w-3/5"/>
 
     </q-page-container>
     
@@ -55,23 +54,25 @@
   </q-layout>
 </template>
 
-<script>
+<script lang="ts">
 import { ref } from 'vue'
+import { seed, randomizeSeed } from 'src/api/seed'
 
 export default {
   setup () {
     const leftDrawerOpen = ref(false)
-    const rightDrawerOpen = ref(false)
 
     return {
+      tab: ref('mails'),
+      randomizeSeed,
+      seed,
       leftDrawerOpen,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },
 
-      rightDrawerOpen,
       toggleRightDrawer () {
-        rightDrawerOpen.value = !rightDrawerOpen.value
+        // TODO
       }
     }
   }
@@ -79,17 +80,10 @@ export default {
 </script>
 
 <style scoped>
-
-.bg-toolbar {
-  background: #43c9b5;
+.top {
+  background-color: white;
+  color: black;
 }
-
-.navigation-menu {
-  background: #6ae0ce;
-  color: #ffffff;
-
-}
-
 </style>
 
 
