@@ -34,8 +34,8 @@ jobs:
         with:
           java-version: 1.8
 
-      - name: Grant execution permission for gradlew
-        run: chmod +x gradlew
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
@@ -70,7 +70,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           node ./version-from-tag.js
-          
+
       - name: Push Version Bump
         uses: ad-m/github-push-action@master
         with:
