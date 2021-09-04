@@ -18,17 +18,19 @@
     "firebaseui": "^5.0.0",
     "quasar": "^2.0.0",
     "tailwindcss": "^2.2.7",
-    "vue-i18n": "^9.0.0-beta.0"
+    "vue-i18n": "^9.1.7"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
+    "@intlify/vue-i18n-loader": "^3.0.0",
     "@quasar/app": "^3.0.0",
     "@types/node": "^10.17.15",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-vue": "^7.0.0"
+    "eslint-plugin-vue": "^7.0.0",
+    "yaml-loader": "^0.6.0"
   },
   "browserslist": [
     "last 10 Chrome versions",
