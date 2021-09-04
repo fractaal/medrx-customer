@@ -9,14 +9,14 @@
       <q-select
         v-model="locale"
         :options="localeOptions"
-        label="Quasar Language"
+        label="Language"
         dense
         borderless
         emit-value
         map-options
         options-dense
-        style="max-width: 250px"
-        class='fixed-bottom px-12' 
+        style="min-width: 175px"
+        class='fixed-top-right px-12' 
       />
     
     </div>
