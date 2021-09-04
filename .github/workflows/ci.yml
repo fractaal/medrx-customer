@@ -119,6 +119,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.get_release.outputs.tag_name }}
           allowUpdates: true
-          artifact: ./dist/capacitor/android/apk/release
+          artifact: ${{ steps.sign_app.outputs.signedReleaseFile }}
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
