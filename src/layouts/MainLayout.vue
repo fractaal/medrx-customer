@@ -1,14 +1,14 @@
 <template>
   <q-layout view="hHh lpR fFf">
 
-    <q-header unelevated class="top mx-auto w-full md:w-3/4 lg:w-3/5 py-4">
+    <q-header unelevated class="px-2 top mx-auto w-full md:w-3/4 lg:w-3/5 py-4">
       <q-toolbar>
-        <q-btn dense flat round @click="toggleLeftDrawer">
-          <q-avatar color="primary" text-color="white" size="96px" @click="randomizeSeed" class="shadow-xl">
+        <q-btn dense flat round>
+          <q-avatar color="primary" text-color="white" size="48px" @click="randomizeSeed" class="shadow-xl">
             <img :src="`https://avatars.dicebear.com/api/micah/${seed}.svg`"/>
           </q-avatar>
         </q-btn>
-        <div class="ml-4 text-h4 font-black">Hello, PENIS!</div>
+        <div class="ml-4 text-h6 font-black">Hello, PENIS!</div>
 
         <q-toolbar-title style="text-align:center">
           <q-avatar>
@@ -28,9 +28,14 @@
     </q-drawer>
 
     <q-page-container>
-
-      <router-view class="mx-auto w-full md:w-3/4 lg:w-3/5"/>
-
+      <transition
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+        appear
+        :duration="300"
+      >
+        <router-view class="mx-auto w-full md:w-3/4 lg:w-3/5"/>
+      </transition>
     </q-page-container>
     
    <q-footer>
