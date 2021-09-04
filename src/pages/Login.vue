@@ -30,8 +30,14 @@ export default defineComponent({
     const email = ref('');
     const password = ref(''); 
     
-    const signIn = async () => await login(email.value, password.value) ? router.push('/home') : null;
-    const signUp = async () => await register(email.value, password.value) ? router.push('/home') : null;
+    const signIn = async () => {
+      router.push('/')
+      await login(email.value, password.value) ? router.push('/home') : router.push('/login')
+    }
+    const signUp = async () => {
+      router.push('/')
+      await register(email.value, password.value) ? router.push('/home') : router.push('/login')
+    }
 
     return {
       signIn,
