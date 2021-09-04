@@ -227,6 +227,30 @@ module.exports = configure(function (ctx) {
         // do something with the Electron main process Webpack cfg
         // extendWebpackPreload also available besides this chainWebpackPreload
       },
+
+      build: {
+        // OR use the equivalent chainWebpack()
+        // with its own chain statements
+        extendWebpack (cfg) {
+          // for i18n resources (json/json5/yaml)
+          cfg.module.rules.push({
+            test: /\.(json5?|ya?ml)$/, // target json, json5, yaml and yml files
+            type: 'javascript/auto',
+            // Use `Rule.include` to specify the files of locale messages to be pre-compiled
+            include: [
+              path.resolve(__dirname, './src/i18n'),
+            ],
+            loader: '@intlify/vue-i18n-loader'
+          })
+      
+          // for i18n custom block
+          cfg.module.rules.push({
+            resourceQuery: /blockType=i18n/,
+            type: 'javascript/auto',
+            loader: '@intlify/vue-i18n-loader'
+          })
+        }
+      }
     }
   }
 });

@@ -3,5 +3,5 @@ import TGL from './TGL';
 
 export default {
   'en-US': enUS,
-  'TGL': TGL
+  TGL: TGL
 };

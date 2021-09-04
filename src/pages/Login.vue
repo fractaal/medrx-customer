@@ -6,21 +6,30 @@
       <q-input v-model="password" id='password' label="Password" type="password" />
       <q-btn color='green' class="mt-4 px-8" @click='signIn()' outline label="Log in"/>
       <q-btn color='green' class="mt-4 px-8" @click='signUp()' rounded outline label="Sign-up"/>
-      <q-select 
-      class='fixed-bottom px-12' 
-      v-model='lang'
-      :label="$t('quasarLanguage')" 
-      :options="langOptions" 
-      style = "max-width:270px"/>
-   
+      <q-select
+        v-model="locale"
+        :options="localeOptions"
+        label="Quasar Language"
+        dense
+        borderless
+        emit-value
+        map-options
+        options-dense
+        style="max-width: 250px"
+        class='fixed-bottom px-12' 
+      />
+    
     </div>
   </q-page>
 </template>
+
+
 
 <script>
 import { defineComponent, ref } from 'vue';
 import { login, register } from 'src/api/firebase';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n'
 
 
 export default defineComponent({
@@ -39,30 +48,23 @@ export default defineComponent({
       await register(email.value, password.value) ? router.push('/home') : router.push('/login')
     }
 
+    const { locale } = useI18n({ useScope: 'global' })
+
     return {
       signIn,
       signUp,
       email, 
-      password
-    }
-  },
-
-  // TODO: Update i18n for Vue 3 composition API 
-  data() {
-    return {
-      lang: this.$i18n.locale,
-      langOptions: [
+      password,
+      locale,
+      localeOptions: [
         { value: 'en-US', label: 'English' },
-        { value: 'TGL', label: 'TGL'}
+        { value: 'TGL', label: 'Filipino' }
       ]
     }
+
+    
   },
-  watch: {
-    lang(lang) {
-      this.$i18n.locale = lang
-      this.$q.localStorage.set('lang',lang)
-    }
-  }
+
 })
 
 </script>
