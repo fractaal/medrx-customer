@@ -79,9 +79,6 @@ jobs:
       - name: Install Quasar CLI 
         run: npm install -g @quasar/cli
 
-      - name: Install Capacitor
-        run: npm install -g capacitor
-          
       - name: Install packages
         run: npm install
 
@@ -90,7 +87,7 @@ jobs:
           npx quasar mode add capacitor
           cd src-capacitor
           yarn install
-          
+
       - name: Perform build step
         run: npx quasar build -m capacitor -T android
 
