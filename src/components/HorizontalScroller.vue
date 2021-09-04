@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-row flex-nowrap p-4 space-x-6 overflow-x-scroll overflow-y-hidden">
+    <div class="flex flex-row flex-nowrap p-4 space-x-4 overflow-x-scroll overflow-y-hidden">
 		<slot/>
 	</div>
 </template>
