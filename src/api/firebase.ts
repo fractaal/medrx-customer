@@ -3,7 +3,7 @@ import { FirebaseApp, initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getFirestore, setDoc, doc, collection, Firestore } from 'firebase/firestore'
 import { Database, getDatabase } from 'firebase/database'
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, browserSessionPersistence } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, browserLocalPersistence } from 'firebase/auth';
 import { Notify } from 'quasar'
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -31,7 +31,7 @@ export const init = () => {
   firestore = getFirestore(app)
   database = getDatabase(app, 'https://medrx-test-default-rtdb.asia-southeast1.firebasedatabase.app/')
   getAnalytics(app);
-  getAuth().setPersistence(browserSessionPersistence)
+  getAuth().setPersistence(browserLocalPersistence)
 }
 
 export const login = async (email: string, password: string) => {
