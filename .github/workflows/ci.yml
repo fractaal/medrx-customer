@@ -36,7 +36,7 @@ jobs:
           
       - name: Mark gradlew executable
         run: |
-          chmod +x /home/runner/work/test/test/src-capacitor/android/gradlew
+          chmod +x /home/runner/work/medrx-customer/medrx-customer/src-capacitor/android/gradlew
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
