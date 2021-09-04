@@ -34,6 +34,9 @@ jobs:
         with:
           java-version: 1.8
 
+      - name: Grant execution permission for gradlew
+        run: chmod +x gradlew
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
 
@@ -44,13 +47,16 @@ jobs:
           sudo pip install yq
           jq --version
           yq --version
+
       - name: Install gitmoji-semver
         run: |
           git clone https://github.com/nkmr-jp/gitmoji-semver -b v2.0.0
+
       - name: Generate semantic-release configs
         working-directory: ./gitmoji-semver
         run: |
           make scaffold F=../.semver.yml O=..
+          
       - name: Release
         working-directory: ./.release
         env:
@@ -58,11 +64,13 @@ jobs:
         run: |
           npm install
           npx semantic-release
+
       - name: Programatically Update Version
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           node ./version-from-tag.js
+          
       - name: Push Version Bump
         uses: ad-m/github-push-action@master
         with:
