@@ -1,0 +1,104 @@
+
+# This is a basic workflow to help you get started with Actions
+
+name: Build
+
+# Controls when the action will run. 
+on:
+    push:
+      branches: [main]
+    
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    name: Build
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Check out master branch
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 14.8.0
+          architecture: x64 
+      
+      - name: Install jq yq
+        run: |
+          sudo wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -O /usr/bin/jq &&\
+          sudo chmod +x /usr/bin/jq
+          sudo pip install yq
+          jq --version
+          yq --version
+      - name: Install gitmoji-semver
+        run: |
+          git clone https://github.com/nkmr-jp/gitmoji-semver -b v2.0.0
+      - name: Generate semantic-release configs
+        working-directory: ./gitmoji-semver
+        run: |
+          make scaffold F=../.semver.yml O=..
+      - name: Release
+        working-directory: ./.release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm install
+          npx semantic-release
+      - name: Programatically Update Version
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          node ./version-from-tag.js
+      - name: Push Version Bump
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Quasar CLI 
+        run: npm install -g @quasar/cli
+
+      - name: Install Capacitor
+        run: npm install -g capacitor
+          
+      - name: Install packages
+        run: npm install
+
+      - name: Perform build step
+        run: npx quasar build -m capacitor -T android
+
+      - uses: r0adkll/sign-android-release@v1
+        name: Sign APK
+        # ID used to access action output
+        id: sign_app
+        with:
+          releaseDirectory: ./dist/capacitor/android/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+
+      - name: List build artifacts
+        run: ls ./dist/capacitor/android -R
+
+      - name: Get Latest Release
+        id: get_release
+        uses: jossef/action-latest-release-info@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release
+        uses: ncipollo/release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.get_release.outputs.tag_name }}
+          allowUpdates: true
+          artifact: ./dist/capacitor/android/apk/release
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
