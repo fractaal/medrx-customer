@@ -4,7 +4,7 @@
       <firebase-uploader
         v-if="!isUploadComplete"
         color='bg-uploadheader'
-        class='fixed-center'
+        class='fixed-center shadow-xl'
         style="max-width: 500px"
         label="Upload your prescription here."
         accept=".jpg, image/*"
@@ -31,7 +31,7 @@
             <div v-else-if="requestStatus === 'success'">
               <q-icon size="128px" name="check_circle"/>
               <p class="text-h4 font-black">Awesome!</p>
-              <p class="font-black">Prescription successfully analyzed! You should get a delivery notification shortly.</p>
+              <p class="font-black">Prescription successfully analyzed!<br/>You should get a delivery notification shortly.</p>
             </div>
           </transition>
       </div>
