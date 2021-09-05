@@ -4,7 +4,7 @@
   "plugins": {
     "SplashScreen":  {
       "androidScaleType": "CENTER_CROP",
-      "showSpinner": true,
+      "showSpinner": false,
       "splashFullScreen": false,
       "splashImmersive": false 
     }
