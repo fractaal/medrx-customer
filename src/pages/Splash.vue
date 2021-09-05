@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen">
-    <div class="pt-32">
+  <div style="width: 100vw; height: 100vh;" class="flex justify-center content-center">
+    <div>
       <video ref="video" playsinline loop autoplay style="width: 500px;" :style="style" @loadeddata="show" class="mx-auto" :class="animation">
         <source src="~assets/MedRx.webm"/>
       </video>
