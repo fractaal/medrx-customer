@@ -8,5 +8,10 @@ export default {
   Email: 'Email',
   Password: 'Password',
   Login: 'LOG IN',
-  Signup: 'SIGN-UP'
+  Signup: 'SIGN-UP',
+  Settings: 'WOAH MAGIC',
+  Hello: 'Kamusta',
+  If: 'Kung gusto mong mabuhay...',
+  Buy: 'Kainin mo ang pwet ni Pedro',
+  Or: 'o mamatay ka.'
 };

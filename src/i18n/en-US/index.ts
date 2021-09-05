@@ -8,5 +8,11 @@ export default {
   Email: 'Email',
   Password: 'Password',
   Login: 'LOG IN',
-  Signup: 'SIGN-UP'
+  Signup: 'SIGN-UP',
+  Settings: 'Settings',
+  Hello: 'Hello',
+  If: 'If you want to live...',
+  Buy: 'Buy these essential medical products',
+  Or: 'Or die'
+
 };
