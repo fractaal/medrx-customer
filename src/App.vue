@@ -14,21 +14,14 @@ import { useRouter } from 'vue-router'
 import { getAuth } from 'firebase/auth'
 import { init } from 'src/api/firebase'
 
+if (process.env.MODE === 'capacitor') {
+  import('src/api/mobile')
+}
+
 export default defineComponent({
   name: 'App',
   setup () {
     init()
-    onMounted(async () => {
-      if (process.env.MODE === 'capacitor') {
-        const { Plugins, StatusBarStyle } = await import('@capacitor/core')
-        if (!Plugins) return
-        const { StatusBar } = Plugins
-        if (!StatusBar) return
-        console.log(StatusBar)
-        StatusBar.setBackgroundColor({color: '#ffffff'})
-        StatusBar.setStyle({style: StatusBarStyle.Light})
-      }
-    })
     
     const router = useRouter()
 
