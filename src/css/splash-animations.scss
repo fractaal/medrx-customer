@@ -1,0 +1,27 @@
+.splash-logo-enter {
+    animation: enter 1s cubic-bezier(1, 0, 0, 1);
+}
+
+.splash-logo-leave {
+    animation: leave 1.5s cubic-bezier(1, 0, 0, 0);
+}
+
+@keyframes enter {
+    0% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes leave {
+    0% {
+        transform: scale(1);
+    }
+    
+    100% {
+        transform: scale(100) translateY(-10%);
+    }
+}

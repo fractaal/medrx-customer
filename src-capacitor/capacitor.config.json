@@ -1,6 +1,14 @@
 {
   "appId": "org.cleio.medrx",
   "appName": "MedRx",
+  "plugins": {
+    "SplashScreen":  {
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false,
+      "splashFullScreen": false,
+      "splashImmersive": false 
+    }
+  },
   "bundledWebRuntime": false,
   "npmClient": "yarn",
   "webDir": "www"
