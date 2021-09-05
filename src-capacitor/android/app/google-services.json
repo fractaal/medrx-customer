@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "535999064122",
+    "firebase_url": "https://medrx-test-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "medrx-test",
+    "storage_bucket": "medrx-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:535999064122:android:10086f6a9bb2051222ed03",
+        "android_client_info": {
+          "package_name": "org.cleio.medrx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "535999064122-g1lb0chhfba8mi3e7l9g55isj05gdpcr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.cleio.medrx",
+            "certificate_hash": "af9965a35dad97b5e80c54bdfd064dcad1f7b59c"
+          }
+        },
+        {
+          "client_id": "535999064122-uacr0fpuonfla0ea3ckmj75agkveihf2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJ1Z1cVFXAXJ6sS7vRyl7GH5Jr4XlFuEE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "535999064122-uacr0fpuonfla0ea3ckmj75agkveihf2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
