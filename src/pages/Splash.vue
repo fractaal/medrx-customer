@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen">
     <div class="pt-32">
-      <video ref="video" playsinline loop autoplay style="width: 75vw;" :style="style" @loadeddata="show" class="mx-auto" :class="animation">
+      <video ref="video" playsinline loop autoplay style="width: 500px;" :style="style" @loadeddata="show" class="mx-auto" :class="animation">
         <source src="~assets/MedRx.webm"/>
       </video>
       <!-- <q-spinner size="32px" :thickness="8" class="mx-auto"/> -->
@@ -20,14 +20,16 @@ export default defineComponent({
     const video = ref(null)
 
     onMounted(() => {
+      try {
+        video.value.play()
+      } catch(err) {}
       animation.value = 'splash-logo-enter'
     })
 
     onBeforeRouteLeave(async () => {
-      await new Promise(r => setTimeout(r, 800))
+      await new Promise(r => setTimeout(r, 900))
       animation.value = 'splash-logo-leave'
-      await new Promise(r => setTimeout(r, 590))
-      video.value.pause()
+      await new Promise(r => setTimeout(r, 640))
       await new Promise(r => setTimeout(r, 10))
       return true
     })
