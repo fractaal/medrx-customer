@@ -59,7 +59,7 @@
 import { seed, randomizeSeed } from 'src/api/seed'
 import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut } from 'firebase/auth';
 
 export default {
   setup () {
