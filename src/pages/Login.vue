@@ -30,22 +30,26 @@ import { defineComponent, ref } from 'vue';
 import { login, register } from 'src/api/firebase';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n'
+import { useQuasar } from 'quasar';
 
 
 export default defineComponent({
   name: 'PageIndex',
   setup () {
+    const quasar = useQuasar();
     const router = useRouter();
     const email = ref('');
     const password = ref(''); 
     
     const signIn = async () => {
-      router.push('/')
-      await login(email.value, password.value) ? router.push('/home') : router.push('/login')
+      quasar.loading.show()
+      await login(email.value, password.value) ? router.push('/home') : null;
+      quasar.loading.hide()
     }
     const signUp = async () => {
-      router.push('/')
-      await register(email.value, password.value) ? router.push('/home') : router.push('/login')
+      quasar.loading.show()
+      await register(email.value, password.value) ? router.push('/home') : null;
+      quasar.loading.hide()
     }
 
     const { locale } = useI18n({ useScope: 'global' })
