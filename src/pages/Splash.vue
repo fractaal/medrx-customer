@@ -29,7 +29,7 @@ export default defineComponent({
     onBeforeRouteLeave(async () => {
       await new Promise(r => setTimeout(r, 900))
       animation.value = 'splash-logo-leave'
-      await new Promise(r => setTimeout(r, 640))
+      await new Promise(r => setTimeout(r, 690))
       await new Promise(r => setTimeout(r, 10))
       return true
     })
