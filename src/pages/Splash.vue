@@ -24,7 +24,7 @@ export default defineComponent({
     })
 
     onBeforeRouteLeave(async () => {
-      await new Promise(r => setTimeout(r, 600))
+      await new Promise(r => setTimeout(r, 800))
       animation.value = 'splash-logo-leave'
       await new Promise(r => setTimeout(r, 590))
       video.value.pause()
