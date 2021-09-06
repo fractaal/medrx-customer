@@ -44,9 +44,29 @@
               </q-card>
             </q-dialog>
             
-          <q-item clickable v-ripple @click="logout">
+          <q-item clickable v-ripple @click="confirm = true">
             <q-item-section>Log-out</q-item-section>
           </q-item>
+
+  
+            <q-dialog v-model="confirm" persistent>
+              <q-card>
+                <q-list bordered separator>
+                  <q-card-section class="row items-center">
+                    <q-avatar icon="warning" color="primary" text-color="white" />
+                    <span class="q-ml-sm">Are you sure you want to log-out?</span>
+                  </q-card-section>
+
+                  <q-card-actions>
+                    <q-btn flat label="No" color="primary" style="width: 150px" v-close-popup />
+                    <q-btn flat label="Yes" color="primary" style="width: 150px" v-close-popup @click='logout'/>
+                  </q-card-actions>
+
+
+                </q-list>
+
+              </q-card>
+            </q-dialog>
 
 
       </q-list>
@@ -79,6 +99,7 @@ export default {
       locale,
       email,
       chlang: ref(false),
+      confirm: ref(false),
       logout
     }
   }
