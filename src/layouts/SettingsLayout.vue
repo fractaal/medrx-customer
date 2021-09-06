@@ -1,9 +1,9 @@
 <template>
   <q-layout view="hHh lpR fFf">
 
-    <q-header elevated class="bg-primary text-white">
+    <q-header class="bg-primary text-white">
 
-      <q-toolbar>
+      <q-toolbar style="max-height: 50px">
           <q-btn dense flat v-ripple round class='back' to='/home'>
             <q-icon size="2rem" class="p-4">
               <img src="../../public/icons/back_arrow.svg"/>
