@@ -10,7 +10,7 @@
           </q-avatar>
         </q-btn>
 
-        <div class="ml-4 text-h6 font-black">{{$t('Hello')}}, PENIS!</div>
+        <div class="ml-4 text-h6 font-black">{{$t('Hello')}} {{ name }} </div>
 
         <q-space />
 
@@ -57,16 +57,21 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
-import { seed, randomizeSeed } from 'src/api/seed'
+import { ref } from 'vue';
+import { seed, randomizeSeed } from 'src/api/seed';
+import { getUser } from 'src/api/firebase';
 
 export default {
   setup () {
+
+    const name = getUser().name
+    
 
     return {
       tab: ref('mails'),
       randomizeSeed,
       seed,
+      name,
       toggleRightDrawer () {
         // TODO
       }
