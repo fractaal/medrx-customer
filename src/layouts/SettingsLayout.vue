@@ -1,13 +1,11 @@
 <template>
   <q-layout view="hHh lpR fFf">
 
-    <q-header elevated class="bg-primary text-white">
+    <q-header unelevated class="bg-primary text-white">
 
-      <q-toolbar>
+      <q-toolbar class="px-2 top mx-auto w-full md:w-3/4 lg:w-3/5 py-4">
           <q-btn dense flat v-ripple round class='back' to='/home'>
-            <q-icon size="2rem" class="p-4">
-              <img src="../../public/icons/back_arrow.svg"/>
-            </q-icon>
+            <q-icon name="chevron_left" size="2rem"/>
           </q-btn>
           <q-toolbar-title>{{$t('Settings')}}</q-toolbar-title>
       </q-toolbar>
@@ -17,7 +15,7 @@
     </q-header>
 
     <q-page-container>
-      <router-view />
+      <router-view class="mx-auto w-full md:w-3/4 lg:w-3/5" />
     </q-page-container>
 
   </q-layout>
