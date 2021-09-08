@@ -64,24 +64,24 @@ export const register = async (email: string, password: string) => {
 export const getUser = () => {
 
   const auth = getAuth();
+
   try {
-    //for easy access to all user info, store in object each one
-    const userinfo: any = {};
+    // For easy access to all user info, store in object each one
+    const userinfo: {email?: string, name?: string} = {};
     const user = auth.currentUser;
 
     if (user !== null) {
-      const email = user.email;
+      const email = user.email as string;
       userinfo.email = email;
-     if(email !== null){
-      const name = email.substr(0, email.indexOf('@'));
-      userinfo.name = name;
-     } 
+      if (email !== null) {
+        userinfo.name = email.substr(0, email.indexOf('@'));
+      } 
     }
     return userinfo
 
    } catch(err) {
       Notify.create(`An error occured: ${err}`)
-      return false
+      return { email: null, name: null }
     }
 } 
    
