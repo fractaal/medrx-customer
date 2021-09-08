@@ -61,4 +61,30 @@ export const register = async (email: string, password: string) => {
   }
 }
 
+export const getUser = () => {
+
+  const auth = getAuth();
+  try {
+    //for easy access to all user info, store in object each one
+    const userinfo: any = {};
+    const user = auth.currentUser;
+
+    if (user !== null) {
+      const email = user.email;
+      userinfo.email = email;
+     if(email !== null){
+      const name = email.substr(0, email.indexOf('@'));
+      userinfo.name = name;
+     } 
+    }
+    return userinfo
+
+   } catch(err) {
+      Notify.create(`An error occured: ${err}`)
+      return false
+    }
+} 
+   
+
+
 console.log('Firebase app initialized!')

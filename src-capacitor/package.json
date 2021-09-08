@@ -1,6 +1,6 @@
 {
   "name": "medrx-customer",
-  "version": "1.1.2",
+  "version": "1.1.7",
   "description": "Nimble hands for comfort and efficiency!",
   "private": true,
   "dependencies": {
