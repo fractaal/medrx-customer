@@ -22,22 +22,19 @@
     </q-header>
 
     <q-page-container>
-      <transition
-        enter-active-class="animated fadeIn"
-        leave-active-class="animated fadeOut"
-        appear
-        :duration="300"
-      >
-        <router-view class="mx-auto w-full md:w-3/4 lg:w-3/5"/>
-      </transition>
+      <router-view v-slot="{ Component }" class="mx-auto w-full md:w-3/4 lg:w-3/5">
+        <transition
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+          appear
+          :duration="150"
+        >
+          <component :is="Component"/>
+        </transition>
+      </router-view>
     </q-page-container>
-    
    <q-footer>
-      <q-tabs
-            v-model="tab"
-            dense
-            class="navigation-menu"
-          >
+      <q-tabs v-model="tab">
             <q-route-tab name="mails" label="Shop" to='/home'>
               <img src='../../public/icons/shop.svg'>
             </q-route-tab>
@@ -46,9 +43,9 @@
               <img src='../../public/icons/upload.svg'>
             </q-route-tab>
 
-            <q-route-tab name="movies" label="Soon">
+            <!-- <q-route-tab name="movies" label="Soon">
               <img src='../../public/icons/soon.svg'>
-            </q-route-tab>
+            </q-route-tab> -->
 
       </q-tabs>
     </q-footer>
