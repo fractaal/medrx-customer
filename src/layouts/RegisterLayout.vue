@@ -1,0 +1,31 @@
+<template>
+  <q-layout view="hHh lpR fFf">
+
+    <q-header unelevated class="bg-primary text-white">
+
+      <q-toolbar class="px-2 top mx-auto w-full md:w-3/4 lg:w-3/5 py-4">
+          <q-btn dense flat v-ripple round class='back' to='/login'>
+            <q-icon name="chevron_left" size="2rem"/>
+          </q-btn>
+          <q-toolbar-title class='font-bold'>Sign Up</q-toolbar-title>
+      </q-toolbar>
+
+
+
+    </q-header>
+
+    <q-page-container>
+      <router-view class="mx-auto w-full md:w-3/4 lg:w-3/5" />
+    </q-page-container>
+
+  </q-layout>
+</template>
+
+<script lang='ts'>
+export default {
+  setup () {
+    return {
+    }
+  }
+}
+</script>

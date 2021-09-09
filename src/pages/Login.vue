@@ -5,7 +5,7 @@
       <q-input v-model="email" id='email' label="Email" type="email" placeholder="username@mail.com"/>
       <q-input v-model="password" id='password' label="Password" type="password" />
       <q-btn color='green' class="mt-4 px-8" @click='signIn()' outline label="Log in"/>
-      <q-btn color='green' class="mt-4 px-8" @click='signUp()' rounded outline label="Sign-up"/>
+      <q-btn color='green' class="mt-4 px-8" to='/register1' outline label="Sign Up"/>
       <q-select
         v-model="locale"
         :options="localeOptions"
@@ -27,7 +27,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue';
-import { login, register } from 'src/api/firebase';
+import { login } from 'src/api/firebase';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar';
@@ -46,17 +46,11 @@ export default defineComponent({
       await login(email.value, password.value) ? router.push('/home') : null;
       quasar.loading.hide()
     }
-    const signUp = async () => {
-      quasar.loading.show()
-      await register(email.value, password.value) ? router.push('/home') : null;
-      quasar.loading.hide()
-    }
 
     const { locale } = useI18n({ useScope: 'global' })
 
     return {
       signIn,
-      signUp,
       email, 
       password,
       locale,
