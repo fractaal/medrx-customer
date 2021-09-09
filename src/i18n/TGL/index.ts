@@ -1,6 +1,8 @@
 // This is just an example,
 // so you can safely delete all default props below
 
+// TODO: Make casing between keys consistent (all should be in camelCase)
+
 export default {
   failed: 'Bigo ang pagkilos',
   success: 'Matagumpay ang pagkilos',
@@ -13,5 +15,6 @@ export default {
   Hello: 'Kamusta',
   If: 'Kung gusto mong mabuhay...',
   Buy: 'Kainin mo ang pwet ni Pedro',
-  Or: 'o mamatay ka.'
+  Or: 'o mamatay ka.',
+  language: 'Wika'
 };
