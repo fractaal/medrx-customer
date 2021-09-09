@@ -1,7 +1,11 @@
 <template>
   <router-view v-slot="{ Component }">
-    <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" :duration="150">
-      <component :is="Component"/>
+    <transition
+      enter-active-class="animated fadeIn"
+      leave-active-class="animated fadeOut"
+      :duration="150"
+    >
+      <component :is="Component" />
     </transition>
   </router-view>
 </template>
@@ -17,9 +21,9 @@ if (process.env.MODE === 'capacitor') {
 
 export default defineComponent({
   name: 'App',
-  setup () {
+  setup() {
     init()
-    
+
     const router = useRouter()
 
     getAuth().onAuthStateChanged(user => {
