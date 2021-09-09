@@ -1,8 +1,18 @@
 <template>
   <div style="width: 100vw; height: 100vh;" class="flex justify-center content-center">
     <div>
-      <video ref="video" playsinline loop autoplay style="width: 500px;" :style="style" @loadeddata="show" class="mx-auto" :class="animation">
-        <source src="~assets/MedRx.webm"/>
+      <video
+        ref="video"
+        playsinline
+        loop
+        autoplay
+        style="width: 500px;"
+        :style="style"
+        @loadeddata="show"
+        class="mx-auto"
+        :class="animation"
+      >
+        <source src="~assets/MedRx.webm" />
       </video>
       <!-- <q-spinner size="32px" :thickness="8" class="mx-auto"/> -->
     </div>
@@ -22,7 +32,7 @@ export default defineComponent({
     onMounted(() => {
       try {
         video.value.play()
-      } catch(err) {}
+      } catch (err) { }
       animation.value = 'splash-logo-enter'
     })
 
