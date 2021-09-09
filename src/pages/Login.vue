@@ -10,20 +10,30 @@
         placeholder="username@mail.com"
       />
       <q-input v-model="password" id="password" label="Password" type="password" />
-      <q-btn color="green" class="mt-4 px-8" @click="signIn()" outline label="Log in" />
-      <q-btn color="green" class="mt-4 px-8" to="/register1" outline label="Sign Up" />
-      <q-select
-        v-model="locale"
-        :options="localeOptions"
-        label="Language"
-        dense
-        borderless
-        emit-value
-        map-options
-        options-dense
-        style="min-width: 175px"
-        class="fixed-top-right px-12"
-      />
+      <q-btn text-color="white" unelevated class="mt-4 px-8 py-2 font-black bg-gradient-to-tr from-medrx to-green-200" rounded @click="signIn()" label="Log in" />
+      <!-- <q-btn color="green" class="mt-4 px-8" to="/register1" outline label="Sign Up" /> -->
+      <q-footer class="p-4 flex justify-between" color="white">
+        <p class="m-0 p-0">Don't have an account? <a to="/register">Sign up!</a></p>
+        <q-btn flat round>
+          <q-icon name="language" size="1.5rem">
+            <q-tooltip>
+              {{ $t('language') }}
+            </q-tooltip>
+          </q-icon>
+        </q-btn>
+        <!-- <q-select
+          v-model="locale"
+          :options="localeOptions"
+          label="Language"
+          dense
+          borderless
+          emit-value
+          map-options
+          options-dense
+          style="min-width: 175px"
+          class="fixed bottom-4 right-4"
+        /> -->
+      </q-footer>
     </div>
   </q-page>
 </template>
