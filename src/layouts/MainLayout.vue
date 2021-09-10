@@ -4,11 +4,11 @@
       <q-toolbar>
         <q-btn dense flat round @click="$router.push('/settings')">
           <q-avatar color="primary" size="48px" class="shadow-xl">
-            <img :src="`https://avatars.dicebear.com/api/micah/${seed}.svg`" />
+            <q-img :src="`https://avatars.dicebear.com/api/micah/${seed}.svg`" />
           </q-avatar>
         </q-btn>
 
-        <div class="ml-4 text-h6 font-black">{{ $t('Hello') }} {{ name }}</div>
+        <div class="ml-4 text-h6 font-black">{{ $t('Hello') }}, {{ name }}!</div>
 
         <q-space />
 
