@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh lpR fFf" class="px-4 md:px-0">
 
     <q-header unelevated class="bg-primary text-white">
 
@@ -7,7 +7,7 @@
           <q-btn dense flat v-ripple round class='back' to='/home'>
             <q-icon name="chevron_left" size="2rem"/>
           </q-btn>
-          <q-toolbar-title>{{$t('Settings')}}</q-toolbar-title>
+          <q-toolbar-title class="font-bold">{{$t('Settings')}}</q-toolbar-title>
       </q-toolbar>
 
 
