@@ -1,7 +1,10 @@
 <template>
-  <q-item clickable class="p-4 rounded-xl border border-gray-200">
+  <q-item clickable class="p-4 mb-4 rounded-xl border-green-50 border-2 font-medium">
+    <q-item-section avatar>
+      <q-icon v-bind="$attrs"/>
+    </q-item-section>
     <q-item-section>
-      <slot />
+      <slot/>
     </q-item-section>
   </q-item>
 </template>
