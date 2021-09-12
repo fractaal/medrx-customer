@@ -5,8 +5,8 @@
 
 
 export default {
-  failed: 'Failed to login!',
-  success: 'Login successful!',
+  Failed: 'Failed to login!',
+  Success: 'Login successful!',
   Welcome: 'Welcome to MedRx!',
   Email: 'Email',
   Password: 'Password',
@@ -17,5 +17,5 @@ export default {
   If: 'If you want to live...',
   Buy: 'Buy these essential medical products',
   Or: 'Or die',
-  language: 'Language'
+  Language: 'Language'
 };

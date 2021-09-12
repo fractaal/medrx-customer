@@ -14,25 +14,27 @@
       <!-- <q-btn color="green" class="mt-4 px-8" to="/register1" outline label="Sign Up" /> -->
       <q-footer class="p-4 flex justify-between" color="white">
         <p class="m-0 p-0">Don't have an account? <a to="/register">Sign up!</a></p>
-        <q-btn flat round>
+        <q-btn flat round @click='chlang = true'>
+
+          <q-dialog v-model="chlang">
+            <q-card>
+              <q-list bordered separator>
+                <q-item clickable v-ripple>
+                  <q-item-section v-model="locale" @click="locale = 'TGL'; chlang = false">Filipino</q-item-section>
+                </q-item>
+                <q-item clickable v-ripple>
+                  <q-item-section v-model="locale" @click="locale = 'en-US'; chlang = false">English</q-item-section>
+                </q-item>
+              </q-list>
+            </q-card>
+          </q-dialog>
+
           <q-icon name="language" size="1.5rem">
             <q-tooltip>
-              {{ $t('language') }}
+              {{ $t('Language') }}
             </q-tooltip>
           </q-icon>
         </q-btn>
-        <!-- <q-select
-          v-model="locale"
-          :options="localeOptions"
-          label="Language"
-          dense
-          borderless
-          emit-value
-          map-options
-          options-dense
-          style="min-width: 175px"
-          class="fixed bottom-4 right-4"
-        /> -->
       </q-footer>
     </div>
   </q-page>
@@ -69,6 +71,7 @@ export default defineComponent({
       email,
       password,
       locale,
+      chlang: ref(false),
       localeOptions: [
         { value: 'en-US', label: 'English' },
         { value: 'TGL', label: 'Filipino' }
