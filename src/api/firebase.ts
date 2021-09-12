@@ -53,7 +53,7 @@ export const register = async (email: string, password: string) => {
     setDoc(doc(collection(firestore, 'users'), userCredential.user.uid), {
       registrationDate: new Date()
     })
-    Notify.create('Successfully created an account!')
+    Notify.create('Almost there!')
     return true
   } catch(err) {
     Notify.create(`An error occured: ${err}`)
