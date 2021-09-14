@@ -1,14 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import {
-  getFirestore,
-  setDoc,
-  doc,
-  collection,
-  Firestore,
-  serverTimestamp,
-} from 'firebase/firestore';
+import { getFirestore, setDoc, doc, collection, Firestore, serverTimestamp } from 'firebase/firestore';
 import { Database, getDatabase } from 'firebase/database';
 import {
   getAuth,
@@ -31,8 +24,7 @@ const firebaseConfig = {
   messagingSenderId: '535999064122',
   appId: '1:535999064122:web:06cced6ce33d009b22ed03',
   measurementId: 'G-G2Y85HXLNM',
-  databaseUrl:
-    'https://medrx-test-default-rtdb.asia-southeast1.firebasedatabase.app/',
+  databaseUrl: 'https://medrx-test-default-rtdb.asia-southeast1.firebasedatabase.app/',
 };
 
 export let app: FirebaseApp;
@@ -42,10 +34,7 @@ export let database: Database;
 export const init = () => {
   app = initializeApp(firebaseConfig);
   firestore = getFirestore(app);
-  database = getDatabase(
-    app,
-    'https://medrx-test-default-rtdb.asia-southeast1.firebasedatabase.app/'
-  );
+  database = getDatabase(app, 'https://medrx-test-default-rtdb.asia-southeast1.firebasedatabase.app/');
   getAnalytics(app);
   getAuth().setPersistence(browserLocalPersistence);
 };
@@ -65,11 +54,7 @@ export const login = async (email: string, password: string) => {
 export const register = async (email: string, password: string) => {
   const auth = getAuth();
   try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     setDoc(doc(collection(firestore, 'users'), userCredential.user.uid), {
       registrationDate: serverTimestamp(),
     });
