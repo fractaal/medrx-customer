@@ -1,5 +1,5 @@
 <template>
-  <q-item clickable class="p-4 mb-4 rounded-xl border-green-50 border-2 font-medium">
+  <q-item clickable v-ripple class="p-4 mb-4 rounded-xl border-green-50 border-2 font-medium">
     <q-item-section avatar>
       <q-icon v-bind="$attrs"/>
     </q-item-section>
