@@ -59,7 +59,7 @@ export const register = async (email: string, password: string, fname: string, m
       registrationDate: serverTimestamp(),
       firstName: fname,
       middleName: mname,
-      lastNamme: lname
+      lastName: lname
     });
     Notify.create('Almost there!');
     return true;
