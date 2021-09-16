@@ -51,12 +51,15 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-export const register = async (email: string, password: string) => {
+export const register = async (email: string, password: string, fname: string, mname: string, lname: string) => {
   const auth = getAuth();
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     setDoc(doc(collection(firestore, 'users'), userCredential.user.uid), {
       registrationDate: serverTimestamp(),
+      firstName: fname,
+      middleName: mname,
+      lastNamme: lname
     });
     Notify.create('Almost there!');
     return true;
