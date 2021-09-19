@@ -98,7 +98,7 @@ export default defineComponent({
 			],
 			password,
 			passwordRules: [
-				val => (val && val.length > 8) || 'Password must be 6 or more characters long'
+				val => (val && val.length > 5) || 'Password must be 6 or more characters long'
 			],
 			fname,
 			fnameRules: [
