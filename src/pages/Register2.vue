@@ -5,10 +5,10 @@
     <div class="gap-4 px-10 grid-cols-1 grid">
       <div class ="mt-5 font-semibold">Mobile number</div>
       <div>
-        <q-input v-model='mobnumber' dense outlined label = "+639123456789"/>
+        <q-input v-model='mobnumber' dense outlined label="+639123456789"/>
       </div>
       <div>
-        <q-btn class="mt-3 w-full md:w-3/4 lg:w-3/5 py-4" @click='' color=primary label='Continue' />
+        <q-btn class="mt-7 w-full md:w-3/4 lg:w-3/5 py-4" to='/register3' color=primary label='Continue' />
 
       </div>
     </div>
@@ -22,6 +22,8 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
   setup() {
     const mobnumber = ref('');
+
+  
     return {
       mobnumber
     }
