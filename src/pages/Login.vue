@@ -10,12 +10,21 @@
         placeholder="username@mail.com"
       />
       <q-input v-model="password" id="password" label="Password" type="password" />
-      <q-btn text-color="white" unelevated class="mt-4 px-8 py-2 font-black bg-gradient-to-tr from-medrx to-green-200" rounded @click="signIn()" label="Log in" />
+      <q-btn
+        text-color="white"
+        unelevated
+        class="mt-4 px-8 py-2 font-black bg-gradient-to-tr from-medrx to-green-200"
+        rounded
+        @click="signIn()"
+        label="Log in"
+      />
       <!-- <q-btn color="green" class="mt-4 px-8" to="/register1" outline label="Sign Up" /> -->
       <q-footer class="p-4 flex justify-between" color="white">
-        <p class="m-0 p-0">Don't have an account? <q-btn padding="none" dense flat no-caps to="/register1" outline>Sign up!</q-btn></p>
-        <q-btn flat round @click='chlang = true'>
-
+        <p class="m-0 p-0">
+          Don't have an account?
+          <q-btn padding="none" dense flat no-caps to="/register" outline>Sign up!</q-btn>
+        </p>
+        <q-btn flat round @click="chlang = true">
           <q-dialog v-model="chlang">
             <q-card>
               <q-list bordered separator>
@@ -30,9 +39,7 @@
           </q-dialog>
 
           <q-icon name="language" size="1.5rem">
-            <q-tooltip>
-              {{ $t('Language') }}
-            </q-tooltip>
+            <q-tooltip>{{ $t('Language') }}</q-tooltip>
           </q-icon>
         </q-btn>
       </q-footer>
