@@ -60,7 +60,7 @@
 								<q-icon
 									:name="isPwd ? 'visibility_off' : 'visibility'"
 									class="cursor-pointer"
-									@click.prevent="isPwd = !isPwd"
+									@click="isPwd = !isPwd"
 								/>
 							</template>
 						</q-input>
@@ -70,7 +70,7 @@
 			<div class="gap-4 px-10 mt-3 grid-cols-2 grid">
 				<div />
 				<div align="right">
-					<q-btn @click.prevent="validate()" color="primary" label="Continue" />
+					<q-btn @click="validate()" color="primary" label="Continue" />
 				</div>
 			</div>
 		</div>
@@ -92,7 +92,7 @@
 				<div>
 					<q-btn
 						class="mt-7 w-full md:w-3/4 lg:w-3/5 py-4"
-						@click.prevent="validateTwo()"
+						@click="validateTwo()"
 						color="primary"
 						label="Continue"
 					/>
@@ -119,7 +119,7 @@
 						class="mt-3 w-full md:w-3/4 lg:w-3/5 py-4"
 						color="primary"
 						label="Continue"
-						@click.prevent="validateThree()"
+						@click="validateThree()"
 					/>
 				</div>
 				<div align="right" class="font-semibold">Didn't receive a code?</div>
@@ -127,24 +127,27 @@
 					<q-btn
 						no-caps
 						:disabled="countDownDone"
-						@click.prevent="countDown()"
+						@click="countDown()"
 						color="primary"
 						label="Send a new code "
 					>({{ timer }}s)</q-btn>
 				</div>
 			</div>
 		</div>
+		<div id="verify"></div>
 	</q-page>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue';
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
 import { Notify } from 'quasar'
-import { PhoneAuthProvider, linkWithCredential } from 'firebase/auth'
+import { PhoneAuthProvider, linkWithCredential, linkWithPhoneNumber, RecaptchaVerifier, getAuth } from 'firebase/auth'
 import { register } from 'src/api/firebase';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
 	setup() {
+		const router = useRouter();
 		const pageNum = ref(0);
 
 		// Register 1
@@ -155,19 +158,26 @@ export default defineComponent({
 		const lastName = ref('');
 		const isPwd = ref(true);
 
-
 		// Register 2
 		const mobileNumber = ref('');
 
 		// Register 3
 		const verificationCode = ref('');
-		const timer = ref('');
-		const countDownDone = ref('');
+		const timer = ref(0);
+		const countDownDone = ref(false);
+
+		const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
+
+		onMounted(() => {
+			recaptchaVerifier.value = new RecaptchaVerifier('verify', { size: 'invisible', callback: (response: any) => console.log("wWAOW", response) }, getAuth())
+			console.log("Verifier mounted: ", recaptchaVerifier.value)
+		})
 
 		const validate = async () => {
 			if (email.value, password.value, firstName.value, lastName.value) {
 				if (await signUp()) {
 					pageNum.value = 1;
+
 				} else {
 					// Something terrible has happened.
 				}
@@ -177,6 +187,8 @@ export default defineComponent({
 		}
 
 		const signUp = async () => {
+			const recaptchaToken = await recaptchaVerifier.value.verify();
+			console.log(recaptchaToken)
 			return await register(email.value, password.value, firstName.value, middleName.value, lastName.value);
 		}
 
@@ -205,34 +217,44 @@ export default defineComponent({
 			}, 1000);
 		}
 
-		const validateThree = () => {
+		const validateThree = async () => {
+
 			if (verificationCode.value) {
 				//link mobile number
-				const provider = new PhoneAuthProvider(auth);
-				const verificationId = provider.verifyPhoneNumber(mobileNumber.value, applicationVerifier);
-				const authCredential = PhoneAuthProvider.credential(verificationId, verificationCode.value);
 				const auth = getAuth();
-				linkWithCredential(auth.currentUser, authCredential)
+				// const recaptchaVerifier = ref(new RecaptchaVerifier('recaptcha-container', {}, auth));
+				// const appVerifier = recaptchaVerifier.value;
+
+				const result = await linkWithPhoneNumber(auth.currentUser!, mobileNumber.value, recaptchaVerifier.value);
+				console.log(result)
+
+				// const provider = new PhoneAuthProvider(auth);
+				// const verificationId = await provider.verifyPhoneNumber(mobileNumber.value, appVerifier);
+				// const authCredential = PhoneAuthProvider.credential(verificationId, verificationCode.value);
+
+				// linkWithPhoneNumber(auth.currentUser, authCredential)
+				router.push('/home')
 			}
 		}
+
 
 
 		return {
 			// Rules
 			emailRules: [
-				val => (val && val.length > 0 && val.includes('@') && val.includes('.')) || 'Please enter a valid email address'
+				(val: string) => (val && val.length > 0 && val.includes('@') && val.includes('.')) || 'Please enter a valid email address'
 			],
 			passwordRules: [
-				val => (val && val.length > 5) || 'Password must be 6 or more characters long'
+				(val: string) => (val && val.length > 5) || 'Password must be 6 or more characters long'
 			],
 			firstNameRules: [
-				val => (val && val.length > 0) || 'Please enter your first name'
+				(val: string) => (val && val.length > 0) || 'Please enter your first name'
 			],
 			lastNameRules: [
-				val => (val && val.length > 0) || 'Please enter your last name'
+				(val: string) => (val && val.length > 0) || 'Please enter your last name'
 			],
 			numberRules: [
-				val => (val && val.length === 13 && val.includes('+639')) || 'Please enter a valid phone number'
+				(val: string) => (val && val.length === 13 && val.includes('+639')) || 'Please enter a valid phone number'
 			],
 
 			// Form fields
