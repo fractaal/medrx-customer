@@ -9,23 +9,33 @@
 			<div class="gap-4 px-10 grid-cols-2 grid">
 				<div>
 					<div class="mt-5 mb-1 text-sm font-semibold">First Name</div>
-					<div style="max-width: 200px">
-						<q-input v-model="firstName" dense outlined label="John" lazy-rules :rules="firstNameRules" />
-					</div>
+					<q-input
+						v-model="firstName"
+						dense
+						outlined
+						label="John"
+						lazy-rules
+						:rules="firstNameRules"
+						class="w-full"
+					/>
 				</div>
 				<div>
 					<div class="mt-5 mb-1 text-sm font-semibold">Middle Name (Optional)</div>
-					<div style="max-width: 200px">
-						<q-input v-model="middleName" dense outlined label="Nathan" />
-					</div>
+					<q-input v-model="middleName" dense outlined label="Nathan" class="w-full" />
 				</div>
 			</div>
 			<div class="gap-4 px-10 grid-cols-2 grid">
 				<div>
 					<div class="mt-5 mb-1 text-sm font-semibold">Last Name</div>
-					<div style="max-width: 200px">
-						<q-input v-model="lastName" dense outlined label="Doe" lazy-rules :rules="lastNameRules" />
-					</div>
+					<q-input
+						v-model="lastName"
+						dense
+						outlined
+						label="Doe"
+						lazy-rules
+						:rules="lastNameRules"
+						class="w-full"
+					/>
 				</div>
 			</div>
 			<div class="gap-4 px-10 grid-cols-1 grid">
@@ -102,7 +112,7 @@
 		<!-- Verification Code Submission -->
 		<div v-else-if="pageNum === 2">
 			<div class="mt-20 px-10 text-4xl font-black text-MedRx_theme">Almost there!</div>
-			<div class="px-10 text-sm font-semibold">Enter the code sent to {{ mobileNumber }}</div>
+			<div class="px-10 text-sm font-semibold">Enter the code sent to {{ mobileNumber }}.</div>
 			<div class="gap-4 px-10 grid-cols-1 grid">
 				<div class="mt-3">
 					<q-input
@@ -139,9 +149,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
-import { Notify } from 'quasar'
-import { PhoneAuthProvider, linkWithCredential, linkWithPhoneNumber, RecaptchaVerifier, getAuth } from 'firebase/auth'
+import { defineComponent, ref, onMounted, watch } from 'vue';
+import { Notify, Loading } from 'quasar'
+import { linkWithPhoneNumber, RecaptchaVerifier, getAuth, ConfirmationResult } from 'firebase/auth'
 import { register } from 'src/api/firebase';
 import { useRouter } from 'vue-router';
 
@@ -163,35 +173,38 @@ export default defineComponent({
 
 		// Register 3
 		const verificationCode = ref('');
+		const confirmationResult = ref<ConfirmationResult>(null as unknown as ConfirmationResult);
 		const timer = ref(0);
 		const countDownDone = ref(false);
 
 		const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
 
 		onMounted(() => {
-			recaptchaVerifier.value = new RecaptchaVerifier('verify', { size: 'invisible', callback: (response: any) => console.log("wWAOW", response) }, getAuth())
-			console.log("Verifier mounted: ", recaptchaVerifier.value)
+			recaptchaVerifier.value = new RecaptchaVerifier('verify', { size: 'invisible' }, getAuth())
+			console.log('Verifier mounted: ', recaptchaVerifier.value)
+		})
+
+		watch(pageNum, async (newPageNum) => {
+			if (newPageNum === 2) {
+				Loading.show();
+				const auth = getAuth();
+				confirmationResult.value = await linkWithPhoneNumber(auth.currentUser!, mobileNumber.value, recaptchaVerifier.value);
+				console.log('OTP code sent')
+				Loading.hide();
+			}
 		})
 
 		const validate = async () => {
 			if (email.value, password.value, firstName.value, lastName.value) {
 				if (await signUp()) {
 					pageNum.value = 1;
-
 				} else {
-					// Something terrible has happened.
+					// TODO: Something terrible has happened.
 				}
 			} else {
 				Notify.create('Please fill up the necessary fields.')
 			}
 		}
-
-		const signUp = async () => {
-			const recaptchaToken = await recaptchaVerifier.value.verify();
-			console.log(recaptchaToken)
-			return await register(email.value, password.value, firstName.value, middleName.value, lastName.value);
-		}
-
 
 		const validateTwo = () => {
 			if (mobileNumber.value) {
@@ -200,6 +213,26 @@ export default defineComponent({
 			} else {
 				Notify.create('Please enter your mobile number.')
 			}
+		}
+
+
+		const validateThree = async () => {
+			try {
+				Loading.show();
+				await confirmationResult.value.confirm(verificationCode.value)
+				console.log('Phone numbers linked!')
+				router.push('/home')
+			} catch (err) {
+				Notify.create({ type: 'negative', message: 'The code was invalid. Try again!' })
+			} finally {
+				Loading.hide();
+			}
+		}
+
+		const signUp = async () => {
+			const recaptchaToken = await recaptchaVerifier.value.verify();
+			console.log(recaptchaToken)
+			return await register(email.value, password.value, firstName.value, middleName.value, lastName.value);
 		}
 
 		const countDown = () => {
@@ -216,28 +249,6 @@ export default defineComponent({
 				console.log(timer.value)
 			}, 1000);
 		}
-
-		const validateThree = async () => {
-
-			if (verificationCode.value) {
-				//link mobile number
-				const auth = getAuth();
-				// const recaptchaVerifier = ref(new RecaptchaVerifier('recaptcha-container', {}, auth));
-				// const appVerifier = recaptchaVerifier.value;
-
-				const result = await linkWithPhoneNumber(auth.currentUser!, mobileNumber.value, recaptchaVerifier.value);
-				console.log(result)
-
-				// const provider = new PhoneAuthProvider(auth);
-				// const verificationId = await provider.verifyPhoneNumber(mobileNumber.value, appVerifier);
-				// const authCredential = PhoneAuthProvider.credential(verificationId, verificationCode.value);
-
-				// linkWithPhoneNumber(auth.currentUser, authCredential)
-				router.push('/home')
-			}
-		}
-
-
 
 		return {
 			// Rules
@@ -269,8 +280,8 @@ export default defineComponent({
 			// Functions
 			validate,
 			validateTwo,
-			countDown,
 			validateThree,
+			countDown,
 
 			// Plain values
 			isPwd,
