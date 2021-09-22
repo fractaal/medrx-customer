@@ -140,7 +140,7 @@
 <script>
 import { defineComponent, ref } from 'vue';
 import { Notify } from 'quasar'
-import { PhoneAuthProvider, linkWithCredential, RecaptchaVerifier } from "firebase/auth"
+import { PhoneAuthProvider, linkWithCredential } from 'firebase/auth'
 import { register } from 'src/api/firebase';
 
 export default defineComponent({
@@ -213,8 +213,6 @@ export default defineComponent({
 				const authCredential = PhoneAuthProvider.credential(verificationId, verificationCode.value);
 				const auth = getAuth();
 				linkWithCredential(auth.currentUser, authCredential)
-
-
 			}
 		}
 

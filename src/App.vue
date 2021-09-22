@@ -11,7 +11,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { getAuth } from 'firebase/auth'
 import { init } from 'src/api/firebase'
 
@@ -25,13 +25,17 @@ export default defineComponent({
     init()
 
     const router = useRouter()
+    const route = useRoute()
 
     getAuth().onAuthStateChanged(user => {
+      if (route.path !== '/') return
+
       if (user) {
         router.push('/home')
       } else {
         router.push('/login')
       }
+
     })
   }
 })
