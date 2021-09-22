@@ -22,7 +22,7 @@
       <q-footer class="p-4 flex justify-between" color="white">
         <p class="m-0 p-0">
           Don't have an account?
-          <q-btn padding="none" dense flat no-caps to="/register" outline>Sign up!</q-btn>
+          <q-btn class="p-0 -mt-1" padding="none" dense flat no-caps to="/register" outline>Sign up!</q-btn>
         </p>
         <q-btn flat round @click="chlang = true">
           <q-dialog v-model="chlang">
