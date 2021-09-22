@@ -1,7 +1,7 @@
 <template>
 	<q-page>
 		<div class="mt-20 text-4xl text-center font-black text-MedRx_theme">Sign Up</div>
-
+		<!-- Basic details Submission -->
 		<div v-if="pageNum === 0">
 			<div
 				class="mt-10 px-10 text-sm font-semibold"
@@ -60,7 +60,7 @@
 								<q-icon
 									:name="isPwd ? 'visibility_off' : 'visibility'"
 									class="cursor-pointer"
-									@click="isPwd = !isPwd"
+									@click.prevent="isPwd = !isPwd"
 								/>
 							</template>
 						</q-input>
@@ -70,11 +70,11 @@
 			<div class="gap-4 px-10 mt-3 grid-cols-2 grid">
 				<div />
 				<div align="right">
-					<q-btn @click="validate()" color="primary" label="Continue" />
+					<q-btn @click.prevent="validate()" color="primary" label="Continue" />
 				</div>
 			</div>
 		</div>
-
+		<!-- Mobile Nuber Submission -->
 		<div v-else-if="pageNum === 1">
 			<div class="px-10 text-sm font-semibold">We need your number to verify your identity.</div>
 			<div class="gap-4 px-10 grid-cols-1 grid">
@@ -92,14 +92,14 @@
 				<div>
 					<q-btn
 						class="mt-7 w-full md:w-3/4 lg:w-3/5 py-4"
-						@click="validateTwo()"
+						@click.prevent="validateTwo()"
 						color="primary"
 						label="Continue"
 					/>
 				</div>
 			</div>
 		</div>
-
+		<!-- Verification Code Submission -->
 		<div v-else-if="pageNum === 2">
 			<div class="mt-20 px-10 text-4xl font-black text-MedRx_theme">Almost there!</div>
 			<div class="px-10 text-sm font-semibold">Enter the code sent to {{ mobileNumber }}</div>
@@ -115,14 +115,19 @@
 					/>
 				</div>
 				<div>
-					<q-btn class="mt-3 w-full md:w-3/4 lg:w-3/5 py-4" color="primary" label="Continue" />
+					<q-btn
+						class="mt-3 w-full md:w-3/4 lg:w-3/5 py-4"
+						color="primary"
+						label="Continue"
+						@click.prevent="validateThree()"
+					/>
 				</div>
 				<div align="right" class="font-semibold">Didn't receive a code?</div>
 				<div align="right">
 					<q-btn
 						no-caps
 						:disabled="countDownDone"
-						@click="countDown()"
+						@click.prevent="countDown()"
 						color="primary"
 						label="Send a new code "
 					>({{ timer }}s)</q-btn>
@@ -135,6 +140,8 @@
 <script>
 import { defineComponent, ref } from 'vue';
 import { Notify } from 'quasar'
+import { PhoneAuthProvider, linkWithCredential, RecaptchaVerifier } from "firebase/auth"
+import { register } from 'src/api/firebase';
 
 export default defineComponent({
 	setup() {
@@ -148,25 +155,31 @@ export default defineComponent({
 		const lastName = ref('');
 		const isPwd = ref(true);
 
+
 		// Register 2
 		const mobileNumber = ref('');
 
 		// Register 3
 		const verificationCode = ref('');
 		const timer = ref('');
-		const countDownDone = ref('')
+		const countDownDone = ref('');
 
-		const signUp = () => {
-			pageNum.value = 1
-		}
-
-		const validate = () => {
+		const validate = async () => {
 			if (email.value, password.value, firstName.value, lastName.value) {
-				signUp()
+				if (await signUp()) {
+					pageNum.value = 1;
+				} else {
+					// Something terrible has happened.
+				}
 			} else {
 				Notify.create('Please fill up the necessary fields.')
 			}
 		}
+
+		const signUp = async () => {
+			return await register(email.value, password.value, firstName.value, middleName.value, lastName.value);
+		}
+
 
 		const validateTwo = () => {
 			if (mobileNumber.value) {
@@ -190,6 +203,19 @@ export default defineComponent({
 				}
 				console.log(timer.value)
 			}, 1000);
+		}
+
+		const validateThree = () => {
+			if (verificationCode.value) {
+				//link mobile number
+				const provider = new PhoneAuthProvider(auth);
+				const verificationId = provider.verifyPhoneNumber(mobileNumber.value, applicationVerifier);
+				const authCredential = PhoneAuthProvider.credential(verificationId, verificationCode.value);
+				const auth = getAuth();
+				linkWithCredential(auth.currentUser, authCredential)
+
+
+			}
 		}
 
 
@@ -224,6 +250,7 @@ export default defineComponent({
 			validate,
 			validateTwo,
 			countDown,
+			validateThree,
 
 			// Plain values
 			isPwd,
