@@ -7,7 +7,7 @@
         appear
         :duration="1000"
       >
-        <router-view />
+        <router-view class="mx-auto w-full md:w-3/4 lg:w-3/5" />
       </transition>
     </q-page-container>
   </q-layout>
