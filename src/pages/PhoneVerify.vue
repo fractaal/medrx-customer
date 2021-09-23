@@ -2,7 +2,7 @@
   <q-page>
     <!-- Mobile Nuber Submission -->
     <div v-if="pageNum === 0">
-      <div class="mt-20 text-4xl text-center font-black">Phone Verification</div>
+      <div class="pt-10 text-4xl text-center font-black">Phone Verification</div>
       <div class="px-10 text-sm font-bold">We need your number to verify your identity.</div>
       <div class="gap-4 px-10 grid-cols-1 grid">
         <div>
@@ -29,7 +29,7 @@
     </div>
     <!-- Verification Code Submission -->
     <div v-else-if="pageNum === 1">
-      <div class="mt-20 px-10 text-4xl font-black text-MedRx_theme">Almost there!</div>
+      <div class="pt-10 px-10 text-4xl font-black text-MedRx_theme">Almost there!</div>
       <div class="px-10 text-sm font-semibold">Enter the code sent to {{ mobileNumber }}.</div>
       <div class="px-10 text-sm font-semibold">It should be 6 digits long.</div>
       <div class="gap-4 px-10 grid-cols-1 grid">
@@ -75,7 +75,7 @@ export default defineComponent({
     const quasar = useQuasar();
     const router = useRouter();
 
-    const pageNum = ref(1);
+    const pageNum = ref(0);
 
     const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
 
@@ -131,7 +131,7 @@ export default defineComponent({
         } else {
           quasar.notify({
             type: 'negative',
-            message: `You're not logged in!`,
+            message: "You're not logged in!",
           });
         }
         quasar.loading.hide();
