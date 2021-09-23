@@ -4,64 +4,75 @@
 		<!-- Basic details Submission -->
 		<div v-if="pageNum === 0">
 			<div
-				class="mt-10 px-10 text-sm font-semibold"
+				class="px-10 text-h6 font-bold text-center"
 			>Let's get you started for your MedRx account first.</div>
+			<q-item-label overline class="px-10 my-4 font-black">PERSONAL INFORMATION</q-item-label>
 			<div class="gap-4 px-10 grid-cols-2 grid">
 				<div>
-					<div class="mt-5 mb-1 text-sm font-semibold">First Name</div>
+					<!-- <div class="mt-5 mb-1 text-sm font-semibold">First Name</div> -->
 					<q-input
 						v-model="firstName"
 						dense
 						outlined
-						label="John"
+						label="First Name"
+						placeholder="John"
 						lazy-rules
 						:rules="firstNameRules"
 						class="w-full"
 					/>
 				</div>
 				<div>
-					<div class="mt-5 mb-1 text-sm font-semibold">Middle Name (Optional)</div>
-					<q-input v-model="middleName" dense outlined label="Nathan" class="w-full" />
+					<!-- <div class="mt-5 mb-1 text-sm font-semibold">Middle Name (Optional)</div> -->
+					<q-input
+						v-model="middleName"
+						dense
+						outlined
+						label="Middle Name (Optional)"
+						placeholder="Nathan"
+						class="w-full"
+					/>
 				</div>
 			</div>
 			<div class="gap-4 px-10 grid-cols-2 grid">
 				<div>
-					<div class="mt-5 mb-1 text-sm font-semibold">Last Name</div>
+					<!-- <div class="mt-5 mb-1 text-sm font-semibold">Last Name</div> -->
 					<q-input
 						v-model="lastName"
 						dense
 						outlined
-						label="Doe"
+						label="Last Name"
+						placeholder="Doe"
 						lazy-rules
 						:rules="lastNameRules"
 						class="w-full"
 					/>
 				</div>
 			</div>
-			<div class="gap-4 px-10 grid-cols-1 grid">
+			<q-item-label overline class="px-10 my-4 font-black">CREDENTIALS</q-item-label>
+			<div class="px-10">
 				<div>
-					<div class="mt-5 mb-1 text-sm font-semibold">E-mail Address</div>
+					<!-- <div class="mt-5 mb-1 text-sm font-semibold">E-mail Address</div> -->
 					<div>
 						<q-input
 							v-model="email"
 							dense
 							outlined
-							label="youremail@email.com"
+							label="E-mail Address"
+							placeholder="address@email.com"
 							lazy-rules
 							:rules="emailRules"
 						/>
 					</div>
 				</div>
-			</div>
-			<div class="gap-4 px-10 grid-cols-1 grid">
 				<div>
-					<div class="mt-5 mb-1 text-sm font-semibold">Password</div>
+					<!-- <div class="mt-5 mb-1 text-sm font-semibold">Password</div> -->
 					<div>
 						<q-input
 							v-model="password"
 							dense
 							outlined
-							label="Password123"
+							label="Password"
+							placeholder="4_v3ry_s3cvr3_p@ssw0rd"
 							:type="isPwd ? 'password' : 'text'"
 							lazy-rules
 							:rules="passwordRules"
@@ -77,11 +88,17 @@
 					</div>
 				</div>
 			</div>
-			<div class="gap-4 px-10 mt-3 grid-cols-2 grid">
-				<div />
-				<div align="right">
-					<q-btn @click="validate()" color="primary" label="Continue" />
-				</div>
+			<q-item-label overline class="px-10 my-4 font-black">GENERAL LOCATION</q-item-label>
+			<location-selector class="mb-4" @input="updateLocations" />
+			<div align="right" class="px-10">
+				<q-btn
+					@click="validate()"
+					rounded
+					unelevated
+					color="none"
+					label="Continue"
+					class="px-8 py-2 font-black bg-gradient-to-tr from-medrx to-green-200"
+				/>
 			</div>
 		</div>
 		<!-- Mobile Nuber Submission -->
@@ -101,10 +118,12 @@
 				</div>
 				<div>
 					<q-btn
-						class="mt-7 w-full md:w-3/4 lg:w-3/5 py-4"
-						@click="validateTwo()"
-						color="primary"
+						@click="validate()"
+						rounded
+						unelevated
+						color="none"
 						label="Continue"
+						class="px-8 py-2 font-black bg-gradient-to-tr from-medrx to-green-200"
 					/>
 				</div>
 			</div>
@@ -150,13 +169,17 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, watch } from 'vue';
-import { Notify, Loading } from 'quasar'
+import { useQuasar } from 'quasar'
 import { linkWithPhoneNumber, RecaptchaVerifier, getAuth, ConfirmationResult } from 'firebase/auth'
 import { register } from 'src/api/firebase';
 import { useRouter } from 'vue-router';
+import LocationSelector from 'src/components/LocationSelector.vue'
 
 export default defineComponent({
+	name: 'Register',
+	components: { LocationSelector },
 	setup() {
+		const quasar = useQuasar();
 		const router = useRouter();
 		const pageNum = ref(0);
 
@@ -166,6 +189,7 @@ export default defineComponent({
 		const firstName = ref('');
 		const middleName = ref('');
 		const lastName = ref('');
+		const locations = ref({ city: '', region: '' });
 		const isPwd = ref(true);
 
 		// Register 2
@@ -179,6 +203,10 @@ export default defineComponent({
 
 		const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
 
+		const updateLocations = (val: { city: string, region: string }) => {
+			locations.value = { ...val }
+		}
+
 		onMounted(() => {
 			recaptchaVerifier.value = new RecaptchaVerifier('verify', { size: 'invisible' }, getAuth())
 			console.log('Verifier mounted: ', recaptchaVerifier.value)
@@ -186,23 +214,29 @@ export default defineComponent({
 
 		watch(pageNum, async (newPageNum) => {
 			if (newPageNum === 2) {
-				Loading.show();
+				quasar.loading.show();
 				const auth = getAuth();
-				confirmationResult.value = await linkWithPhoneNumber(auth.currentUser!, mobileNumber.value, recaptchaVerifier.value);
-				console.log('OTP code sent')
-				Loading.hide();
+
+				if (auth.currentUser) {
+					confirmationResult.value = await linkWithPhoneNumber(auth.currentUser, mobileNumber.value, recaptchaVerifier.value);
+					console.log('OTP code sent')
+				} else {
+					quasar.notify({ type: 'negative', message: 'Something went wrong with the registration. Please restart MedRx and try again.' })
+				}
+
+				quasar.loading.hide();
 			}
 		})
 
 		const validate = async () => {
-			if (email.value, password.value, firstName.value, lastName.value) {
+			if (email.value, password.value, firstName.value, lastName.value && locations.value.city && locations.value.region) {
 				if (await signUp()) {
 					pageNum.value = 1;
 				} else {
 					// TODO: Something terrible has happened.
 				}
 			} else {
-				Notify.create('Please fill up the necessary fields.')
+				quasar.notify('Please fill up the necessary fields.')
 			}
 		}
 
@@ -211,28 +245,28 @@ export default defineComponent({
 				pageNum.value = 2
 				countDown()
 			} else {
-				Notify.create('Please enter your mobile number.')
+				quasar.notify('Please enter your mobile number.')
 			}
 		}
 
 
 		const validateThree = async () => {
 			try {
-				Loading.show();
+				quasar.loading.show();
 				await confirmationResult.value.confirm(verificationCode.value)
 				console.log('Phone numbers linked!')
 				router.push('/home')
 			} catch (err) {
-				Notify.create({ type: 'negative', message: 'The code was invalid. Try again!' })
+				quasar.notify({ type: 'negative', message: 'The code was invalid. Try again!' })
 			} finally {
-				Loading.hide();
+				quasar.loading.hide();
 			}
 		}
 
 		const signUp = async () => {
 			const recaptchaToken = await recaptchaVerifier.value.verify();
 			console.log(recaptchaToken)
-			return await register(email.value, password.value, firstName.value, middleName.value, lastName.value);
+			return await register(email.value, password.value, firstName.value, middleName.value, lastName.value, locations.value);
 		}
 
 		const countDown = () => {
@@ -282,12 +316,14 @@ export default defineComponent({
 			validateTwo,
 			validateThree,
 			countDown,
+			updateLocations,
 
 			// Plain values
 			isPwd,
 			pageNum,
 			countDownDone,
 			timer,
+
 		}
 	}
 })
