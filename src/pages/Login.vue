@@ -2,13 +2,7 @@
   <q-page class="p-8">
     <div class="text-6xl font-black mt-32">{{ $t('Welcome') }}</div>
     <div class="p-4">
-      <q-input
-        v-model="email"
-        id="email"
-        label="Email"
-        type="email"
-        placeholder="username@mail.com"
-      />
+      <q-input v-model="email" id="email" label="Email" type="email" placeholder="username@mail.com" />
       <q-input v-model="password" id="password" label="Password" type="password" />
       <q-btn
         text-color="white"
@@ -29,10 +23,24 @@
             <q-card>
               <q-list bordered separator>
                 <q-item clickable v-ripple>
-                  <q-item-section v-model="locale" @click="locale = 'TGL'; chlang = false">Filipino</q-item-section>
+                  <q-item-section
+                    v-model="locale"
+                    @click="
+                      locale = 'TGL';
+                      chlang = false;
+                    "
+                    >Filipino</q-item-section
+                  >
                 </q-item>
                 <q-item clickable v-ripple>
-                  <q-item-section v-model="locale" @click="locale = 'en-US'; chlang = false">English</q-item-section>
+                  <q-item-section
+                    v-model="locale"
+                    @click="
+                      locale = 'en-US';
+                      chlang = false;
+                    "
+                    >English</q-item-section
+                  >
                 </q-item>
               </q-list>
             </q-card>
@@ -47,15 +55,12 @@
   </q-page>
 </template>
 
-
-
 <script>
 import { defineComponent, ref } from 'vue';
 import { login } from 'src/api/firebase';
 import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
-
 
 export default defineComponent({
   name: 'PageIndex',
@@ -66,12 +71,12 @@ export default defineComponent({
     const password = ref('');
 
     const signIn = async () => {
-      quasar.loading.show()
-      await login(email.value, password.value) ? router.push('/home') : null;
-      quasar.loading.hide()
-    }
+      quasar.loading.show();
+      (await login(email.value, password.value)) ? router.push('/home') : null;
+      quasar.loading.hide();
+    };
 
-    const { locale } = useI18n({ useScope: 'global' })
+    const { locale } = useI18n({ useScope: 'global' });
 
     return {
       signIn,
@@ -81,13 +86,9 @@ export default defineComponent({
       chlang: ref(false),
       localeOptions: [
         { value: 'en-US', label: 'English' },
-        { value: 'TGL', label: 'Filipino' }
-      ]
-    }
-
-
+        { value: 'TGL', label: 'Filipino' },
+      ],
+    };
   },
-
-})
-
+});
 </script>
