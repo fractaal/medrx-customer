@@ -8,7 +8,7 @@
         <div>
           <q-input
             v-model="mobileNumber"
-            class="text-4xl"
+            class="text-3xl"
             outlined
             label="Phone Number"
             placeholder="+639123456789"
@@ -31,22 +31,30 @@
     <div v-else-if="pageNum === 1">
       <div class="mt-20 px-10 text-4xl font-black text-MedRx_theme">Almost there!</div>
       <div class="px-10 text-sm font-semibold">Enter the code sent to {{ mobileNumber }}.</div>
+      <div class="px-10 text-sm font-semibold">It should be 6 digits long.</div>
       <div class="gap-4 px-10 grid-cols-1 grid">
         <div class="mt-3">
-          <q-input class="text-3xl" style="max-width: 100px" v-model="verificationCode" dense outlined label="1234" />
+          <q-input class="text-4xl" v-model="verificationCode" outlined label="Verification Code" maxlength="6" />
         </div>
         <div>
           <q-btn
-            class="mt-3 w-full md:w-3/4 lg:w-3/5 py-4"
-            color="primary"
+            class="px-8 py-2 font-black bg-gradient-to-tr from-medrx to-green-200"
+            color="none"
             label="Continue"
             @click="stepTwoValidation()"
+            unelevated
           />
         </div>
         <div align="right" class="font-semibold">Didn't receive a code?</div>
         <div align="right">
-          <q-btn no-caps :disabled="countDownDone" @click="countDown()" color="primary" label="Send a new code "
-            >({{ timer }}s)</q-btn
+          <q-btn
+            no-caps
+            :disabled="countDownDone"
+            @click="countDown()"
+            class="px-8 py-2 font-black bg-gradient-to-tr from-medrx to-green-200"
+            color="none"
+            unelevated
+            >Send a new code ({{ timer }}s)</q-btn
           >
         </div>
       </div>
@@ -67,7 +75,7 @@ export default defineComponent({
     const quasar = useQuasar();
     const router = useRouter();
 
-    const pageNum = ref(0);
+    const pageNum = ref(1);
 
     const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
 
@@ -132,7 +140,7 @@ export default defineComponent({
 
     const stepOneValidation = () => {
       if (mobileNumber.value) {
-        pageNum.value = 2;
+        pageNum.value = 1;
         countDown();
       } else {
         quasar.notify('Please enter your mobile number.');
