@@ -51,7 +51,15 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-export const register = async (email: string, password: string, fname: string, mname: string, lname: string) => {
+export const register = async (
+  email: string,
+  password: string,
+  fname: string,
+  mname: string,
+  lname: string,
+  locations: { city: string; region: string }
+) => {
+  console.log(locations);
   const auth = getAuth();
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -59,7 +67,9 @@ export const register = async (email: string, password: string, fname: string, m
       registrationDate: serverTimestamp(),
       firstName: fname,
       middleName: mname,
-      lastName: lname
+      lastName: lname,
+      region: locations.region,
+      city: locations.city,
     });
     Notify.create('Almost there!');
     return true;
