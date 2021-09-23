@@ -98,6 +98,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 import { register } from 'src/api/firebase';
 import LocationSelector from 'src/components/LocationSelector.vue';
@@ -107,9 +108,9 @@ export default defineComponent({
   components: { LocationSelector },
   setup() {
     const quasar = useQuasar();
-    const pageNum = ref(0);
+    const router = useRouter();
 
-    // Register 1
+    // Register form fields
     const email = ref('');
     const password = ref('');
     const firstName = ref('');
@@ -123,17 +124,19 @@ export default defineComponent({
     };
 
     const validate = async () => {
+      quasar.loading.show();
       if (
         (email.value, password.value, firstName.value, lastName.value && locations.value.city && locations.value.region)
       ) {
         if (await signUp()) {
-          pageNum.value = 1;
+          router.push('/verify');
         } else {
           // TODO: Something terrible has happened.
         }
       } else {
         quasar.notify('Please fill up the necessary fields.');
       }
+      quasar.loading.hide();
     };
 
     const signUp = async () => {
