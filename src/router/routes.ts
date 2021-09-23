@@ -23,18 +23,28 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/settings',
+    name: 'Settings',
     component: () => import('layouts/HeaderLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/Setting.vue') }],
+    meta: {
+      name: 'settings',
+    },
   },
   {
     path: '/register',
     component: () => import('layouts/FancyLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/Register.vue') }],
+    meta: {
+      name: 'signUp',
+    },
   },
   {
     path: '/verify',
     component: () => import('layouts/FancyLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/PhoneVerify.vue') }],
+    meta: {
+      name: 'verify',
+    },
   },
 
   // Always leave this as last one,
