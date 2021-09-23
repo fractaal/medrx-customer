@@ -46,7 +46,7 @@ export const login = async (email: string, password: string) => {
     Notify.create('Login successful!');
     return true;
   } catch (err) {
-    Notify.create(`Failed to log in! ${err}`);
+    Notify.create(`Failed to log in! ${(err as Error).message}`);
     return false;
   }
 };
@@ -74,7 +74,7 @@ export const register = async (
     Notify.create('Almost there!');
     return true;
   } catch (err) {
-    Notify.create(`An error occured: ${err}`);
+    Notify.create(`An error occured: ${(err as Error).message}`);
     return false;
   }
 };
@@ -96,7 +96,7 @@ export const getUser = () => {
     }
     return userinfo;
   } catch (err) {
-    Notify.create(`An error occured: ${err}`);
+    Notify.create(`An error occured: ${(err as Error).message}`);
     return { email: null, name: null };
   }
 };
