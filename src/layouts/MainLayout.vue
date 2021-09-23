@@ -1,5 +1,6 @@
 <template>
   <q-layout view="hHh lpR fFf">
+    <!-- <img src="~assets/cityscape.svg" class="fixed bottom-4 opacity-5" /> -->
     <q-header unelevated class="px-2 top mx-auto w-full md:w-3/4 lg:w-3/5 py-4">
       <q-toolbar>
         <q-btn dense flat round @click="$router.push('/settings')">
@@ -20,12 +21,7 @@
 
     <q-page-container>
       <router-view v-slot="{ Component }" class="mx-auto w-full md:w-3/4 lg:w-3/5">
-        <transition
-          enter-active-class="animated fadeIn"
-          leave-active-class="animated fadeOut"
-          appear
-          :duration="150"
-        >
+        <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" appear :duration="150">
           <component :is="Component" />
         </transition>
       </router-view>
@@ -55,9 +51,7 @@ import { getUser } from 'src/api/firebase';
 
 export default {
   setup() {
-
-    const name = getUser().name
-
+    const name = getUser().name;
 
     return {
       tab: ref('mails'),
@@ -66,10 +60,10 @@ export default {
       name,
       toggleRightDrawer() {
         // TODO
-      }
-    }
-  }
-}
+      },
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -78,6 +72,3 @@ export default {
   color: black;
 }
 </style>
-
-
-      
