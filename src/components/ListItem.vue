@@ -1,18 +1,18 @@
 <template>
-  <q-item clickable v-ripple class="p-4 mb-4 rounded-xl border-green-50 border-2 font-medium">
+  <q-item clickable v-ripple class="p-4 mb-4 rounded-xl border-green-50 border-2 font-medium bg-white">
     <q-item-section avatar>
-      <q-icon v-bind="$attrs"/>
+      <q-icon v-bind="$attrs" />
     </q-item-section>
     <q-item-section>
-      <slot/>
+      <slot />
     </q-item-section>
   </q-item>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'ListItem'
-})
+  name: 'ListItem',
+});
 </script>
