@@ -17,4 +17,5 @@ export default {
   buy: 'Buy these essential medical products',
   or: 'Or die',
   language: 'Language',
+  verify: 'Verification',
 };

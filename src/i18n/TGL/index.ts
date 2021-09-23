@@ -17,4 +17,5 @@ export default {
   buy: 'Kainin mo ang pwet ni Pedro',
   or: 'o mamatay ka.',
   language: 'Wika',
+  verify: 'Beripikasyon',
 };
