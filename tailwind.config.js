@@ -6,6 +6,10 @@ module.exports = {
       colors: {
         'medrx': '#30b59e',
       },
+      borderRadius: {
+        '4xl': '5rem;',
+        '5xl': '7.5rem',
+      }
     }
   },
   variants: {
