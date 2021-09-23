@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <!-- Basic details Submission -->
-    <div class="mt-20 text-4xl text-center font-black">Sign Up</div>
+    <div class="pt-10 text-4xl text-center font-black">Sign Up</div>
     <div class="px-10 text-h6 font-bold text-center">Let's get you started for your MedRx account first.</div>
     <q-item-label overline class="px-10 my-4 font-black">PERSONAL INFORMATION</q-item-label>
     <div class="gap-4 px-10 grid-cols-2 grid">
