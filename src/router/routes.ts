@@ -4,12 +4,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/SimpleLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Splash.vue')}]
+    children: [{ path: '', component: () => import('pages/Splash.vue') }],
   },
   {
     path: '/login',
     component: () => import('layouts/SimpleLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Login.vue')}]
+    children: [{ path: '', component: () => import('pages/Login.vue') }],
   },
   {
     path: '/home',
@@ -23,13 +23,18 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/settings',
-    component: () => import('layouts/SettingsLayout.vue'),
+    component: () => import('layouts/HeaderLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/Setting.vue') }],
   },
   {
     path: '/register',
-    component: () => import('layouts/RegisterLayout.vue'),
+    component: () => import('layouts/FancyLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/Register.vue') }],
+  },
+  {
+    path: '/verify',
+    component: () => import('layouts/FancyLayout.vue'),
+    children: [{ path: '', component: () => import('src/pages/PhoneVerify.vue') }],
   },
 
   // Always leave this as last one,
