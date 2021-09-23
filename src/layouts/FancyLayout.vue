@@ -2,10 +2,10 @@
   <q-layout view="hHh lpR fFf">
     <q-header unelevated class="bg-primary text-white">
       <q-toolbar class="px-2 top mx-auto w-full md:w-3/4 lg:w-3/5 py-4">
-        <q-btn dense flat v-ripple round class="back" @click='goBack()'>
+        <q-btn dense flat v-ripple round class="back" @click="goBack()">
           <q-icon name="chevron_left" size="2rem" />
         </q-btn>
-        <q-toolbar-title class="font-bold">Sign Up</q-toolbar-title>
+        <q-toolbar-title class="font-bold">{{ $t(`${$route.meta.name}`) }}</q-toolbar-title>
       </q-toolbar>
     </q-header>
 
@@ -15,16 +15,15 @@
   </q-layout>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 export default {
   setup() {
-
     const goBack = () => {
       window.history.back();
-    }
+    };
     return {
-      goBack
-    }
-  }
-}
+      goBack,
+    };
+  },
+};
 </script>
