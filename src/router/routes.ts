@@ -28,6 +28,8 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('src/pages/Setting.vue') }],
     meta: {
       name: 'settings',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
     },
   },
   {
@@ -36,6 +38,8 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('src/pages/Register.vue') }],
     meta: {
       name: 'signUp',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
     },
   },
   {
@@ -44,6 +48,8 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('src/pages/PhoneVerify.vue') }],
     meta: {
       name: 'verify',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
     },
   },
 
