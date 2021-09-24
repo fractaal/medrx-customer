@@ -7,6 +7,10 @@
           <q-icon name="chevron_left" size="2rem" />
         </q-btn>
         <q-toolbar-title class="font-bold">{{ $t(`${$route.meta.name}`) }}</q-toolbar-title>
+        <div>
+          <q-icon :name="$route.meta.icon" size="md" />
+        </div>
+        <div class="mr-4" />
       </q-toolbar>
     </q-header>
 
