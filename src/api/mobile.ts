@@ -1,15 +1,24 @@
 const api = {} as Record<string, any>;
 
+const statusBarHistory: { color: string; dark: boolean }[] = [];
+
 if (process.env.MODE === 'capacitor') {
   import('@capacitor/core').then(({ Plugins, StatusBarStyle }) => {
     const { StatusBar, PushNotifications } = Plugins;
-    StatusBar.setBackgroundColor({ color: '#ffffff' });
-    StatusBar.setStyle({ style: StatusBarStyle.Light });
 
     api.setStatusBarColor = (color: string, dark = false) => {
       StatusBar.setBackgroundColor({ color });
       StatusBar.setStyle({ style: dark ? StatusBarStyle.Dark : StatusBarStyle.Light });
+      statusBarHistory.push({ color, dark });
     };
+
+    api.goBackToPreviousStatusBarStyle = () => {
+      const { color, dark } = statusBarHistory.pop()!;
+      StatusBar.setBackgroundColor({ color: color ?? '#ffffff' });
+      StatusBar.setStyle({ style: dark ?? false ? StatusBarStyle.Dark : StatusBarStyle.Light });
+    };
+
+    api.setStatusBarColor('#ffffff');
 
     // Request permission to use push notifications
     // iOS will prompt user and return if they granted permission or not
