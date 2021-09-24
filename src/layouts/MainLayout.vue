@@ -1,6 +1,7 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <!-- <img src="~assets/cityscape.svg" class="fixed bottom-4 opacity-5" /> -->
+    <img src="~assets/cityscape.svg" class="fixed bottom-4 opacity-5" />
     <q-header unelevated class="px-2 top mx-auto w-full md:w-3/4 lg:w-3/5 py-4">
       <q-toolbar>
         <q-btn dense flat round @click="$router.push('/settings')">
@@ -26,14 +27,14 @@
         </transition>
       </router-view>
     </q-page-container>
-    <q-footer>
+    <q-footer class="bg-transparent text-black">
       <q-tabs v-model="tab">
         <q-route-tab name="mails" label="Shop" to="/home">
-          <img src="../../public/icons/shop.svg" />
+          <q-icon name="shopping_basket" size="sm" />
         </q-route-tab>
 
         <q-route-tab name="alarms" label="Prescription" to="/upload">
-          <img src="../../public/icons/upload.svg" />
+          <q-icon name="upload" size="sm" />
         </q-route-tab>
 
         <!-- <q-route-tab name="movies" label="Soon">
@@ -45,22 +46,23 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { seed, randomizeSeed } from 'src/api/seed';
 import { getUser } from 'src/api/firebase';
 
 export default {
   setup() {
-    const name = getUser().name;
+    const name = ref('');
+
+    onMounted(async () => {
+      name.value = (await getUser())?.name as string;
+    });
 
     return {
       tab: ref('mails'),
       randomizeSeed,
       seed,
       name,
-      toggleRightDrawer() {
-        // TODO
-      },
     };
   },
 };
