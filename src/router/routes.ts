@@ -40,6 +40,7 @@ const routes: RouteRecordRaw[] = [
       name: 'signUp',
       statusBarColor: '#30b59e',
       statusBarIsDark: true,
+      icon: 'emoji_people',
     },
   },
   {
@@ -50,6 +51,7 @@ const routes: RouteRecordRaw[] = [
       name: 'verify',
       statusBarColor: '#30b59e',
       statusBarIsDark: true,
+      icon: 'local_phone',
     },
   },
 
