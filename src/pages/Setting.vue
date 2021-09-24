@@ -30,18 +30,22 @@
 
         <q-item-label header overline class="font-black">USER CONTROLS</q-item-label>
 
-        <list-item
-          @click="chlang = true"
-          color="primary"
-          name="language"
-          size="2rem"
-        >Current Language: {{ locale }}</list-item>
+        <list-item @click="chlang = true" color="primary" name="language" size="2rem"
+          >Current Language: {{ locale }}</list-item
+        >
 
         <q-dialog v-model="chlang">
           <q-card>
             <q-list bordered separator>
               <q-item clickable v-ripple>
-                <q-item-section v-model="locale" @click="locale = 'TGL'; chlang = false">Filipino</q-item-section>
+                <q-item-section
+                  v-model="locale"
+                  @click="
+                    locale = 'TGL';
+                    chlang = false;
+                  "
+                  >Filipino</q-item-section
+                >
               </q-item>
             </q-list>
           </q-card>
@@ -59,14 +63,7 @@
 
               <q-card-actions>
                 <q-btn flat label="No" color="primary" style="width: 150px" v-close-popup />
-                <q-btn
-                  flat
-                  label="Yes"
-                  color="primary"
-                  style="width: 150px"
-                  v-close-popup
-                  @click="logout"
-                />
+                <q-btn flat label="Yes" color="primary" style="width: 150px" v-close-popup @click="logout" />
               </q-card-actions>
             </q-list>
           </q-card>
@@ -74,14 +71,13 @@
       </q-list>
     </div>
   </q-page>
-</template> 
+</template>
 
 <script lang="ts">
-import { seed, randomizeSeed } from 'src/api/seed'
-import { useI18n } from 'vue-i18n'
-import { ref } from 'vue'
+import { seed, randomizeSeed } from 'src/api/seed';
+import { useI18n } from 'vue-i18n';
+import { ref } from 'vue';
 import { getAuth, signOut } from 'firebase/auth';
-import { getUser } from 'src/api/firebase';
 import { useRouter } from 'vue-router';
 
 import ListItem from 'src/components/ListItem.vue';
@@ -89,14 +85,14 @@ import ListItem from 'src/components/ListItem.vue';
 export default {
   components: { ListItem },
   setup() {
-    const router = useRouter()
-    const { locale } = useI18n({ useScope: 'global' })
+    const router = useRouter();
+    const { locale } = useI18n({ useScope: 'global' });
     const auth = getAuth();
-    const email = getUser().email;
+    const email = auth.currentUser?.email;
     const logout = async () => {
-      await signOut(auth)
-      router.push('/login')
-    }
+      await signOut(auth);
+      router.push('/login');
+    };
     // Sign-out successful.
 
     return {
@@ -106,8 +102,8 @@ export default {
       email,
       chlang: ref(false),
       confirm: ref(false),
-      logout
-    }
-  }
-}
+      logout,
+    };
+  },
+};
 </script>
