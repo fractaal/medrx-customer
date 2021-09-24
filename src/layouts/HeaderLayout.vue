@@ -18,6 +18,7 @@
 
 <script lang="ts">
 import mobile from 'src/api/mobile';
+import { onBeforeRouteLeave } from 'vue-router';
 
 export default {
   name: 'HeaderLayout',
@@ -26,12 +27,13 @@ export default {
     if (mobile.setStatusBarColor) {
       mobile.setStatusBarColor('#30b59e');
     }
-  },
-  beforeRouteLeave(_, __, next) {
-    if (mobile.goBackToPreviousStatusBarStyle) {
-      mobile.goBackToPreviousStatusBarStyle();
-    }
-    next();
+
+    onBeforeRouteLeave((to, from, next) => {
+      if (mobile.goBackToPreviousStatusBarStyle) {
+        mobile.goBackToPreviousStatusBarStyle();
+      }
+      next();
+    });
   },
 };
 </script>
