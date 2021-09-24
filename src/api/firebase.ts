@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import { getFirestore, setDoc, doc, collection, Firestore, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, setDoc, getDoc, doc, collection, Firestore, serverTimestamp } from 'firebase/firestore';
 import { Database, getDatabase } from 'firebase/database';
 import {
   getAuth,
@@ -79,7 +79,7 @@ export const register = async (
   }
 };
 
-export const getUser = () => {
+export const getUser = async () => {
   const auth = getAuth();
 
   try {
@@ -88,16 +88,13 @@ export const getUser = () => {
     const user = auth.currentUser;
 
     if (user !== null) {
-      const email = user.email as string;
-      userinfo.email = email;
-      if (email !== null) {
-        userinfo.name = email.substr(0, email.indexOf('@'));
-      }
+      userinfo.email = user.email!;
+      userinfo.name = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.firstName;
     }
     return userinfo;
   } catch (err) {
     Notify.create(`An error occured: ${(err as Error).message}`);
-    return { email: null, name: null };
+    // return { email: null, name: null };
   }
 };
 
