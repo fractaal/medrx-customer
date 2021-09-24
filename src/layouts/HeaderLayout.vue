@@ -27,5 +27,11 @@ export default {
       mobile.setStatusBarColor('#30b59e');
     }
   },
+  beforeRouteLeave(_, __, next) {
+    if (mobile.goBackToPreviousStatusBarStyle) {
+      mobile.goBackToPreviousStatusBarStyle();
+    }
+    next();
+  },
 };
 </script>
