@@ -54,6 +54,16 @@ const routes: RouteRecordRaw[] = [
       icon: 'local_phone',
     },
   },
+  {
+    path: '/cart',
+    component: () => import('layouts/HeaderLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Cart.vue') }],
+    meta: {
+      name: 'My Cart',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
+    },
+  },
 
   // Always leave this as last one,
   // but you can also remove it

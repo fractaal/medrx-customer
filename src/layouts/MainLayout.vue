@@ -14,7 +14,7 @@
 
         <q-space />
 
-        <q-btn dense flat round @click="toggleRightDrawer">
+        <q-btn dense flat round to="/cart">
           <q-icon name="shopping_cart" size="2rem" class="p-4" />
         </q-btn>
       </q-toolbar>
@@ -22,7 +22,12 @@
 
     <q-page-container>
       <router-view v-slot="{ Component }" class="mx-auto w-full md:w-3/4 lg:w-3/5">
-        <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" appear :duration="150">
+        <transition
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+          appear
+          :duration="150"
+        >
           <component :is="Component" />
         </transition>
       </router-view>
