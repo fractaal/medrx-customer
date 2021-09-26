@@ -10,7 +10,7 @@
           </q-avatar>
         </q-btn>
 
-        <div class="ml-4 text-h6 font-black">{{ $t('Hello') }}, {{ name }}!</div>
+        <div class="ml-4 text-h6 font-black">{{ $t('Hello') }}, {{ firstName }}!</div>
 
         <q-space />
 
@@ -57,17 +57,17 @@ import { getUser } from 'src/api/firebase';
 
 export default {
   setup() {
-    const name = ref('');
+    const firstName = ref('');
 
     onMounted(async () => {
-      name.value = (await getUser())?.name as string;
+      firstName.value = (await getUser())?.firstName as string;
     });
 
     return {
       tab: ref('mails'),
       randomizeSeed,
       seed,
-      name,
+      firstName,
     };
   },
 };

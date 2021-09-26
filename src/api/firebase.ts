@@ -62,15 +62,8 @@ export const register = async (
   console.log(locations);
   const auth = getAuth();
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    setDoc(doc(collection(firestore, 'users'), userCredential.user.uid), {
-      registrationDate: serverTimestamp(),
-      firstName: fname,
-      middleName: mname,
-      lastName: lname,
-      region: locations.region,
-      city: locations.city,
-    });
+    await createUserWithEmailAndPassword(auth, email, password);
+    update(fname, mname, lname, locations);
     Notify.create('Almost there!');
     return true;
   } catch (err) {
@@ -79,18 +72,48 @@ export const register = async (
   }
 };
 
+export const update = (
+  fname: string,
+  mname: string,
+  lname: string,
+  locations: { city: string; region: string }
+) => {
+  console.log(locations);
+  const auth = getAuth();
+  const uid = auth.currentUser?.uid;
+  try {
+    setDoc(doc(collection(firestore, 'users'), uid), {
+      registrationDate: serverTimestamp(),
+      firstName: fname,
+      middleName: mname,
+      lastName: lname,
+      region: locations.region,
+      city: locations.city,
+    });
+    return true;
+  } catch (err) {
+    Notify.create(`An error occured: ${(err as Error).message}`);
+    return false;
+  }
+}
+
 export const getUser = async () => {
   const auth = getAuth();
 
   try {
     // For easy access to all user info, store in object each one
-    const userinfo: { email?: string; name?: string } = {};
+    const userinfo: { email?: string; firstName?: string; middleName?: string; lastName?: string; region?: string; city?: string } = {};
     const user = auth.currentUser;
 
     if (user !== null) {
       userinfo.email = user.email!;
-      userinfo.name = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.firstName;
+      userinfo.firstName = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.firstName;
+      userinfo.middleName = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.middleName;
+      userinfo.lastName = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.lastName;
+      userinfo.region = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.region;
+      userinfo.city = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.city;
     }
+
     return userinfo;
   } catch (err) {
     Notify.create(`An error occured: ${(err as Error).message}`);

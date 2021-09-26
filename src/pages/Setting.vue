@@ -22,17 +22,39 @@
 
         <list-item color="primary" name="person" size="2rem">Profile Picture</list-item>
 
-        <list-item color="primary" name="badge" size="2rem">Name</list-item>
+        <list-item @click="namechange = true" color="primary" name="badge" size="2rem">Name</list-item>
 
-        <list-item color="primary" name="call" size="2rem">Phone Numbers</list-item>
+        <q-dialog v-model="namechange" persistent>
+          <q-card style="min-width: 350px">
+            <q-card-section>
+              <div class="text-h6">Your address</div>
+            </q-card-section>
+
+            <q-card-section class="q-pt-none">
+              <q-input dense v-model="firstName" autofocus label="First Name" />
+              <q-input dense v-model="middleName" autofocus label="Middle Name" />
+              <q-input dense v-model="lastName" autofocus label="Last Name" />
+            </q-card-section>
+
+            <q-card-actions align="right" class="text-primary">
+              <q-btn flat label="Cancel" v-close-popup />
+              <q-btn flat label="Update" v-close-popup @click="updateName()" />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
+
+        <list-item color="primary" name="call" size="2rem">Phone Number</list-item>
 
         <list-item color="primary" name="home" size="2rem">Delivery Addresses</list-item>
 
         <q-item-label header overline class="font-black">USER CONTROLS</q-item-label>
 
-        <list-item @click="chlang = true" color="primary" name="language" size="2rem"
-          >Current Language: {{ locale }}</list-item
-        >
+        <list-item
+          @click="chlang = true"
+          color="primary"
+          name="language"
+          size="2rem"
+        >Current Language: {{ locale }}</list-item>
 
         <q-dialog v-model="chlang">
           <q-card>
@@ -41,11 +63,10 @@
                 <q-item-section
                   v-model="locale"
                   @click="
-                    locale = 'TGL';
-                    chlang = false;
+                  locale = 'TGL';
+                  chlang = false;
                   "
-                  >Filipino</q-item-section
-                >
+                >Filipino</q-item-section>
               </q-item>
             </q-list>
           </q-card>
@@ -63,7 +84,14 @@
 
               <q-card-actions>
                 <q-btn flat label="No" color="primary" style="width: 150px" v-close-popup />
-                <q-btn flat label="Yes" color="primary" style="width: 150px" v-close-popup @click="logout" />
+                <q-btn
+                  flat
+                  label="Yes"
+                  color="primary"
+                  style="width: 150px"
+                  v-close-popup
+                  @click="logout"
+                />
               </q-card-actions>
             </q-list>
           </q-card>
@@ -76,9 +104,12 @@
 <script lang="ts">
 import { seed, randomizeSeed } from 'src/api/seed';
 import { useI18n } from 'vue-i18n';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { getAuth, signOut } from 'firebase/auth';
 import { useRouter } from 'vue-router';
+import { getUser, update } from 'src/api/firebase';
+
+
 
 import ListItem from 'src/components/ListItem.vue';
 
@@ -89,6 +120,26 @@ export default {
     const { locale } = useI18n({ useScope: 'global' });
     const auth = getAuth();
     const email = auth.currentUser?.email;
+
+    //get User data
+    const firstName = ref('');
+    const middleName = ref('');
+    const lastName = ref('');
+    const locations = ref({ city: '', region: '' });
+
+    onMounted(async () => {
+      firstName.value = (await getUser())?.firstName as string;
+      middleName.value = (await getUser())?.middleName as string;
+      lastName.value = (await getUser())?.lastName as string;
+      locations.value.region = (await getUser())?.region as string;
+      locations.value.city = (await getUser())?.city as string;
+    });
+
+    const updateName = () => {
+      update(firstName.value, middleName.value, lastName.value, locations.value)
+    }
+
+
     const logout = async () => {
       await signOut(auth);
       router.push('/login');
@@ -102,7 +153,13 @@ export default {
       email,
       chlang: ref(false),
       confirm: ref(false),
+      namechange: ref(false),
+      firstName,
+      middleName,
+      lastName,
       logout,
+      updateName
+
     };
   },
 };
