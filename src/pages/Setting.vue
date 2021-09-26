@@ -27,7 +27,7 @@
         <q-dialog v-model="namechange" persistent>
           <q-card style="min-width: 350px">
             <q-card-section>
-              <div class="text-h6">Your address</div>
+              <div class="text-h6">Change your name:</div>
             </q-card-section>
 
             <q-card-section class="q-pt-none">
