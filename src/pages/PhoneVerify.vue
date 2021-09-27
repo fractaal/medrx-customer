@@ -34,7 +34,13 @@
       <div class="px-10 text-sm font-semibold">It should be 6 digits long.</div>
       <div class="gap-4 px-10 grid-cols-1 grid">
         <div class="mt-3">
-          <q-input class="text-4xl" v-model="verificationCode" outlined label="Verification Code" maxlength="6" />
+          <q-input
+            class="text-4xl"
+            v-model="verificationCode"
+            outlined
+            label="Verification Code"
+            maxlength="6"
+          />
         </div>
         <div>
           <q-btn
@@ -54,8 +60,7 @@
             class="px-8 py-2 font-black bg-gradient-to-tr from-medrx to-green-200"
             color="none"
             unelevated
-            >Send a new code ({{ timer }}s)</q-btn
-          >
+          >Send a new code ({{ timer }}s)</q-btn>
         </div>
       </div>
     </div>

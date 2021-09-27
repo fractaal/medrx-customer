@@ -43,7 +43,49 @@
           </q-card>
         </q-dialog>
 
-        <list-item color="primary" name="call" size="2rem">Phone Number</list-item>
+        <list-item @click="phonechange = true" color="primary" name="call" size="2rem">Phone Number</list-item>
+
+        <q-dialog v-model="phonechange" persistent>
+          <q-card v-if="pageNum === 0" style="min-width: 350px ">
+            <q-card-section>
+              <div class="text-h6">Change your mobile number:</div>
+            </q-card-section>
+            <q-card-section class="q-pt-none">
+              <q-input
+                dense
+                v-model="mobileNumber"
+                autofocus
+                label="Phone Number"
+                placeholder="+639123456789"
+              />
+            </q-card-section>
+
+            <q-card-actions align="right" class="text-primary">
+              <q-btn flat label="Cancel" v-close-popup />
+              <q-btn flat label="Update" @click="verify()" />
+            </q-card-actions>
+          </q-card>
+
+          <q-card v-if="pageNum === 1" style="min-width: 350px ">
+            <q-card-section>
+              <div class="text-h6">Enter code:</div>
+            </q-card-section>
+            <q-card-section class="q-pt-none">
+              <q-input
+                dense
+                v-model="verificationCode"
+                autofocus
+                label="Verification Code"
+                maxlength="6"
+              />
+            </q-card-section>
+
+            <q-card-actions align="right" class="text-primary">
+              <q-btn flat label="Cancel" v-close-popup @click="pageNum = 0; phonechange = false" />
+              <q-btn flat label="Update" v-close-popup @click="updatePhone()" />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
 
         <list-item color="primary" name="home" size="2rem">Delivery Addresses</list-item>
 
@@ -98,17 +140,18 @@
         </q-dialog>
       </q-list>
     </div>
+    <div id="verify"></div>
   </q-page>
 </template>
 
 <script lang="ts">
 import { seed, randomizeSeed } from 'src/api/seed';
 import { useI18n } from 'vue-i18n';
-import { ref, onMounted } from 'vue';
-import { getAuth, signOut } from 'firebase/auth';
+import { ref, onMounted, watch } from 'vue';
+import { getAuth, signOut, updatePhoneNumber, RecaptchaVerifier, PhoneAuthProvider } from 'firebase/auth';
 import { useRouter } from 'vue-router';
 import { getUser, update } from 'src/api/firebase';
-
+import { useQuasar } from 'quasar';
 
 
 import ListItem from 'src/components/ListItem.vue';
@@ -119,14 +162,21 @@ export default {
     const router = useRouter();
     const { locale } = useI18n({ useScope: 'global' });
     const auth = getAuth();
+    const quasar = useQuasar();
     const email = auth.currentUser?.email;
-
-    //get User data
     const firstName = ref('');
     const middleName = ref('');
     const lastName = ref('');
     const locations = ref({ city: '', region: '' });
+    const mobileNumber = ref('');
+    const pageNum = ref(0);
+    const verificationCode = ref('');
+    const verificationId = ref('');
+    const phonechange = ref(false);
+    const namechange = ref(false);
+    const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
 
+    //get User data
     onMounted(async () => {
       firstName.value = (await getUser())?.firstName as string;
       middleName.value = (await getUser())?.middleName as string;
@@ -135,9 +185,61 @@ export default {
       locations.value.city = (await getUser())?.city as string;
     });
 
+    //Add methods here to update specific User data.
     const updateName = () => {
       update(firstName.value, middleName.value, lastName.value, locations.value)
     }
+
+    watch(pageNum, async (newPageNum) => {
+
+      if (newPageNum === 1) {
+        quasar.loading.show();
+        const auth = getAuth();
+
+        if (auth.currentUser) {
+          const provider = new PhoneAuthProvider(auth);
+          verificationId.value = await provider.verifyPhoneNumber(
+            mobileNumber.value,
+            recaptchaVerifier.value);
+          console.log('OTP code sent');
+        } else {
+          quasar.notify({
+            type: 'negative',
+            message: "You're not logged in!",
+          });
+        }
+        quasar.loading.hide();
+      }
+    });
+
+    const verify = async () => {
+      if (mobileNumber.value.length === 13 && mobileNumber.value.includes('+639')) {
+        pageNum.value = 1
+
+        recaptchaVerifier.value = new RecaptchaVerifier('verify', { size: 'invisible' }, getAuth());
+        console.log('Verifier mounted: ', recaptchaVerifier.value, ' not verifying...');
+        await recaptchaVerifier.value.verify();
+        console.log('reCAPTCHA verified!');
+      } else {
+        quasar.notify({ type: 'negative', message: 'Please enter a valid phone number' });
+      }
+    }
+
+    const updatePhone = async () => {
+      try {
+        const auth = getAuth();
+        quasar.loading.show();
+        const phoneCredential = PhoneAuthProvider.credential(verificationId.value, verificationCode.value);
+        if (auth.currentUser) {
+          await updatePhoneNumber(auth.currentUser, phoneCredential);
+          console.log('Phone numbers linked!');
+        }
+      } catch (err) {
+        quasar.notify({ type: 'negative', message: 'The code was invalid. Try again!' });
+      } finally {
+        quasar.loading.hide();
+      }
+    };
 
 
     const logout = async () => {
@@ -153,12 +255,25 @@ export default {
       email,
       chlang: ref(false),
       confirm: ref(false),
-      namechange: ref(false),
+      pageNum,
+
+      //user change reference and methods
       firstName,
       middleName,
       lastName,
-      logout,
-      updateName
+      mobileNumber,
+
+      //methods
+      updateName,
+      updatePhone,
+      verificationCode,
+      verify,
+
+      //dialog triggers
+      namechange,
+      phonechange,
+
+      logout
 
     };
   },
