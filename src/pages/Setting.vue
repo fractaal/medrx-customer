@@ -175,6 +175,7 @@ export default {
     const phonechange = ref(false);
     const namechange = ref(false);
     const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
+    const address = ref('');
 
     //get User data
     onMounted(async () => {
@@ -187,7 +188,7 @@ export default {
 
     //Add methods here to update specific User data.
     const updateName = () => {
-      update(firstName.value, middleName.value, lastName.value, locations.value)
+      update(firstName.value, middleName.value, lastName.value, address.value, locations.value)
     }
 
     watch(pageNum, async (newPageNum) => {

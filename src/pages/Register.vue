@@ -2,7 +2,9 @@
   <q-page>
     <!-- Basic details Submission -->
     <div class="pt-10 text-4xl text-center font-black">Sign Up</div>
-    <div class="px-10 text-h6 font-bold text-center">Let's get you started for your MedRx account first.</div>
+    <div
+      class="px-10 text-h6 font-bold text-center"
+    >Let's get you started for your MedRx account first.</div>
     <q-item-label overline class="px-10 my-4 font-black">PERSONAL INFORMATION</q-item-label>
     <div class="gap-4 px-10 grid-cols-2 grid">
       <div>
@@ -75,7 +77,11 @@
             :rules="passwordRules"
           >
             <template v-slot:append>
-              <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd = !isPwd"
+              />
             </template>
           </q-input>
         </div>
@@ -83,6 +89,17 @@
     </div>
     <q-item-label overline class="px-10 my-4 font-black">GENERAL LOCATION</q-item-label>
     <location-selector class="mb-4" @input="updateLocations" />
+    <div class="px-10">
+      <q-input
+        v-model="address"
+        dense
+        outlined
+        label="Delivery address"
+        placeholder="Street name/number, Building Name/subdivision, barangay"
+        lazy-rules
+        :rules="addressRules"
+      />
+    </div>
     <div align="right" class="px-10">
       <q-btn
         @click="validate()"
@@ -118,6 +135,7 @@ export default defineComponent({
     const lastName = ref('');
     const locations = ref({ city: '', region: '' });
     const isPwd = ref(true);
+    const address = ref('');
 
     const updateLocations = (val: { city: string; region: string }) => {
       locations.value = { ...val };
@@ -126,7 +144,7 @@ export default defineComponent({
     const validate = async () => {
       quasar.loading.show();
       if (
-        (email.value, password.value, firstName.value, lastName.value && locations.value.city && locations.value.region)
+        (email.value, password.value, firstName.value, lastName.value, address.value && locations.value.city && locations.value.region)
       ) {
         if (await signUp()) {
           router.push('/verify');
@@ -146,6 +164,7 @@ export default defineComponent({
         firstName.value,
         middleName.value,
         lastName.value,
+        address.value,
         locations.value
       );
     };
@@ -159,6 +178,7 @@ export default defineComponent({
       passwordRules: [(val: string) => (val && val.length > 5) || 'Password must be 6 or more characters long'],
       firstNameRules: [(val: string) => (val && val.length > 0) || 'Please enter your first name'],
       lastNameRules: [(val: string) => (val && val.length > 0) || 'Please enter your last name'],
+      addressRules: [(val: string) => (val && val.length > 0) || 'Please enter your delivery address'],
 
       // Form fields
       email,
@@ -166,6 +186,7 @@ export default defineComponent({
       firstName,
       middleName,
       lastName,
+      address,
 
       // Functions
       validate,

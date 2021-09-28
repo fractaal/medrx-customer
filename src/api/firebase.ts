@@ -57,13 +57,14 @@ export const register = async (
   fname: string,
   mname: string,
   lname: string,
+  address: string,
   locations: { city: string; region: string }
 ) => {
   console.log(locations);
   const auth = getAuth();
   try {
     await createUserWithEmailAndPassword(auth, email, password);
-    update(fname, mname, lname, locations);
+    update(fname, mname, lname, address, locations);
     Notify.create('Almost there!');
     return true;
   } catch (err) {
@@ -76,6 +77,7 @@ export const update = (
   fname: string,
   mname: string,
   lname: string,
+  address: string,
   locations: { city: string; region: string }
 ) => {
   console.log(locations);
@@ -87,6 +89,7 @@ export const update = (
       firstName: fname,
       middleName: mname,
       lastName: lname,
+      address: address,
       region: locations.region,
       city: locations.city,
     });
@@ -102,7 +105,7 @@ export const getUser = async () => {
 
   try {
     // For easy access to all user info, store in object each one
-    const userinfo: { email?: string; firstName?: string; middleName?: string; lastName?: string; region?: string; city?: string } = {};
+    const userinfo: { email?: string; firstName?: string; middleName?: string; lastName?: string; address?: string; region?: string; city?: string } = {};
     const user = auth.currentUser;
 
     if (user !== null) {
@@ -110,8 +113,10 @@ export const getUser = async () => {
       userinfo.firstName = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.firstName;
       userinfo.middleName = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.middleName;
       userinfo.lastName = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.lastName;
+      userinfo.address = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.address;
       userinfo.region = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.region;
       userinfo.city = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.city;
+
     }
 
     return userinfo;
