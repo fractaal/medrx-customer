@@ -7,6 +7,7 @@ export default {
   failed: 'Failed to login!',
   success: 'Login successful!',
   welcome: 'Welcome to MedRx!',
+  none: "Don't have an account?",
   email: 'Email',
   password: 'Password',
   login: 'LOG IN',

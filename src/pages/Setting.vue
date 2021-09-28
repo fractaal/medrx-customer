@@ -132,6 +132,15 @@
                   "
                 >Filipino</q-item-section>
               </q-item>
+              <q-item clickable v-ripple>
+                <q-item-section
+                  v-model="locale"
+                  @click="
+                  locale = 'en-US';
+                  chlang = false;
+                  "
+                >English</q-item-section>
+              </q-item>
             </q-list>
           </q-card>
         </q-dialog>
