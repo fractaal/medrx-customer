@@ -105,7 +105,7 @@ export const getUser = async () => {
 
   try {
     // For easy access to all user info, store in object each one
-    const userinfo: { email?: string; firstName?: string; middleName?: string; lastName?: string; address?: string; region?: string; city?: string } = {};
+    const userinfo: { email?: string; firstName?: string; middleName?: string; lastName?: string; address?: string; region?: string; city?: string; phoneNumber?: string } = {};
     const user = auth.currentUser;
 
     if (user !== null) {
@@ -116,6 +116,9 @@ export const getUser = async () => {
       userinfo.address = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.address;
       userinfo.region = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.region;
       userinfo.city = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.city;
+      if (user.phoneNumber) {
+        userinfo.phoneNumber = user.phoneNumber
+      }
 
     }
 

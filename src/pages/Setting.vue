@@ -38,7 +38,7 @@
 
             <q-card-actions align="right" class="text-primary">
               <q-btn flat label="Cancel" v-close-popup />
-              <q-btn flat label="Update" v-close-popup @click="updateName()" />
+              <q-btn flat label="Update" v-close-popup @click="updateUser()" />
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -87,7 +87,29 @@
           </q-card>
         </q-dialog>
 
-        <list-item color="primary" name="home" size="2rem">Delivery Addresses</list-item>
+        <list-item
+          @click="addresschange = true"
+          color="primary"
+          name="home"
+          size="2rem"
+        >Delivery Address</list-item>
+
+        <q-dialog v-model="addresschange" persistent>
+          <q-card style="min-width: 350px">
+            <q-card-section>
+              <div class="text-h6">Change your address:</div>
+            </q-card-section>
+
+            <q-card-section class="q-pt-none">
+              <q-input dense v-model="address" autofocus label="Address" />
+            </q-card-section>
+
+            <q-card-actions align="right" class="text-primary">
+              <q-btn flat label="Cancel" v-close-popup />
+              <q-btn flat label="Update" v-close-popup @click="updateUser()" />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
 
         <q-item-label header overline class="font-black">USER CONTROLS</q-item-label>
 
@@ -174,6 +196,7 @@ export default {
     const verificationId = ref('');
     const phonechange = ref(false);
     const namechange = ref(false);
+    const addresschange = ref(false);
     const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
     const address = ref('');
 
@@ -184,10 +207,12 @@ export default {
       lastName.value = (await getUser())?.lastName as string;
       locations.value.region = (await getUser())?.region as string;
       locations.value.city = (await getUser())?.city as string;
+      address.value = (await getUser())?.address as string;
+      mobileNumber.value = (await getUser())?.phoneNumber as string;
     });
 
     //Add methods here to update specific User data.
-    const updateName = () => {
+    const updateUser = () => {
       update(firstName.value, middleName.value, lastName.value, address.value, locations.value)
     }
 
@@ -263,9 +288,10 @@ export default {
       middleName,
       lastName,
       mobileNumber,
+      address,
 
       //methods
-      updateName,
+      updateUser,
       updatePhone,
       verificationCode,
       verify,
@@ -273,6 +299,7 @@ export default {
       //dialog triggers
       namechange,
       phonechange,
+      addresschange,
 
       logout
 
