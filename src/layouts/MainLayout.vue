@@ -10,7 +10,7 @@
           </q-avatar>
         </q-btn>
 
-        <div class="ml-4 text-h6 font-black">{{ $t('Hello') }}, {{ firstName }}!</div>
+        <div class="ml-4 text-h6 font-black">{{ $t('hello') }}, {{ firstName }}!</div>
 
         <q-space />
 

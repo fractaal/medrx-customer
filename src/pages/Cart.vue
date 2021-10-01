@@ -11,7 +11,7 @@
 
           <q-item-section>
             <q-item-label lines="1" class="text-lg">Pin your location</q-item-label>
-            <q-item-label caption>{ Address }</q-item-label>
+            <q-item-label caption>{{ address }}</q-item-label>
           </q-item-section>
 
           <q-item-section side>
@@ -67,14 +67,23 @@
 </template> 
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { getUser } from 'src/api/firebase';
 export default {
   setup() {
+
+    const address = ref('');
+
+    onMounted(async () => {
+      address.value = (await getUser())?.address;
+    });
+
     return {
       model: ref(null),
       options: [
-        'Payment Method1', 'Payment Method2', 'Cash-on-Delivery'
-      ]
+        'Cash-on-Delivery'
+      ],
+      address
     }
   }
 }
