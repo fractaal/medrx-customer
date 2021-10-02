@@ -14,8 +14,8 @@
 
         <q-space />
 
-        <q-btn dense flat round to="/cart">
-          <q-icon name="shopping_cart" size="2rem" class="p-4" />
+        <q-btn dense flat round icon="shopping_cart" to="/cart">
+          <q-badge color="primary" floating transparent>{{ itemQuantity }}</q-badge>
         </q-btn>
       </q-toolbar>
     </q-header>
@@ -58,6 +58,10 @@ import { getUser } from 'src/api/firebase';
 export default {
   setup() {
     const firstName = ref('');
+    const itemQuantity = ref(0);
+
+    //Take SQL number of cart items. (Only General Items, medicine not included)
+    itemQuantity.value = 3;
 
     onMounted(async () => {
       firstName.value = (await getUser())?.firstName as string;
@@ -68,6 +72,7 @@ export default {
       randomizeSeed,
       seed,
       firstName,
+      itemQuantity
     };
   },
 };
