@@ -13,7 +13,7 @@
         :key="i"
         name="Name"
         description="Test"
-        :price="69.420"
+        :price="69.42"
       />
     </horizontal-scroller>
 
@@ -21,24 +21,10 @@
       <q-card>
         <q-list>
           <q-card-actions align="around">
-            <q-btn
-              dense
-              class="glossy ml-4"
-              round
-              color="primary"
-              icon="remove"
-              @click="quantityChecker()"
-            />
+            <q-btn dense class="glossy ml-4" round color="primary" icon="remove" @click="quantityChecker()" />
             <div class="p-3" v-bind="quantity">{{ quantity }}</div>
             <q-btn dense class="glossy" round color="primary" icon="add" @click="quantity++" />
-            <q-btn
-              flat
-              label="Confirm"
-              color="primary"
-              style="width: 100px"
-              v-close-popup
-              @click="addToCart()"
-            />
+            <q-btn flat label="Confirm" color="primary" style="width: 100px" v-close-popup @click="addToCart()" />
           </q-card-actions>
         </q-list>
       </q-card>
@@ -48,6 +34,7 @@
 
 <script>
 import { defineComponent, ref } from 'vue';
+import { api } from 'src/boot/axios';
 import ProductCard from 'src/components/ProductCard.vue';
 import HorizontalScroller from 'src/components/HorizontalScroller.vue';
 
@@ -55,23 +42,25 @@ export default defineComponent({
   name: 'PageIndex',
   components: { ProductCard, HorizontalScroller },
   setup() {
+    api.post('/storefront').then(console.log);
 
     const quantity = ref(1);
 
     const quantityChecker = () => {
       if (quantity.value > 0) {
-        quantity.value--
+        quantity.value--;
       }
-    }
+    };
 
     const addToCart = (/*product ID, Product quantity, Product price*/) => {
       //Send to backend for cart of specific user?
       console.log('Added to Cart!');
       //Reset counter
-      setTimeout(() => { quantity.value = 1; }, 500);;
+      setTimeout(() => {
+        quantity.value = 1;
+      }, 500);
     };
     return {
-
       //Variables:
       quantity,
 
@@ -80,13 +69,10 @@ export default defineComponent({
       quantityChecker,
       //dialog references:
 
-      confirm: ref(false)
-    }
-  }
-})
-
-
+      confirm: ref(false),
+    };
+  },
+});
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
