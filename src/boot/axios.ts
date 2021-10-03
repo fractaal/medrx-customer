@@ -1,6 +1,7 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
 import { getRemoteConfig, getString } from 'firebase/remote-config';
+import { onAuthStateChanged, getAuth } from 'firebase/auth';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -14,7 +15,19 @@ declare module '@vue/runtime-core' {
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: getString(getRemoteConfig(), 'serverAddress') });
+const api = axios.create({ baseURL: 'PLACEHOLDER' });
+
+const init = () => {
+  axios.defaults.baseURL = getString(getRemoteConfig(), 'serverAddress');
+
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  onAuthStateChanged(getAuth(), async (user) => {
+    if (user === null) return;
+    console.log('Updating ID token in axios...');
+    axios.defaults.data = { token: await user.getIdToken(true) };
+    console.log('New axios defaults: ', axios.defaults);
+  });
+};
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
@@ -28,4 +41,4 @@ export default boot(({ app }) => {
   //       so you can easily perform requests against your app's API
 });
 
-export { api };
+export { api, init };
