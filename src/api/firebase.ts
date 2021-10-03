@@ -9,6 +9,7 @@ import {
   createUserWithEmailAndPassword,
   browserLocalPersistence,
 } from 'firebase/auth';
+import { fetchAndActivate, getRemoteConfig } from '@firebase/remote-config';
 import { Notify } from 'quasar';
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -31,12 +32,17 @@ export let app: FirebaseApp;
 export let firestore: Firestore;
 export let database: Database;
 
-export const init = () => {
+export const init = async () => {
   app = initializeApp(firebaseConfig);
   firestore = getFirestore(app);
   database = getDatabase(app, 'https://medrx-test-default-rtdb.asia-southeast1.firebasedatabase.app/');
   getAnalytics(app);
   getAuth().setPersistence(browserLocalPersistence);
+  if (await fetchAndActivate(getRemoteConfig())) {
+    console.log('Remote config fetch success');
+  } else {
+    console.log('Remote config fetch failed');
+  }
 };
 
 export const login = async (email: string, password: string) => {
@@ -98,14 +104,23 @@ export const update = (
     Notify.create(`An error occured: ${(err as Error).message}`);
     return false;
   }
-}
+};
 
 export const getUser = async () => {
   const auth = getAuth();
 
   try {
     // For easy access to all user info, store in object each one
-    const userinfo: { email?: string; firstName?: string; middleName?: string; lastName?: string; address?: string; region?: string; city?: string; phoneNumber?: string } = {};
+    const userinfo: {
+      email?: string;
+      firstName?: string;
+      middleName?: string;
+      lastName?: string;
+      address?: string;
+      region?: string;
+      city?: string;
+      phoneNumber?: string;
+    } = {};
     const user = auth.currentUser;
 
     if (user !== null) {
@@ -117,9 +132,8 @@ export const getUser = async () => {
       userinfo.region = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.region;
       userinfo.city = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.city;
       if (user.phoneNumber) {
-        userinfo.phoneNumber = user.phoneNumber
+        userinfo.phoneNumber = user.phoneNumber;
       }
-
     }
 
     return userinfo;
