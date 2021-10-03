@@ -64,6 +64,16 @@ const routes: RouteRecordRaw[] = [
       statusBarIsDark: true,
     },
   },
+  {
+    path: '/geolocation-test',
+    component: () => import('layouts/HeaderLayout.vue'),
+    children: [{ path: '', component: () => import('pages/GeolocationTest.vue') }],
+    meta: {
+      name: 'GeoLocationTest',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
+    },
+  },
 
   // Always leave this as last one,
   // but you can also remove it
