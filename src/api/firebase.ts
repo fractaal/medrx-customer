@@ -39,9 +39,9 @@ export const init = async () => {
   getAnalytics(app);
   getAuth().setPersistence(browserLocalPersistence);
   if (await fetchAndActivate(getRemoteConfig())) {
-    console.log('Remote config fetch success');
+    console.log('Remote config fetched and activated');
   } else {
-    console.log('Remote config fetch failed');
+    console.log('Remote config fetch already activated');
   }
 };
 
