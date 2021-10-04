@@ -6,11 +6,9 @@
   </router-view>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { getAuth } from 'firebase/auth';
-import { init as initFirebase } from 'src/api/firebase';
-import { init as initAxios } from 'src/boot/axios';
 
 if (process.env.MODE === 'capacitor') {
   import('src/api/mobile');
@@ -19,14 +17,11 @@ if (process.env.MODE === 'capacitor') {
 export default defineComponent({
   name: 'App',
   setup() {
-    initFirebase().then(() => initAxios());
-
     const router = useRouter();
     const route = useRoute();
 
     getAuth().onAuthStateChanged((user) => {
       if (route.path !== '/') return;
-
       if (user) {
         router.push('/home');
       } else {
