@@ -18,14 +18,21 @@ declare module '@vue/runtime-core' {
 const api = axios.create({ baseURL: 'PLACEHOLDER' });
 
 const init = () => {
-  api.defaults.baseURL = getString(getRemoteConfig(), 'serverAddress');
+  return new Promise<void>((resolve, reject) => {
+    try {
+      api.defaults.baseURL = getString(getRemoteConfig(), 'serverAddress');
 
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-  onAuthStateChanged(getAuth(), async (user) => {
-    if (user === null) return;
-    console.log('Updating ID token in axios...');
-    api.defaults.headers.common['Authorization'] = await user.getIdToken(true);
-    console.log('New axios defaults: ', api.defaults);
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      onAuthStateChanged(getAuth(), async (user) => {
+        if (user === null) return;
+        console.log('Updating ID token in axios...');
+        api.defaults.headers.common['Authorization'] = await user.getIdToken(true);
+        console.log('New axios defaults: ', api.defaults);
+        resolve();
+      });
+    } catch (err) {
+      reject(err);
+    }
   });
 };
 
