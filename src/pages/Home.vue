@@ -6,17 +6,17 @@
       <i>Or die.</i>
     </div>
     <horizontal-scroller>
+      <q-spinner class="block mx-auto" size="xl" v-if="storefrontIsLoading" />
       <product-card
+        v-for="item in storefront"
         clickable
-        @click="confirm = true"
-        v-for="i in 20"
-        :key="i"
-        name="Name"
-        description="Test"
-        :price="69.42"
+        @click="addToCart(item.id)"
+        :key="item.id"
+        :name="item.name"
+        :description="item.description"
+        :price="item.price"
       />
     </horizontal-scroller>
-
     <q-dialog v-model="confirm" position="bottom">
       <q-card>
         <q-list>
@@ -32,18 +32,16 @@
   </q-page>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue';
-import { api } from 'src/boot/axios';
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
 import ProductCard from 'src/components/ProductCard.vue';
 import HorizontalScroller from 'src/components/HorizontalScroller.vue';
+import * as storefront from 'src/api/storefront';
 
 export default defineComponent({
   name: 'PageIndex',
   components: { ProductCard, HorizontalScroller },
   setup() {
-    api.post('/storefront').then(console.log);
-
     const quantity = ref(1);
 
     const quantityChecker = () => {
@@ -52,24 +50,33 @@ export default defineComponent({
       }
     };
 
-    const addToCart = (/*product ID, Product quantity, Product price*/) => {
+    const addToCart = (id: number) => {
       //Send to backend for cart of specific user?
-      console.log('Added to Cart!');
+      console.log('Added to Cart!', id);
       //Reset counter
       setTimeout(() => {
         quantity.value = 1;
       }, 500);
     };
+
+    onMounted(() => {
+      storefront.getStorefront();
+    });
+
     return {
-      //Variables:
+      // Variables
       quantity,
 
-      //Methods:
+      // Methods
       addToCart,
       quantityChecker,
-      //dialog references:
 
+      // Dialog references
       confirm: ref(false),
+
+      // Storefront
+      storefront: storefront.storefront,
+      storefrontIsLoading: storefront.isLoading,
     };
   },
 });
