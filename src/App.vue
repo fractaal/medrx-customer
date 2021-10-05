@@ -6,7 +6,7 @@
   </router-view>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { getAuth } from 'firebase/auth';
 
