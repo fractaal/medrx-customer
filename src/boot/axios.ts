@@ -19,7 +19,7 @@ const api = axios.create({ baseURL: 'PLACEHOLDER' });
 
 const getIdToken = async (auth: Auth) => {
   console.log('Updating ID token in axios...');
-  api.defaults.headers.common['Authorization'] = await auth.currentUser!.getIdToken(true);
+  api.defaults.headers.common['Authorization'] = await auth.currentUser!.getIdToken();
   console.log('New axios defaults: ', api.defaults);
 };
 
