@@ -10,7 +10,12 @@
       <product-card
         v-for="item in storefront"
         clickable
-        @click="id=item.id; name=item.name; price=item.price; confirm=true"
+        @click="
+          id = item.id;
+          name = item.name;
+          price = item.price;
+          confirm = true;
+        "
         :key="item.id"
         :name="item.name"
         :description="item.vendorName"
@@ -27,7 +32,7 @@
             <q-btn flat label="Confirm" color="primary" style="width: 100px" v-close-popup @click="addToCart()" />
           </q-card-actions>
         </q-list>
-      </q-card> 
+      </q-card>
     </q-dialog>
   </q-page>
 </template>
@@ -37,7 +42,6 @@ import { defineComponent, ref, onMounted } from 'vue';
 import ProductCard from 'src/components/ProductCard.vue';
 import HorizontalScroller from 'src/components/HorizontalScroller.vue';
 import * as storefront from 'src/api/storefront';
-import { updateCart } from 'src/api/firebase';
 
 export default defineComponent({
   name: 'PageIndex',
@@ -47,22 +51,11 @@ export default defineComponent({
     const id = ref(0);
     const name = ref('');
     const price = ref(0);
-    const cartCounter = ref(0);
 
     const quantityChecker = () => {
       if (quantity.value > 0) {
         quantity.value--;
       }
-    };
-
-    const addToCart = () => {
-      //Send to backend for cart of specific user?
-      cartCounter.value++;
-      updateCart(name.value, quantity.value, price.value)
-      //Reset counter
-      setTimeout(() => {
-        quantity.value = 1;
-      }, 500);
     };
 
     onMounted(() => {
@@ -72,7 +65,7 @@ export default defineComponent({
     return {
       // Variables
       quantity,
-      id, 
+      id,
       name,
       price,
 
