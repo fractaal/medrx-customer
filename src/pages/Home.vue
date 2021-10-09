@@ -10,12 +10,7 @@
       <product-card
         v-for="item in storefront"
         clickable
-        @click="
-          id = item.id;
-          name = item.name;
-          price = item.price;
-          confirm = true;
-        "
+        @click="addToCart(item.id, item.name, 1, item.price)"
         :key="item.id"
         :name="item.name"
         :description="item.vendorName"
@@ -29,7 +24,7 @@
             <q-btn dense class="glossy ml-4" round color="primary" icon="remove" @click="quantityChecker()" />
             <div class="p-3" v-bind="quantity">{{ quantity }}</div>
             <q-btn dense class="glossy" round color="primary" icon="add" @click="quantity++" />
-            <q-btn flat label="Confirm" color="primary" style="width: 100px" v-close-popup @click="addToCart()" />
+            <q-btn flat label="Confirm" color="primary" style="width: 100px" v-close-popup />
           </q-card-actions>
         </q-list>
       </q-card>
@@ -39,6 +34,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
+import { addToCart } from 'src/api/cart';
 import ProductCard from 'src/components/ProductCard.vue';
 import HorizontalScroller from 'src/components/HorizontalScroller.vue';
 import * as storefront from 'src/api/storefront';
@@ -65,12 +61,10 @@ export default defineComponent({
     return {
       // Variables
       quantity,
-      id,
-      name,
-      price,
 
       // Methods
       quantityChecker,
+      addToCart,
 
       // Dialog references
       confirm: ref(false),
