@@ -21,7 +21,7 @@ export default defineComponent({
   name: 'App',
   setup() {
     const router = useRouter();
-    const route = useRoute();
+    // const route = useRoute();
 
     const desiredPath =
       window.location.hash === '#/' ? null : window.location.hash.substring(1, window.location.hash.length);
