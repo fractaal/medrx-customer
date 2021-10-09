@@ -70,7 +70,6 @@ export default defineComponent({
       price,
 
       // Methods
-      addToCart,
       quantityChecker,
 
       // Dialog references
