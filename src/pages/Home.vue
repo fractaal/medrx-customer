@@ -13,7 +13,7 @@
         @click="addToCart(item.id)"
         :key="item.id"
         :name="item.name"
-        :description="item.description"
+        :description="item.vendorName"
         :price="item.price"
       />
     </horizontal-scroller>
