@@ -4,7 +4,6 @@ import { getDoc, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { getAuth } from '@firebase/auth';
 import { firestore } from './firebase';
 import { CartItem } from 'src/models/CartItem';
-import { SrvRecord } from 'dns';
 
 const auth = getAuth();
 const uid = auth.currentUser?.uid;
