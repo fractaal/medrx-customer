@@ -15,19 +15,14 @@
         <q-space />
 
         <q-btn dense flat round icon="shopping_cart" to="/cart">
-          <q-badge color="primary" floating transparent>{{ itemQuantity }}</q-badge>
+          <q-badge color="primary" floating transparent>{{ itemsInCart }}</q-badge>
         </q-btn>
       </q-toolbar>
     </q-header>
 
     <q-page-container>
       <router-view v-slot="{ Component }" class="mx-auto w-full md:w-3/4 lg:w-3/5">
-        <transition
-          enter-active-class="animated fadeIn"
-          leave-active-class="animated fadeOut"
-          appear
-          :duration="150"
-        >
+        <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" appear :duration="150">
           <component :is="Component" />
         </transition>
       </router-view>
@@ -54,14 +49,13 @@
 import { ref, onMounted } from 'vue';
 import { seed, randomizeSeed } from 'src/api/seed';
 import { getUser } from 'src/api/firebase';
+import { itemsInCart } from 'src/api/cart';
 
 export default {
   setup() {
     const firstName = ref('');
-    const itemQuantity = ref(0);
 
-    //Take SQL number of cart items. (Only General Items, medicine not included)
-    itemQuantity.value = 3;
+    // TODO: Take SQL number of cart items. (Only General Items, medicine not included)
 
     onMounted(async () => {
       firstName.value = (await getUser())?.firstName as string;
@@ -72,7 +66,7 @@ export default {
       randomizeSeed,
       seed,
       firstName,
-      itemQuantity
+      itemsInCart,
     };
   },
 };
