@@ -11,7 +11,7 @@ const uid = auth.currentUser?.uid;
 export const itemsInCart = ref(0);
 
 export const addToCart = async (
-  productId: number,
+  productId: string,
   productName: string,
   productQuantity: number,
   productPrice: number
