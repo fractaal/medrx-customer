@@ -25,9 +25,9 @@
         <q-item-label class="text-l font-semibold mb-4">General Items</q-item-label>
 
         <q-item dense v-for="item in cart" :key="item">
-          <q-item-section top>{{ item.productName }}</q-item-section>
-          <q-item-section>{{ item.productPrice }}</q-item-section>
-          <q-item-section side>{{ item.productQuantity }}</q-item-section>
+          <q-item-section top class="font-black">{{ item.productName }}</q-item-section>
+          <q-item-section>{{ item.productQuantity }}</q-item-section>
+          <q-item-section side>{{ item.productPrice }}</q-item-section>
         </q-item>
 
         <q-item-label class="text-l font-semibold mb-4">Prescription</q-item-label>
