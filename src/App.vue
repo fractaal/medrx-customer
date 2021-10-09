@@ -1,17 +1,13 @@
 <template>
   <router-view v-slot="{ Component }">
-    <transition
-      enter-active-class="animated fadeIn"
-      leave-active-class="animated fadeOut"
-      :duration="150"
-    >
+    <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" :duration="150">
       <component :is="Component" />
     </transition>
   </router-view>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { defineComponent, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { getAuth } from 'firebase/auth';
 
 import { init as initFirebase } from 'src/api/firebase';
