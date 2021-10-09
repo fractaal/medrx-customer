@@ -4,7 +4,7 @@
       <div>
         <q-item-label class="text-h6 mb-4">My Cart</q-item-label>
 
-        <q-item dense clickable v-ripple>
+        <q-item dense clickable v-ripple @click='printCart()'>
           <q-item-section avatar top>
             <q-avatar icon="place" color="primary" text-color="white" />
           </q-item-section>
@@ -14,7 +14,7 @@
             <q-item-label caption>{{ address }}</q-item-label>
           </q-item-section>
 
-          <q-item-section side>
+          <q-item-section side> 
             <q-icon name="chevron_right" color="black" />
           </q-item-section>
         </q-item>
@@ -24,10 +24,10 @@
         <q-item-label class="text-h6 mb-4">Order Summary</q-item-label>
         <q-item-label class="text-l font-semibold mb-4">General Items</q-item-label>
 
-        <q-item dense v-for="i in 5" :key="i">
-          <q-item-section top>{ quantity }</q-item-section>
-          <q-item-section>{ item name }</q-item-section>
-          <q-item-section side>{ price }</q-item-section>
+        <q-item dense v-for="item in cart" :key="item">
+          <q-item-section top>{{ item[1] }}</q-item-section>
+          <q-item-section>{{ item[2] }}</q-item-section>
+          <q-item-section side>{{ item[3] }}</q-item-section> 
         </q-item>
 
         <q-item-label class="text-l font-semibold mb-4">Prescription</q-item-label>
@@ -68,22 +68,30 @@
 
 <script>
 import { ref, onMounted } from 'vue'
-import { getUser } from 'src/api/firebase';
+import { getUser, getCart } from 'src/api/firebase';
 export default {
   setup() {
-
     const address = ref('');
+  
+    let cart = {};
+
+    const printCart = () => {
+      console.log(cart);
+    }
 
     onMounted(async () => {
       address.value = (await getUser())?.address;
-    });
+      cart = await getCart();
+    }); 
 
     return {
       model: ref(null),
-      options: [
+      options: [  
         'Cash-on-Delivery'
       ],
-      address
+      address,
+      cart,
+      printCart,
     }
   }
 }
