@@ -4,7 +4,7 @@
       <div>
         <q-item-label class="text-h6 mb-4">My Cart</q-item-label>
 
-        <q-item dense clickable v-ripple @click='printCart()'>
+        <q-item dense clickable v-ripple @click="printCart()">
           <q-item-section avatar top>
             <q-avatar icon="place" color="primary" text-color="white" />
           </q-item-section>
@@ -14,7 +14,7 @@
             <q-item-label caption>{{ address }}</q-item-label>
           </q-item-section>
 
-          <q-item-section side> 
+          <q-item-section side>
             <q-icon name="chevron_right" color="black" />
           </q-item-section>
         </q-item>
@@ -25,9 +25,9 @@
         <q-item-label class="text-l font-semibold mb-4">General Items</q-item-label>
 
         <q-item dense v-for="item in cart" :key="item">
-          <q-item-section top>{{ item[1] }}</q-item-section>
-          <q-item-section>{{ item[2] }}</q-item-section>
-          <q-item-section side>{{ item[3] }}</q-item-section> 
+          <q-item-section top>{{ item.productName }}</q-item-section>
+          <q-item-section>{{ item.productPrice }}</q-item-section>
+          <q-item-section side>{{ item.productQuantity }}</q-item-section>
         </q-item>
 
         <q-item-label class="text-l font-semibold mb-4">Prescription</q-item-label>
@@ -64,35 +64,31 @@
       </div>
     </div>
   </div>
-</template> 
+</template>
 
-<script>
-import { ref, onMounted } from 'vue'
-import { getUser, getCart } from 'src/api/firebase';
+<script lang="ts">
+import { ref, onMounted } from 'vue';
+import { getUser } from 'src/api/firebase';
+import { getCart } from 'src/api/cart';
+import { CartItem } from 'src/models/CartItem';
+
 export default {
   setup() {
     const address = ref('');
-  
-    let cart = {};
-
-    const printCart = () => {
-      console.log(cart);
-    }
+    const cart = ref<Record<string, CartItem>>({});
 
     onMounted(async () => {
-      address.value = (await getUser())?.address;
-      cart = await getCart();
-    }); 
+      address.value = (await getUser())?.address as string;
+      cart.value = await getCart();
+    });
 
     return {
       model: ref(null),
-      options: [  
-        'Cash-on-Delivery'
-      ],
+      options: ['Cash-on-Delivery'],
       address,
       cart,
-      printCart,
-    }
-  }
-}
+      printCart: () => console.log(cart.value),
+    };
+  },
+};
 </script>
