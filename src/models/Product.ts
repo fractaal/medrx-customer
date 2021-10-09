@@ -8,4 +8,5 @@ export interface Product {
   isPrescriptionRequired: boolean;
   updatedAt?: any;
   createdAt: Date;
+  [x: string]: any;
 }

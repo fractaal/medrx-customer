@@ -11,6 +11,7 @@ import {
 } from 'firebase/auth';
 import { fetchAndActivate, getRemoteConfig } from '@firebase/remote-config';
 import { Notify } from 'quasar';
+import { init as initAxios } from 'src/boot/axios';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -49,6 +50,7 @@ export const login = async (email: string, password: string) => {
   const auth = getAuth();
   try {
     await signInWithEmailAndPassword(auth, email, password);
+    await initAxios();
     Notify.create('Login successful!');
     return true;
   } catch (err) {
@@ -70,6 +72,7 @@ export const register = async (
   const auth = getAuth();
   try {
     await createUserWithEmailAndPassword(auth, email, password);
+    await initAxios();
     update(fname, mname, lname, address, locations);
     Notify.create('Almost there!');
     return true;

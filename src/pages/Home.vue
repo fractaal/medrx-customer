@@ -13,8 +13,8 @@
         @click="id=item.id; name=item.name; price=item.price; confirm=true"
         :key="item.id"
         :name="item.name"
-        :description="item.description"
-        :price= "item.price"
+        :description="item.vendorName"
+        :price="item.price"
       />
     </horizontal-scroller>
     <q-dialog v-model="confirm" position="bottom">

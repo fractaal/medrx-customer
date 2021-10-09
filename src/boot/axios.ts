@@ -1,7 +1,7 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
 import { getRemoteConfig, getString } from 'firebase/remote-config';
-import { onAuthStateChanged, getAuth } from 'firebase/auth';
+import { getAuth, Auth } from 'firebase/auth';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -17,22 +17,20 @@ declare module '@vue/runtime-core' {
 // for each client)
 const api = axios.create({ baseURL: 'PLACEHOLDER' });
 
-const init = () => {
-  return new Promise<void>((resolve, reject) => {
-    try {
-      api.defaults.baseURL = getString(getRemoteConfig(), 'serverAddress');
+const getIdToken = async (auth: Auth) => {
+  console.log('Updating ID token in axios...');
+  api.defaults.headers.common['Authorization'] = await auth.currentUser!.getIdToken();
+  console.log('New axios defaults: ', api.defaults);
+};
 
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      onAuthStateChanged(getAuth(), async (user) => {
-        if (user === null) return;
-        console.log('Updating ID token in axios...');
-        api.defaults.headers.common['Authorization'] = await user.getIdToken(true);
-        console.log('New axios defaults: ', api.defaults);
-        resolve();
-      });
-    } catch (err) {
-      reject(err);
-    }
+const init = () => {
+  return new Promise<boolean>((resolve) => {
+    api.defaults.baseURL = getString(getRemoteConfig(), 'serverAddress');
+
+    const auth = getAuth();
+
+    if (auth.currentUser) getIdToken(auth).then(() => resolve(true));
+    else resolve(false);
   });
 };
 
