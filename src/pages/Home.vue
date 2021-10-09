@@ -10,25 +10,25 @@
       <product-card
         v-for="item in storefront"
         clickable
-        @click="addToCart(item.id, item.name, 1, item.price)"
+        @click="$router.push(`/product/${item.id}`)"
         :key="item.id"
         :name="item.name"
         :description="item.vendorName"
         :price="item.price"
       />
     </horizontal-scroller>
-    <q-dialog v-model="confirm" position="bottom">
+    <!-- <q-dialog v-model="confirm" position="bottom">
       <q-card>
         <q-list>
           <q-card-actions align="around">
             <q-btn dense class="glossy ml-4" round color="primary" icon="remove" @click="quantityChecker()" />
-            <div class="p-3" v-bind="quantity">{{ quantity }}</div>
+            <div class="p-3">{{ quantity }}</div>
             <q-btn dense class="glossy" round color="primary" icon="add" @click="quantity++" />
             <q-btn flat label="Confirm" color="primary" style="width: 100px" v-close-popup />
           </q-card-actions>
         </q-list>
       </q-card>
-    </q-dialog>
+    </q-dialog> -->
   </q-page>
 </template>
 
@@ -44,9 +44,9 @@ export default defineComponent({
   components: { ProductCard, HorizontalScroller },
   setup() {
     const quantity = ref(1);
-    const id = ref(0);
-    const name = ref('');
-    const price = ref(0);
+    // const id = ref(0);
+    // const name = ref('');
+    // const price = ref(0);
 
     const quantityChecker = () => {
       if (quantity.value > 0) {
@@ -60,14 +60,14 @@ export default defineComponent({
 
     return {
       // Variables
-      quantity,
+      // quantity,
 
-      // Methods
-      quantityChecker,
-      addToCart,
+      // // Methods
+      // quantityChecker,
+      // addToCart,
 
-      // Dialog references
-      confirm: ref(false),
+      // // Dialog references
+      // confirm: ref(false),
 
       // Storefront
       storefront: storefront.storefront,
