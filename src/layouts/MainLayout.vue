@@ -20,14 +20,14 @@
       </q-toolbar>
     </q-header>
 
-    <q-page-container>
+    <q-page-container class="my-2">
       <router-view v-slot="{ Component }" class="mx-auto w-full md:w-3/4 lg:w-3/5">
         <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" appear :duration="150">
           <component :is="Component" />
         </transition>
       </router-view>
     </q-page-container>
-    <q-footer class="bg-transparent text-black">
+    <q-footer class="bg-white text-black">
       <q-tabs v-model="tab">
         <q-route-tab name="mails" label="Shop" to="/home">
           <q-icon name="shopping_basket" size="sm" />
