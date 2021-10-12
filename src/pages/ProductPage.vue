@@ -3,7 +3,7 @@
     <q-spinner class="w-1/2 mx-auto" v-if="isLoading" size="96px" />
     <div class="flex mt-16 flex-nowrap" v-else>
       <q-card class="w-full md:w-1/2 rounded-none md:rounded-xl">
-        <q-img src="https://cdn.quasar.dev/img/parallax2.jpg"></q-img>
+        <q-img :src="product?.photoUrl || placeholderImageUrl" ratio="1"></q-img>
       </q-card>
       <div class="mt-4 md:mt-0 divide-y divide-gray-300 px-8 space-y-4 w-full md:w-1/2">
         <div>
@@ -38,6 +38,7 @@ import { useRouter } from 'vue-router';
 import { Product } from 'src/models/Product';
 import { isLoading, getProduct } from 'src/api/product';
 import { addToCart } from 'src/api/cart';
+import { placeholderImageUrl } from 'src/api/storage';
 
 export default defineComponent({
   name: 'ProductPage',
@@ -62,6 +63,7 @@ export default defineComponent({
     });
 
     return {
+      placeholderImageUrl,
       addToCart,
       isLoading,
       product,
