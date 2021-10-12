@@ -1,23 +1,25 @@
 <template>
   <q-page>
     <q-spinner class="w-1/2 mx-auto" v-if="isLoading" size="96px" />
-    <div class="flex mt-16 flex-nowrap" v-else>
-      <q-card class="w-full md:w-1/2 rounded-none md:rounded-xl">
-        <q-img :src="product?.photoUrl || placeholderImageUrl" ratio="1"></q-img>
-      </q-card>
+    <div class="flex mt-16" v-else>
+      <q-img
+        :src="product?.photoUrl || placeholderImageUrl"
+        ratio="1"
+        class="w-full md:w-1/2 rounded-none md:rounded-xl shadow-md"
+      ></q-img>
       <div class="mt-4 md:mt-0 divide-y divide-gray-300 px-8 space-y-4 w-full md:w-1/2">
         <div>
-          <q-item-label class="text-h4 font-black">{{ product?.name }}</q-item-label>
+          <q-item-label class="text-h6 font-black">{{ product?.name }}</q-item-label>
           <q-item-label overline>{{ product?.vendorName }}</q-item-label>
-          <div class="text-h6">{{ product?.description }}</div>
+          <div>{{ product?.description }}</div>
           <div class="flex content-center justify-end">
-            <div class="text-h5 font-black p-0 m-0">{{ product?.price }}</div>
+            <div class="text-h6 font-black p-0 m-0">{{ product?.price }}</div>
             <div class="text-h6 p-0 m-0">PHP</div>
           </div>
         </div>
         <div class="pt-4">
           <div class="grid grid-cols-2 gap-2">
-            <q-input v-model.number="quantity" type="number" min="1" outlined dense />
+            <q-input v-model.number="quantity" type="number" min="1" outlined dense maxlength="12" label="Quantity" />
             <q-btn
               class="px-8 bg-gradient-to-tr from-medrx to-green-200"
               text-color="white"
