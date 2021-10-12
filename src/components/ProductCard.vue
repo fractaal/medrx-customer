@@ -6,7 +6,7 @@
         <q-item-label caption lines="1">{{ description }}</q-item-label>
       </q-item-section>
     </q-item>
-    <img src="https://cdn.quasar.dev/img/parallax2.jpg" />
+    <q-img :src="photoUrl || placeholderImageUrl" ratio="1" />
     <q-item>
       <q-item-section>
         <q-item-label class>
@@ -20,6 +20,7 @@
 
 <script>
 import { defineComponent } from 'vue';
+import { placeholderImageUrl } from 'src/api/storage';
 
 export default defineComponent({
   name: 'ProductCard',
@@ -27,6 +28,12 @@ export default defineComponent({
     name: String,
     description: String,
     price: Number,
+    photoUrl: String,
+  },
+  setup() {
+    return {
+      placeholderImageUrl,
+    };
   },
 });
 </script>
