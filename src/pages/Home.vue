@@ -11,6 +11,7 @@
         v-for="item in storefront"
         clickable
         @click="$router.push(`/product/${item.id}`)"
+        :photo-url="item.photoUrl"
         :key="item.id"
         :name="item.name"
         :description="item.vendorName"
@@ -33,8 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
-import { addToCart } from 'src/api/cart';
+import { defineComponent, onMounted } from 'vue';
 import ProductCard from 'src/components/ProductCard.vue';
 import HorizontalScroller from 'src/components/HorizontalScroller.vue';
 import * as storefront from 'src/api/storefront';
@@ -43,32 +43,11 @@ export default defineComponent({
   name: 'PageIndex',
   components: { ProductCard, HorizontalScroller },
   setup() {
-    const quantity = ref(1);
-    // const id = ref(0);
-    // const name = ref('');
-    // const price = ref(0);
-
-    const quantityChecker = () => {
-      if (quantity.value > 0) {
-        quantity.value--;
-      }
-    };
-
     onMounted(() => {
       storefront.getStorefront();
     });
 
     return {
-      // Variables
-      // quantity,
-
-      // // Methods
-      // quantityChecker,
-      // addToCart,
-
-      // // Dialog references
-      // confirm: ref(false),
-
       // Storefront
       storefront: storefront.storefront,
       storefrontIsLoading: storefront.isLoading,
