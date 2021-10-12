@@ -1,12 +1,12 @@
 <template>
-  <q-card v-ripple class="shadow-lg" style="width: 12rem; min-width: 12rem">
+  <q-card v-ripple class="shadow-lg h-50" style="width: 10rem; min-width: 10rem">
     <q-item>
       <q-item-section>
         <q-item-label class="text-2xl">{{ name }}</q-item-label>
         <q-item-label caption lines="1">{{ description }}</q-item-label>
       </q-item-section>
     </q-item>
-    <q-img :src="photoUrl || placeholderImageUrl" ratio="1" />
+    <q-img :src="photoUrl || placeholderImageUrl" ratio="1" class="h-30" />
     <q-item>
       <q-item-section>
         <q-item-label class>
