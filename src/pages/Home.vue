@@ -1,12 +1,8 @@
 <template>
   <q-page class="bg-body">
-    <div class="font-black text-2xl p-4 -mb-10">If you want to live...</div>
-    <div class="p-4 -mb-4">
-      Buy these essential medical products!
-      <i>Or die.</i>
-    </div>
-    <horizontal-scroller>
-      <q-spinner class="block mx-auto" size="xl" v-if="storefrontIsLoading" />
+    <!-- <horizontal-scroller> -->
+    <q-spinner class="block mx-auto" size="xl" v-if="storefrontIsLoading" />
+    <div class="flex content-center justify-center gap-2">
       <product-card
         v-for="item in storefront"
         clickable
@@ -17,7 +13,8 @@
         :description="item.vendorName"
         :price="item.price"
       />
-    </horizontal-scroller>
+    </div>
+    <!-- </horizontal-scroller> -->
     <!-- <q-dialog v-model="confirm" position="bottom">
       <q-card>
         <q-list>
