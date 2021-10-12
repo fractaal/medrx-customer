@@ -1,4 +1,4 @@
-import { Notify } from 'quasar';
+import { Notify, Dialog } from 'quasar';
 import { ref } from 'vue';
 import { getDoc, doc, updateDoc, onSnapshot } from 'firebase/firestore';
 import { getAuth } from '@firebase/auth';
@@ -10,25 +10,28 @@ const uid = auth.currentUser?.uid;
 
 export const itemsInCart = ref(0);
 
-export const addToCart = async (
-  productId: string,
-  productName: string,
-  productQuantity: number,
-  productPrice: number
-) => {
+export const addToCart = (productId: string, productName: string, productQuantity: number, productPrice: number) => {
   try {
-    // const ref = doc(firestore, 'users', uid, 'cart');
-    const ref = doc(firestore, `users/${uid}`);
-    const existingQuantity: number = (await getDoc(ref)).get(`cart.${productId}.productQuantity`) ?? 0;
-    await updateDoc(ref, `cart.${productId}`, {
-      productId,
-      productName,
-      productPrice,
-      productQuantity: existingQuantity + productQuantity,
+    Dialog.create({
+      persistent: true,
+      cancel: 'No',
+      ok: 'Yes',
+      title: "You're sure?",
+      message: `Add ${productQuantity} of ${productName} to your cart?`,
+    }).onOk(async () => {
+      // const ref = doc(firestore, 'users', uid, 'cart');
+      const ref = doc(firestore, `users/${uid}`);
+      const existingQuantity: number = (await getDoc(ref)).get(`cart.${productId}.productQuantity`) ?? 0;
+      await updateDoc(ref, `cart.${productId}`, {
+        productId,
+        productName,
+        productPrice,
+        productQuantity: existingQuantity + productQuantity,
+      });
+      console.log('Added to cart', productName, productQuantity, productPrice);
+      Notify.create({ message: `${productName} has been added to the cart!`, type: 'positive' });
+      return true;
     });
-    console.log('Added to cart', productName, productQuantity, productPrice);
-    Notify.create({ message: `${productName} has been added to the cart!`, type: 'positive' });
-    return true;
   } catch (err) {
     Notify.create(`An error occured: ${(err as Error).message}`);
     return false;
