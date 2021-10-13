@@ -8,7 +8,7 @@
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, Auth, User } from 'firebase/auth';
 
 import { init as initFirebase } from 'src/api/firebase';
 import { init as initAxios } from 'src/boot/axios';
@@ -16,6 +16,19 @@ import { init as initAxios } from 'src/boot/axios';
 if (process.env.MODE === 'capacitor') {
   import('src/api/mobile');
 }
+
+const getCurrentUser = (auth: Auth) => {
+  return new Promise<User | null>((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (user) => {
+        unsubscribe();
+        resolve(user);
+      },
+      reject
+    );
+  });
+};
 
 export default defineComponent({
   name: 'App',
@@ -28,14 +41,14 @@ export default defineComponent({
     onMounted(async () => {
       await router.push('/');
       await initFirebase();
-      await new Promise((r) => setTimeout(r, 2500));
+      const currentUser = await getCurrentUser(getAuth());
       await initAxios();
 
       if (desiredPath) {
         console.log(`Going to desired path ${desiredPath}`);
         await router.push(desiredPath);
       } else {
-        if (getAuth().currentUser) {
+        if (currentUser) {
           console.log('Going to home - user logged in with no specified path');
           router.push('/home');
         } else {
