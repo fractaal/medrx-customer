@@ -33,12 +33,11 @@
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
 import ProductCard from 'src/components/ProductCard.vue';
-import HorizontalScroller from 'src/components/HorizontalScroller.vue';
 import * as storefront from 'src/api/storefront';
 
 export default defineComponent({
   name: 'PageIndex',
-  components: { ProductCard, HorizontalScroller },
+  components: { ProductCard },
   setup() {
     onMounted(() => {
       storefront.getStorefront();
