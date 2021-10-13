@@ -3,6 +3,8 @@ import { createMemoryHistory, createRouter, createWebHashHistory, createWebHisto
 import routes from './routes';
 import mobile from 'src/api/mobile';
 
+let hasAlreadyNavigatedToOtherRoutes = false;
+
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
@@ -30,6 +32,13 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   Router.beforeEach((to, _, next) => {
+    if (to.path === '/' && hasAlreadyNavigatedToOtherRoutes) {
+      next('/home');
+      return;
+    } else if (to.path !== '/') {
+      hasAlreadyNavigatedToOtherRoutes = true;
+    }
+
     mobile.setStatusBarColor(to.meta?.statusBarColor, to.meta?.statusBarIsDark);
     next();
   });
