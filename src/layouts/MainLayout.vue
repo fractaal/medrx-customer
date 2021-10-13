@@ -12,7 +12,7 @@
             icon="chevron_left"
             size="lg"
             v-if="$route.path !== '/home'"
-            class="-ml-14"
+            class="-ml-14 mr-2"
             @click="$router.back()"
           />
           <q-btn dense flat round @click="$router.push('/settings')">
