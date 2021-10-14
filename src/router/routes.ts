@@ -69,7 +69,16 @@ const routes: RouteRecordRaw[] = [
       statusBarIsDark: true,
     },
   },
-
+  {
+    path: '/search',
+    component: () => import('layouts/HeaderLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Search.vue') }],
+    meta: {
+      name: 'Search',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
+    },
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
