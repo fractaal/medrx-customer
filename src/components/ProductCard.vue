@@ -1,8 +1,8 @@
 <template>
-  <q-card v-ripple class="shadow-lg h-50" style="width: 10rem; min-width: 10rem">
+  <q-card v-ripple class="shadow-lg h-62 w-40">
     <q-item>
       <q-item-section>
-        <q-item-label class="text-2xl">{{ name }}</q-item-label>
+        <q-item-label class="font-bold" lines="1">{{ name }}</q-item-label>
         <q-item-label caption lines="1">{{ description }}</q-item-label>
       </q-item-section>
     </q-item>
@@ -10,7 +10,7 @@
     <q-item>
       <q-item-section>
         <q-item-label class>
-          <span class="font-black text-2xl pr-1">{{ price }}</span
+          <span class="font-bold pr-1">{{ price }}</span
           >PHP
         </q-item-label>
       </q-item-section>
