@@ -26,6 +26,8 @@
 
         <q-space />
 
+        <q-btn dense flat round icon='search' to="/search" />
+
         <q-btn dense flat round icon="shopping_cart" to="/cart">
           <q-badge color="primary" floating transparent>{{ itemsInCart }}</q-badge>
         </q-btn>
