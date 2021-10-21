@@ -61,7 +61,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/cart',
-    component: () => import('layouts/HeaderLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Cart.vue') }],
     meta: {
       name: 'My Cart',
