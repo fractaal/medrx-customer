@@ -32,17 +32,17 @@
 
         <q-item dense>
           <q-item-section top>Subtotal</q-item-section>
-          <q-item-section side>{ subtotal }</q-item-section>
+          <q-item-section side>{{ subTotal }}</q-item-section>
         </q-item>
 
         <q-item dense>
           <q-item-section top>Delivery fee</q-item-section>
-          <q-item-section side>{ delivery fee }</q-item-section>
+          <q-item-section side>{{ fee }}</q-item-section>
         </q-item>
 
         <q-item dense>
           <q-item-section top class="font-semibold">Total</q-item-section>
-          <q-item-section side>{ Total }</q-item-section>
+          <q-item-section side>{{ total }}</q-item-section>
         </q-item>
       </div>
 
@@ -62,17 +62,22 @@
 <script lang="ts">
 import { ref, onMounted } from 'vue';
 import { getUser } from 'src/api/firebase';
-import { getCart } from 'src/api/cart';
+import { getCart, getTotal } from 'src/api/cart';
 import { CartItem } from 'src/models/CartItem';
 
 export default {
   setup() {
     const address = ref('');
     const cart = ref<Record<string, CartItem>>({});
+    const subTotal = ref(0);
+    const total = ref(0);
+    const fee = ref(0);
 
     onMounted(async () => {
       address.value = (await getUser())?.address as string;
       cart.value = await getCart();
+      subTotal.value = await getTotal();
+      total.value = subTotal.value + fee.value;
     });
 
     return {
@@ -80,6 +85,9 @@ export default {
       options: ['Cash-on-Delivery'],
       address,
       cart,
+      subTotal,
+      total,
+      fee,
       printCart: () => console.log(cart.value),
     };
   },
