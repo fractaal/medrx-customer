@@ -22,11 +22,25 @@
           </q-btn>
         </div>
 
-        <div class="ml-4 text-h6 font-black">{{ $t('hello') }}, {{ firstName }}!</div>
+        <!-- <div class="ml-4 text-h6 font-black">{{ $t('hello') }}, {{ firstName }}!</div> -->
 
-        <q-space />
-
-        <q-btn dense flat round icon="search" to="/search" />
+        <!-- <q-space /> -->
+        <q-input
+          dense
+          flat
+          outlined
+          rounded
+          label="Search..."
+          to="/search"
+          class="mx-4 w-full"
+          v-model="searchTerm"
+          @click="$router.push('/search')"
+        >
+          <template v-slot:append>
+            <q-icon name="search" size="sm" />
+          </template>
+        </q-input>
+        <!-- <q-btn dense flat round icon="search" to="/search" /> -->
       </q-toolbar>
     </q-header>
     <q-page-container class="my-2">
@@ -37,19 +51,22 @@
       </router-view>
     </q-page-container>
     <q-footer class="bg-white text-black">
-      <q-tabs v-model="tab">
-        <q-route-tab to="/cart" label="Cart">
+      <q-tabs v-model="tab" :breakpoint="300">
+        <q-route-tab to="/cart">
           <q-icon size="sm" name="shopping_cart">
             <q-badge v-if="itemsInCart != 0" color="primary">{{ itemsInCart }}</q-badge>
           </q-icon>
+          <p class="text-xs font-black">CART</p>
         </q-route-tab>
 
-        <q-route-tab label="Shop" to="/home">
+        <q-route-tab to="/home">
           <q-icon name="shopping_basket" size="sm" />
+          <p class="text-xs font-black">SHOP</p>
         </q-route-tab>
 
-        <q-route-tab label="Prescription" to="/upload">
-          <q-icon name="upload" size="sm" />
+        <q-route-tab to="/upload">
+          <q-icon name="medication" size="sm" />
+          <p class="text-xs font-black">PRESCRIBE</p>
         </q-route-tab>
 
         <!-- <q-route-tab name="movies" label="Soon">
@@ -65,6 +82,7 @@ import { ref, onMounted } from 'vue';
 import { seed, randomizeSeed } from 'src/api/seed';
 import { getUser } from 'src/api/firebase';
 import { itemsInCart } from 'src/api/cart';
+import { searchTerm } from 'src/api/search';
 
 export default {
   setup() {
@@ -82,6 +100,8 @@ export default {
       seed,
       firstName,
       itemsInCart,
+
+      searchTerm,
     };
   },
 };
