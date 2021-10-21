@@ -21,13 +21,27 @@ export const addToCart = (productId: string, productName: string, productQuantit
     }).onOk(async () => {
       // const ref = doc(firestore, 'users', uid, 'cart');
       const ref = doc(firestore, `users/${uid}`);
+
       const existingQuantity: number = (await getDoc(ref)).get(`cart.${productId}.productQuantity`) ?? 0;
+      await updateDoc(ref, `cart.${productId}`, {
+        productQuantity: existingQuantity + productQuantity,
+      });
+      const latestQuantity: number = (await getDoc(ref)).get(`cart.${productId}.productQuantity`) ?? 0;
+      const subTotal: number = (await getDoc(ref)).get('subTotal') ?? 0;
+      const latestPrice: number = latestQuantity * productPrice;
+      const newSubTotal = latestPrice + subTotal;
+
       await updateDoc(ref, `cart.${productId}`, {
         productId,
         productName,
-        productPrice,
-        productQuantity: existingQuantity + productQuantity,
+        productPrice: latestPrice,
+        productQuantity: latestQuantity,
       });
+
+      await updateDoc(ref, {
+        subTotal: newSubTotal,
+      });
+
       console.log('Added to cart', productName, productQuantity, productPrice);
       Notify.create({ message: `${productName} has been added to the cart!`, type: 'positive' });
       return true;
@@ -35,6 +49,20 @@ export const addToCart = (productId: string, productName: string, productQuantit
   } catch (err) {
     Notify.create(`An error occured: ${(err as Error).message}`);
     return false;
+  }
+};
+
+export const getTotal = async () => {
+  try {
+    const user = auth.currentUser;
+    if (user !== null) {
+      const subTotal = (await getDoc(doc(firestore, `users/${uid}`))).data()!.subTotal;
+      return subTotal;
+    }
+    return 0;
+  } catch (err) {
+    Notify.create(`An error occured: ${(err as Error).message}`);
+    return {};
   }
 };
 
