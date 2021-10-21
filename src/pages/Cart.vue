@@ -49,7 +49,7 @@
       <q-separator color="grey" spaced />
 
       <q-item-label class="text-l font-semibold mb-4">Payment Method</q-item-label>
-      <q-select disable Rounded filled v-model="model" :options="options" label="Default Payment method">
+      <q-select disable Rounded filled v-model="model" :options="options" label="Cash-on-Delivery">
         <template v-slot:prepend></template>
       </q-select>
       <div class="row justify-center">
