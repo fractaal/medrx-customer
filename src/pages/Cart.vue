@@ -30,13 +30,6 @@
           <q-item-section side>{{ item.productPrice }}</q-item-section>
         </q-item>
 
-        <q-item-label class="text-l font-semibold mb-4">Prescription</q-item-label>
-        <q-item dense v-for="i in 5" :key="i">
-          <q-item-section top>{ quantity }</q-item-section>
-          <q-item-section>{ medicine }</q-item-section>
-          <q-item-section side>{ price }</q-item-section>
-        </q-item>
-
         <q-item dense>
           <q-item-section top>Subtotal</q-item-section>
           <q-item-section side>{ subtotal }</q-item-section>
@@ -56,7 +49,7 @@
       <q-separator color="grey" spaced />
 
       <q-item-label class="text-l font-semibold mb-4">Payment Method</q-item-label>
-      <q-select Rounded filled v-model="model" :options="options" label="Default Payment method">
+      <q-select disable Rounded filled v-model="model" :options="options" label="Default Payment method">
         <template v-slot:prepend></template>
       </q-select>
       <div class="row justify-center">
