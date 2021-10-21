@@ -26,11 +26,7 @@
 
         <q-space />
 
-        <q-btn dense flat round icon='search' to="/search" />
-
-        <q-btn dense flat round icon="shopping_cart" to="/cart">
-          <q-badge color="primary" floating transparent>{{ itemsInCart }}</q-badge>
-        </q-btn>
+        <q-btn dense flat round icon="search" to="/search" />
       </q-toolbar>
     </q-header>
     <q-page-container class="my-2">
@@ -42,11 +38,17 @@
     </q-page-container>
     <q-footer class="bg-white text-black">
       <q-tabs v-model="tab">
-        <q-route-tab name="mails" label="Shop" to="/home">
+        <q-route-tab to="/cart" label="Cart">
+          <q-icon size="sm" name="shopping_cart">
+            <q-badge v-if="itemsInCart != 0" color="primary">{{ itemsInCart }}</q-badge>
+          </q-icon>
+        </q-route-tab>
+
+        <q-route-tab label="Shop" to="/home">
           <q-icon name="shopping_basket" size="sm" />
         </q-route-tab>
 
-        <q-route-tab name="alarms" label="Prescription" to="/upload">
+        <q-route-tab label="Prescription" to="/upload">
           <q-icon name="upload" size="sm" />
         </q-route-tab>
 
