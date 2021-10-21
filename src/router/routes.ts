@@ -71,7 +71,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/search',
-    component: () => import('layouts/HeaderLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/Search.vue') }],
     meta: {
       name: 'Search',
