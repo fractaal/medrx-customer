@@ -10,9 +10,14 @@
       <div class="mt-4 md:mt-0 divide-y divide-gray-300 px-8 space-y-4 w-full md:w-1/2">
         <div>
           <p class="text-h6 font-black">{{ product?.name }}</p>
-          <q-btn rounded flat class="font-semibold" :to="`/product/${product?.vendorId}`">{{
-            product?.vendorName.toUpperCase()
-          }}</q-btn>
+          <div
+            v-ripple
+            class="relative flex -mt-3 -mx-2 p-2 rounded-sm"
+            @click="$router.push(`/vendor/${product?.vendorId}`)"
+          >
+            <p class="mr-1">Sold by</p>
+            <p class="font-black">{{ product?.vendorName.toUpperCase() }}</p>
+          </div>
           <div>{{ product?.description }}</div>
           <div class="flex content-center justify-end">
             <div class="text-h6 font-black p-0 m-0">{{ product?.price }}</div>
