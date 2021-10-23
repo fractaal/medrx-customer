@@ -42,10 +42,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { Product } from 'src/models/Product';
-import { isLoading, getProduct } from 'src/api/product';
+import { Data } from 'src/models/Vendor';
+import { isLoading, getVendor } from 'src/api/vendor';
 import { addToCart } from 'src/api/cart';
 import { placeholderImageUrl } from 'src/api/storage';
 
@@ -53,30 +53,18 @@ export default defineComponent({
   name: 'ProductPage',
   setup() {
     const router = useRouter();
-    const productId = router.currentRoute.value.params.id;
-    const product = ref<Product | null>(null);
-    const quantity = ref(1);
-
-    // const addToCart = async () => {
-    //   addToCart(productId as string, product.value?.name, quantity.value, product.value?.price)
-    // }
+    const vendorId = router.currentRoute.value.params.id;
+    const vendor = ref<Data | null>(null);
 
     onMounted(async () => {
-      product.value = await getProduct(productId as string);
-    });
-
-    watch(quantity, (newQuantity) => {
-      if (newQuantity < 1) {
-        quantity.value = 1;
-      }
+      vendor.value = await getVendor(vendorId as string);
     });
 
     return {
       placeholderImageUrl,
       addToCart,
       isLoading,
-      product,
-      quantity,
+      vendor,
     };
   },
 });
