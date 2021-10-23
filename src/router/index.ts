@@ -31,12 +31,16 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE),
   });
 
-  Router.beforeEach((to, _, next) => {
+  Router.beforeEach(async (to, from, next) => {
     if (to.path === '/' && hasAlreadyNavigatedToOtherRoutes) {
       next('/home');
       return;
     } else if (to.path !== '/') {
       hasAlreadyNavigatedToOtherRoutes = true;
+    }
+
+    if (from.fullPath !== '/') {
+      await new Promise((r) => setTimeout(r, 150));
     }
 
     mobile.setStatusBarColor(to.meta?.statusBarColor, to.meta?.statusBarIsDark);
