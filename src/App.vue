@@ -12,6 +12,7 @@ import { getAuth, onAuthStateChanged, Auth, User } from 'firebase/auth';
 
 import { init as initFirebase } from 'src/api/firebase';
 import { init as initAxios } from 'src/boot/axios';
+import { Dialog } from 'quasar';
 
 if (process.env.MODE === 'capacitor') {
   import('src/api/mobile');
@@ -40,9 +41,23 @@ export default defineComponent({
 
     onMounted(async () => {
       await router.push('/');
-      await initFirebase();
-      const currentUser = await getCurrentUser(getAuth());
-      await initAxios();
+
+      let currentUser;
+
+      try {
+        await initFirebase();
+        currentUser = await getCurrentUser(getAuth());
+        await initAxios();
+      } catch (err) {
+        Dialog.create({
+          color: 'red',
+          title: 'Failed to connect to MedRx',
+          persistent: true,
+          message:
+            "We couldn't connect to MedRx. Perhaps you're not connected to the internet. Close the app and try again later!",
+        });
+        return;
+      }
 
       if (desiredPath) {
         console.log(`Going to desired path ${desiredPath}`);
