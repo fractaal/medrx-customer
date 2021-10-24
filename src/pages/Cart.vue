@@ -22,32 +22,55 @@
         <q-separator color="grey" spaced />
 
         <q-item-label class="text-h6 mb-4">Order Summary</q-item-label>
-        <q-item-label class="text-l font-semibold mb-4">General Items</q-item-label>
 
-        <q-item dense v-for="item in cart" :key="item" class='row'>
-          <q-item-section class="font-black col items-start">{{ item.productName }}</q-item-section>
-          <q-item-section class='col items-center'>{{ item.productQuantity }}</q-item-section>
-          <q-item-section class='col items-end'>{{ item.productPrice }}</q-item-section>
-        </q-item>
+        <div class="grid-cols-4 grid">
+          <div v-for='header in headers' :key='header'>
+            <div class="text-l font-semibold mb-4">{{ header }}</div>
+          </div>
+        </div>
 
-        <q-separator/>
+        <div dense v-for="item in cart" :key="item" class='grid-cols-4 grid'>
+        <!--can be a component-->
+          <div dense class="font-black">{{ item.productName }}</div>
+          <q-input  
+            @click="updateCart(item.productId, item.productName, item.productQuantity, item.productPrice)"
+            v-model="item.productQuantity"
+            type="number"
+            dense
+            style="max-width: 30px"
+            class='ml-3'
+          />
+          <div class='pt-2.5'>{{ item.productPrice }}</div>
+          <div class='col items-end pt-2.5'>{{ item.amount }}</div>
+        <!--can be a component-->
+        </div>
+        
+        <q-separator class='my-3'/>
 
-        <q-item dense>
-          <q-item-section top>Subtotal</q-item-section>
-          <q-item-section side>{{ subTotal }}</q-item-section>
-        </q-item>
+        <div dense class='grid-cols-4 grid'>
 
-        <q-item dense>
-          <q-item-section top>Delivery fee</q-item-section>
-          <q-item-section side>{{ fee }}</q-item-section>
-        </q-item>
+          <div>Subtotal</div>
+          <div></div>
+          <div></div>
+          <div>{{ subTotal }}</div>
+      
+          <div>Delivery fee</div>
+          <div></div>
+          <div></div>
+          <div>{{ fee }}</div>
 
-        <q-separator/>
+        </div>
 
-        <q-item dense>
-          <q-item-section top class="font-semibold">Total</q-item-section>
-          <q-item-section side>{{ total }}</q-item-section>
-        </q-item>
+        <q-separator class='my-3'/>
+
+        <div dense class='grid-cols-4 grid'>
+
+          <div class='font-bold'>Total</div>
+          <div></div>
+          <div></div>
+          <div>{{ total }}</div>
+
+        </div>
       </div>
 
       <q-separator color="grey" spaced />
@@ -83,10 +106,11 @@ export default {
       subTotal.value = await getTotal();
       total.value = subTotal.value + fee.value;
     });
-
+    
     return {
       model: ref(null),
       options: ['Cash-on-Delivery'],
+      headers: ['General Items', 'Quantity', 'Unit Price', 'Amount'],
       address,
       cart,
       subTotal,
