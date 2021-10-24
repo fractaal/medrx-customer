@@ -114,7 +114,7 @@ onSnapshot(doc(firestore, `users/${uid}`), (doc) => {
     _subTotal += itemSubtotal;
     _total = _subTotal + fee.value;
 
-    _itemsInCart += _cart[productId].productQuantity;
+    _itemsInCart += parseInt(_cart[productId].productQuantity as unknown as string);
   }
 
   subTotal.value = _subTotal;
