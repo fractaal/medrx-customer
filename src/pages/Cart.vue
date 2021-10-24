@@ -33,10 +33,10 @@
         <!--can be a component-->
           <div dense class="font-black">{{ item.productName }}</div>
           <q-input  
-            @click="updateCart(item.productId, item.productName, item.productQuantity, item.productPrice)"
+            @change="update(item.productId, item.productName, item.productQuantity, item.productPrice)"
             v-model="item.productQuantity"
-            type="number"
             dense
+            type='number'
             style="max-width: 30px"
             class='ml-3'
           />
@@ -89,23 +89,39 @@
 <script lang="ts">
 import { ref, onMounted } from 'vue';
 import { getUser } from 'src/api/firebase';
-import { getCart, getTotal } from 'src/api/cart';
-import { CartItem } from 'src/models/CartItem';
+import { cart, getTotal, updateCart, getAmount, removeProduct } from 'src/api/cart';
+import { useQuasar } from 'quasar';
 
 export default {
   setup() {
     const address = ref('');
-    const cart = ref<Record<string, CartItem>>({});
     const subTotal = ref(0);
     const total = ref(0);
     const fee = ref(0);
+    const amount = ref(0);
+    const quasar = useQuasar();
+
 
     onMounted(async () => {
       address.value = (await getUser())?.address as string;
-      cart.value = await getCart();
-      subTotal.value = await getTotal();
+      subTotal.value = await getTotal() || 0;
       total.value = subTotal.value + fee.value;
     });
+
+    const update = async (productId: string, productName: string, productQuantity: number, productPrice: number) => {
+      if(productQuantity > 0){
+        await updateCart(productId, productName, productQuantity, productPrice);
+        amount.value = await getAmount(productId);
+        subTotal.value = await getTotal();
+        total.value = subTotal.value + fee.value;
+      }else if(productQuantity == 0){
+        removeProduct(productId);
+        subTotal.value = await getTotal();
+        total.value = subTotal.value + fee.value;
+      }else{
+        quasar.notify({ type: 'negative', message: 'Please type a valid number!' });
+      }
+    }
     
     return {
       model: ref(null),
@@ -116,6 +132,7 @@ export default {
       subTotal,
       total,
       fee,
+      update,
       printCart: () => console.log(cart.value),
     };
   },
