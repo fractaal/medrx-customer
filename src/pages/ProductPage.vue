@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <q-spinner class="w-1/2 mx-auto" v-if="isLoading" size="96px" />
-    <div class="flex mt-16" v-else>
+    <div class="flex" v-else>
       <q-img
         :src="product?.photoUrl || placeholderImageUrl"
         ratio="1"
