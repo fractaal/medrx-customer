@@ -43,7 +43,7 @@
         <!-- <q-btn dense flat round icon="search" to="/search" /> -->
       </q-toolbar>
     </q-header>
-    <q-page-container class="my-2">
+    <q-page-container>
       <router-view v-slot="{ Component }" class="mx-auto w-full md:w-3/4 lg:w-3/5">
         <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" appear :duration="150">
           <component :is="Component" />
