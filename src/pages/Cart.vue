@@ -24,52 +24,48 @@
         <q-item-label class="text-h6 mb-4">Order Summary</q-item-label>
 
         <div class="grid-cols-4 grid">
-          <div v-for='header in headers' :key='header'>
+          <div v-for="header in headers" :key="header">
             <div class="text-l font-semibold mb-4">{{ header }}</div>
           </div>
         </div>
 
-        <div dense v-for="item in cart" :key="item" class='grid-cols-4 grid'>
-        <!--can be a component-->
+        <div dense v-for="item in cart" :key="item" class="grid-cols-4 grid">
+          <!--can be a component-->
           <div dense class="font-black">{{ item.productName }}</div>
-          <q-input  
+          <q-input
             @change="update(item.productId, item.productName, item.productQuantity, item.productPrice)"
             v-model="item.productQuantity"
             dense
-            type='number'
+            type="number"
             style="max-width: 30px"
-            class='ml-3'
+            class="ml-3"
           />
-          <div class='pt-2.5'>{{ item.productPrice }}</div>
-          <div class='col items-end pt-2.5'>{{ item.amount }}</div>
-        <!--can be a component-->
+          <div class="pt-2.5">{{ item.productPrice }}</div>
+          <div class="col items-end pt-2.5">{{ item.amount }}</div>
+          <!--can be a component-->
         </div>
-        
-        <q-separator class='my-3'/>
 
-        <div dense class='grid-cols-4 grid'>
+        <q-separator class="my-3" />
 
+        <div dense class="grid-cols-4 grid">
           <div>Subtotal</div>
           <div></div>
           <div></div>
           <div>{{ subTotal }}</div>
-      
+
           <div>Delivery fee</div>
           <div></div>
           <div></div>
           <div>{{ fee }}</div>
-
         </div>
 
-        <q-separator class='my-3'/>
+        <q-separator class="my-3" />
 
-        <div dense class='grid-cols-4 grid'>
-
-          <div class='font-bold'>Total</div>
+        <div dense class="grid-cols-4 grid">
+          <div class="font-bold">Total</div>
           <div></div>
           <div></div>
           <div>{{ total }}</div>
-
         </div>
       </div>
 
@@ -89,40 +85,29 @@
 <script lang="ts">
 import { ref, onMounted } from 'vue';
 import { getUser } from 'src/api/firebase';
-import { cart, getTotal, updateCart, getAmount, removeProduct } from 'src/api/cart';
+import { cart, total, subTotal, updateCart, getAmount, removeProduct } from 'src/api/cart';
 import { useQuasar } from 'quasar';
 
 export default {
   setup() {
     const address = ref('');
-    const subTotal = ref(0);
-    const total = ref(0);
     const fee = ref(0);
-    const amount = ref(0);
     const quasar = useQuasar();
-
 
     onMounted(async () => {
       address.value = (await getUser())?.address as string;
-      subTotal.value = await getTotal() || 0;
-      total.value = subTotal.value + fee.value;
     });
 
     const update = async (productId: string, productName: string, productQuantity: number, productPrice: number) => {
-      if(productQuantity > 0){
+      if (productQuantity > 0) {
         await updateCart(productId, productName, productQuantity, productPrice);
-        amount.value = await getAmount(productId);
-        subTotal.value = await getTotal();
-        total.value = subTotal.value + fee.value;
-      }else if(productQuantity == 0){
+      } else if (productQuantity == 0) {
         removeProduct(productId);
-        subTotal.value = await getTotal();
-        total.value = subTotal.value + fee.value;
-      }else{
+      } else {
         quasar.notify({ type: 'negative', message: 'Please type a valid number!' });
       }
-    }
-    
+    };
+
     return {
       model: ref(null),
       options: ['Cash-on-Delivery'],
