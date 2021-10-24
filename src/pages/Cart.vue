@@ -24,11 +24,13 @@
         <q-item-label class="text-h6 mb-4">Order Summary</q-item-label>
         <q-item-label class="text-l font-semibold mb-4">General Items</q-item-label>
 
-        <q-item dense v-for="item in cart" :key="item">
-          <q-item-section top class="font-black">{{ item.productName }}</q-item-section>
-          <q-item-section>{{ item.productQuantity }}</q-item-section>
-          <q-item-section side>{{ item.productPrice }}</q-item-section>
+        <q-item dense v-for="item in cart" :key="item" class='row'>
+          <q-item-section class="font-black col items-start">{{ item.productName }}</q-item-section>
+          <q-item-section class='col items-center'>{{ item.productQuantity }}</q-item-section>
+          <q-item-section class='col items-end'>{{ item.productPrice }}</q-item-section>
         </q-item>
+
+        <q-separator/>
 
         <q-item dense>
           <q-item-section top>Subtotal</q-item-section>
@@ -39,6 +41,8 @@
           <q-item-section top>Delivery fee</q-item-section>
           <q-item-section side>{{ fee }}</q-item-section>
         </q-item>
+
+        <q-separator/>
 
         <q-item dense>
           <q-item-section top class="font-semibold">Total</q-item-section>
