@@ -1,15 +1,15 @@
 <template>
   <q-page>
-    <q-spinner class="w-1/2 mx-auto" v-if="isLoading" size="96px" />
+    <medrx-loader v-if="isLoading" style="height: calc(100vh - 150px)" />
     <div v-else>
       <div class="flex">
         <q-img
           :src="vendorData?.vendor.photoUrl || placeholderImageUrl"
           class="w-full h-32 md:h-64 rounded-none md:rounded-md shadow-md"
         >
-          <p class="absolute left-4 bottom-2 text-h6 font-black">{{ vendorData?.vendor.name }}</p>
         </q-img>
-        <div class="mt-4 divide-y divide-gray-300 px-4 space-y-4">
+        <p class="px-4 mt-2 text-h6 font-black">{{ vendorData?.vendor.name }}</p>
+        <div class="divide-y divide-gray-300 px-4 space-y-4">
           <p>{{ vendorData?.vendor.content }}</p>
         </div>
       </div>
@@ -65,9 +65,10 @@ import { isLoading, getVendor } from 'src/api/vendor';
 import { addToCart } from 'src/api/cart';
 import { placeholderImageUrl } from 'src/api/storage';
 import ProductCard from 'src/components/ProductCard.vue';
+import MedrxLoader from 'src/components/MedrxLoader.vue';
 
 export default defineComponent({
-  components: { ProductCard },
+  components: { ProductCard, MedrxLoader },
   name: 'ProductPage',
   setup() {
     const router = useRouter();

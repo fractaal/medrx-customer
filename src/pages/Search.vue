@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="mt-4">
-      <q-spinner v-if="isLoading" size="xl" class="block mx-auto" />
+      <medrx-loader v-if="isLoading" style="height: calc(100vh - 150px)" />
       <q-list padding class="space-y-2 px-2" v-else>
         <product-item
           v-for="product in searchResults"
@@ -22,10 +22,11 @@
 import { defineComponent } from 'vue';
 import { searchResults, isLoading } from 'src/api/search';
 import ProductItem from 'src/components/ProductItem.vue';
+import MedrxLoader from 'src/components/MedrxLoader.vue';
 
 export default defineComponent({
   name: 'Search',
-  components: { ProductItem },
+  components: { ProductItem, MedrxLoader },
   setup() {
     return {
       searchResults,
