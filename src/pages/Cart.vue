@@ -85,7 +85,7 @@
 <script lang="ts">
 import { ref, onMounted } from 'vue';
 import { getUser } from 'src/api/firebase';
-import { cart, total, subTotal, updateCart, getAmount, removeProduct } from 'src/api/cart';
+import { cart, total, subTotal, updateCart, removeProduct } from 'src/api/cart';
 import { useQuasar } from 'quasar';
 
 export default {

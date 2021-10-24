@@ -43,22 +43,6 @@ export const addToCart = (productId: string, productName: string, productQuantit
   }
 };
 
-export const getAmount = async (productId: string) => {
-  try {
-    const user = auth.currentUser;
-    if (user !== null) {
-      const ref = doc(firestore, `users/${uid}`);
-      const amount: number = (await getDoc(ref)).get(`cart.${productId}.amount`) ?? 0;
-
-      return amount;
-    }
-    return 0;
-  } catch (err) {
-    Notify.create(`An error occured: ${(err as Error).message}`);
-    return 0;
-  }
-};
-
 export const removeProduct = async (productId: string) => {
   try {
     const user = auth.currentUser;
