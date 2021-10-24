@@ -34,8 +34,9 @@ export const addToCart = (productId: string, productName: string, productQuantit
       await updateDoc(ref, `cart.${productId}`, {
         productId,
         productName,
-        productPrice: latestPrice,
+        productPrice,
         productQuantity: latestQuantity,
+        amount: latestPrice
       });
 
       await updateDoc(ref, {
@@ -66,6 +67,25 @@ export const getTotal = async () => {
   }
 };
 
+// export const updateCart = async (productId: string, productName: string, productQuantity: number, productPrice: number) => {
+//   try {
+//     const user = auth.currentUser;
+//     const uid = auth.currentUser?.uid;
+
+//     if (user !== null) {
+//       const ref = doc(firestore, `users/${uid}`);
+//       const currentPrice: number = (await getDoc(ref)).get(`cart.${productId}.productPrice`) ?? 0;
+
+//       await updateDoc(ref, `cart.${productId}`, {
+//         productId,
+//         productName,
+//         productPrice: productPrice,
+//         productQuantity: latestQuantity,
+//       });
+//     }
+//   }
+// }
+
 export const getCart = async (): Promise<Record<string, CartItem>> => {
   try {
     const user = auth.currentUser;
@@ -79,6 +99,8 @@ export const getCart = async (): Promise<Record<string, CartItem>> => {
     return {};
   }
 };
+
+
 
 onSnapshot(doc(firestore, `users/${uid}`), (doc) => {
   const data = doc.data()!;
