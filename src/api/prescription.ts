@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { getAuth, IdTokenResult } from 'firebase/auth';
-import { get, set, ref as storageRef, onValue, DatabaseReference } from 'firebase/database';
+import { set, ref as storageRef, onValue, DatabaseReference } from 'firebase/database';
 import { database } from './firebase';
 import { Notify, Dialog } from 'quasar';
 
@@ -52,17 +52,15 @@ export const performPrescriptionRequest = async () => {
     `/${token.claims.region}/${token.claims.city}/${auth.currentUser?.uid}/prescriptionRequests`
   );
 
-  const existingPrescriptionRequest = (await get(location)).val();
-
-  if (existingPrescriptionRequest.__dummy) {
-    requestStatus.value = PrescriptionRequestStatus.IN_QUEUE;
-  }
-
   onValue(location, (snapshot) => {
     const data = snapshot.val();
+    console.log(data);
     const status = data.status;
     const _customMessage = data.customMessage ?? '';
     customMessage.value = _customMessage;
     requestStatus.value = status;
+    if (data.__dummy) {
+      requestStatus.value = PrescriptionRequestStatus.IN_QUEUE;
+    }
   });
 })();
