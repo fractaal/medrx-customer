@@ -1,7 +1,8 @@
 <template>
   <q-page class="bg-body">
     <!-- <horizontal-scroller> -->
-    <q-spinner class="block mx-auto" size="xl" v-if="storefrontIsLoading" />
+    <!-- <q-spinner class="block mx-auto" size="xl" v-if="storefrontIsLoading" /> -->
+    <medrx-loader v-if="storefrontIsLoading" style="height: calc(100vh - 150px)" />
     <div class="flex content-center justify-center gap-2">
       <product-card
         v-for="item in storefront"
@@ -33,11 +34,12 @@
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
 import ProductCard from 'src/components/ProductCard.vue';
+import MedrxLoader from 'src/components/MedrxLoader.vue';
 import * as storefront from 'src/api/storefront';
 
 export default defineComponent({
   name: 'PageIndex',
-  components: { ProductCard },
+  components: { ProductCard, MedrxLoader },
   setup() {
     onMounted(() => {
       storefront.getStorefront();

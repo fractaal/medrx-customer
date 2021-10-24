@@ -1,7 +1,7 @@
 <template>
   <q-page>
-    <q-spinner class="w-1/2 mx-auto" v-if="isLoading" size="96px" />
-    <div class="flex mt-16" v-else>
+    <medrx-loader v-if="isLoading" style="height: calc(100vh - 150px)" />
+    <div class="flex" v-else>
       <q-img
         :src="product?.photoUrl || placeholderImageUrl"
         ratio="1"
@@ -48,8 +48,10 @@ import { Product } from 'src/models/Product';
 import { isLoading, getProduct } from 'src/api/product';
 import { addToCart } from 'src/api/cart';
 import { placeholderImageUrl } from 'src/api/storage';
+import MedrxLoader from 'src/components/MedrxLoader.vue';
 
 export default defineComponent({
+  components: { MedrxLoader },
   name: 'ProductPage',
   setup() {
     const router = useRouter();

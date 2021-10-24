@@ -1,6 +1,5 @@
 <template>
   <q-page>
-    {{ requestStatus }}
     <transition name="fade" mode="out-in">
       <firebase-uploader
         v-if="requestStatus === undefined"
@@ -12,7 +11,7 @@
         :max-file-size="1024 * 1024 * 2.5"
         @uploaded="performPrescriptionRequest"
       />
-      <div v-else class="text-center pt-64">
+      <div v-else class="text-center h-screen flex content-center justify-center">
         <transition name="fade" mode="out-in">
           <div v-if="requestStatus === 'IN_QUEUE'">
             <q-spinner class="mx-auto" size="128px" :thickness="3" />

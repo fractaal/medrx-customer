@@ -40,7 +40,7 @@ export default route(function (/* { store, ssrContext } */) {
     }
 
     if (from.fullPath !== '/') {
-      await new Promise((r) => setTimeout(r, 150));
+      await new Promise((r) => setTimeout(r, 250));
     }
 
     mobile.setStatusBarColor(to.meta?.statusBarColor, to.meta?.statusBarIsDark);

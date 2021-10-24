@@ -2,7 +2,7 @@
   <q-layout view="hHh lpR fFf">
     <!-- <img src="~assets/cityscape.svg" class="fixed bottom-4 opacity-5" /> -->
     <img src="~assets/cityscape.svg" class="fixed bottom-4 opacity-5" />
-    <q-header unelevated class="px-2 top mx-auto w-full md:w-3/4 lg:w-3/5 py-4">
+    <q-header unelevated class="px-2 top mx-auto w-full md:w-3/4 lg:w-3/5 py-2">
       <q-toolbar>
         <div>
           <q-btn
@@ -16,7 +16,7 @@
             @click="$router.back()"
           />
           <q-btn dense flat round @click="$router.push('/settings')">
-            <q-avatar color="primary" size="48px" class="shadow-xl">
+            <q-avatar color="primary" size="40px" class="shadow-xl">
               <q-img :src="`https://avatars.dicebear.com/api/micah/${seed}.svg`" />
             </q-avatar>
           </q-btn>
@@ -43,7 +43,7 @@
         <!-- <q-btn dense flat round icon="search" to="/search" /> -->
       </q-toolbar>
     </q-header>
-    <q-page-container class="my-2">
+    <q-page-container>
       <router-view v-slot="{ Component }" class="mx-auto w-full md:w-3/4 lg:w-3/5">
         <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" appear :duration="150">
           <component :is="Component" />
