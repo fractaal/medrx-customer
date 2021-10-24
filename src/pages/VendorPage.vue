@@ -5,14 +5,12 @@
       <div class="flex">
         <q-img
           :src="vendorData?.vendor.photoUrl || placeholderImageUrl"
-          ratio="1"
-          class="w-full md:w-1/2 rounded-none md:rounded-xl shadow-md"
-        ></q-img>
-        <div class="mt-4 md:mt-0 divide-y divide-gray-300 px-4 space-y-4 w-full md:w-1/2">
-          <div>
-            <p class="text-h6 font-black">{{ vendorData?.vendor.name }}</p>
-            <div>{{ vendorData?.vendor.content }}</div>
-          </div>
+          class="w-full h-32 md:h-64 rounded-none md:rounded-md shadow-md"
+        >
+          <p class="absolute left-4 bottom-2 text-h6 font-black">{{ vendorData?.vendor.name }}</p>
+        </q-img>
+        <div class="mt-4 divide-y divide-gray-300 px-4 space-y-4">
+          <p>{{ vendorData?.vendor.content }}</p>
         </div>
       </div>
       <br />
@@ -21,12 +19,26 @@
       <div class="px-4">
         <div class="flex space-x-2 content-center">
           <div class="space-x-2">
-            <q-btn icon="arrow_left" round unelevated class="shadow-md bg-white" @click="changePageNumber(-1)"></q-btn>
-            <q-btn icon="arrow_right" round unelevated class="shadow-md bg-white" @click="changePageNumber(1)"></q-btn>
+            <q-btn
+              icon="arrow_left"
+              round
+              unelevated
+              class="shadow-md bg-white"
+              @click="changePageNumber(-1)"
+              :disable="pageNumber == 0"
+            ></q-btn>
+            <q-btn
+              icon="arrow_right"
+              round
+              unelevated
+              class="shadow-md bg-white"
+              @click="changePageNumber(1)"
+              :disable="pageNumber == maxPageNumber"
+            ></q-btn>
           </div>
-          <p>
+          <span class="flex content-center">
             {{ vendorData?.products.total }} products in total (Page {{ pageNumber + 1 }} of {{ maxPageNumber + 1 }})
-          </p>
+          </span>
         </div>
         <br />
         <div class="flex content-center gap-2">
