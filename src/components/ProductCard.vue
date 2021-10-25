@@ -1,5 +1,5 @@
 <template>
-  <q-card v-ripple class="shadow-lg h-62 w-40 transition-all duration-150 hover:bg-gray-100 hover:shadow-xl">
+  <q-card v-ripple class="shadow-lg h-62 transition-all duration-150 hover:bg-gray-100 hover:shadow-xl">
     <q-item>
       <q-item-section>
         <q-item-label class="font-bold" lines="1">{{ name }}</q-item-label>
