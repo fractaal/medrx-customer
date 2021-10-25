@@ -3,7 +3,7 @@
     <!-- <horizontal-scroller> -->
     <!-- <q-spinner class="block mx-auto" size="xl" v-if="storefrontIsLoading" /> -->
     <medrx-loader v-if="storefrontIsLoading" style="height: calc(100vh - 150px)" />
-    <div class="flex content-center justify-center gap-2">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mx-4">
       <product-card
         v-for="item in storefront"
         clickable

@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <medrx-loader v-if="isLoading" style="height: calc(100vh - 150px)" />
+    <medrx-loader v-if="isLoading" class="h-screen" />
     <div v-else>
       <div class="flex">
         <q-img
@@ -41,7 +41,7 @@
           </span>
         </div>
         <br />
-        <div class="flex content-center gap-2">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mx-4">
           <product-card
             v-for="item in vendorData?.products.results"
             :key="item.id"
