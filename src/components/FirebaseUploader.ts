@@ -1,9 +1,9 @@
-import { createUploaderComponent } from 'quasar'
-import { computed, ref, onUpdated } from 'vue'
-import { getApp } from '@firebase/app'
-import { uploadBytesResumable, ref as storageRef, getStorage, UploadTask } from 'firebase/storage'
-import { getAuth } from '@firebase/auth'
-import { Notify } from 'quasar'
+import { createUploaderComponent } from 'quasar';
+import { computed, ref, onUpdated } from 'vue';
+import { getApp } from '@firebase/app';
+import { uploadBytesResumable, ref as storageRef, getStorage, UploadTask } from 'firebase/storage';
+import { getAuth } from '@firebase/auth';
+import { Notify } from 'quasar';
 
 // export a Vue component
 export default createUploaderComponent({
@@ -19,11 +19,11 @@ export default createUploaderComponent({
     // ...your custom events name list
   ],
 
-  injectPlugin ({ helpers, emit }) {
+  injectPlugin({ helpers, emit }) {
     onUpdated(() => {
-        console.log(helpers.queuedFiles.value[0])
-    })
-    const task = ref<UploadTask|null>(null);
+      console.log(helpers.queuedFiles.value[0]);
+    });
+    const task = ref<UploadTask | null>(null);
 
     // [ REQUIRED! ]
     // We're working on uploading files
@@ -34,39 +34,51 @@ export default createUploaderComponent({
     // uploader signaling it's waiting
     // on something (blocks all controls)
     const isBusy = computed(() => {
-      return false
-    })
+      return false;
+    });
 
     // [ REQUIRED! ]
     // Abort and clean up any process
     // that is in progress
-    function abort () {
-        task.value?.cancel()
-        isUploading.value = false
-        helpers.updateFileStatus(helpers.queuedFiles.value[0], 'failed')
-        emit('failed')
+    function abort() {
+      task.value?.cancel();
+      isUploading.value = false;
+      helpers.updateFileStatus(helpers.queuedFiles.value[0], 'failed');
+      emit('failed');
     }
 
     // [ REQUIRED! ]
     // Start the uploading process
-    function upload () {
-      const file = helpers.queuedFiles.value[0]
-      task.value = uploadBytesResumable(storageRef(getStorage(getApp()), `/users/${getAuth().currentUser?.uid}/prescription.png`), file)
-      emit('uploading')
-      isUploading.value = true
-      task.value.on('state_changed', snapshot => {
-        helpers.updateFileStatus(file, 'uploading', snapshot.bytesTransferred)
-        helpers.uploadedSize.value = snapshot.bytesTransferred
-      }, (err) => {
-        Notify.create({type: 'negative', message: `Something went wrong... ${err.message}`})
-        isUploading.value = false
-        emit('failed')
-      }, 
-      () => {
-        helpers.updateFileStatus(file, 'uploaded', file.size)
-        isUploading.value = false          
-        emit('uploaded')
-      })
+    function upload() {
+      const file = helpers.queuedFiles.value[0];
+      task.value = uploadBytesResumable(
+        storageRef(getStorage(getApp()), `/users/${getAuth().currentUser?.uid}/prescription.png`),
+        file
+      );
+      emit('uploading');
+      isUploading.value = true;
+      task.value.on(
+        'state_changed',
+        (snapshot) => {
+          helpers.updateFileStatus(file, 'uploading', snapshot.bytesTransferred);
+          helpers.uploadedSize.value = snapshot.bytesTransferred;
+        },
+        (err) => {
+          Notify.create({
+            type: 'negative',
+            message: "Something went wrong and we couldn't upload your prescription.",
+          });
+          console.error(err);
+          abort();
+          // isUploading.value = false;
+          // emit('failed');
+        },
+        () => {
+          helpers.updateFileStatus(file, 'uploaded', file.size);
+          isUploading.value = false;
+          emit('uploaded');
+        }
+      );
     }
 
     return {
@@ -74,7 +86,7 @@ export default createUploaderComponent({
       isBusy,
 
       abort,
-      upload
-    }
-  }
-})
+      upload,
+    };
+  },
+});
