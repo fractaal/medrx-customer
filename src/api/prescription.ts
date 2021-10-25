@@ -54,7 +54,12 @@ export const performPrescriptionRequest = async () => {
 
   onValue(location, (snapshot) => {
     const data = snapshot.val();
-    console.log(data);
+
+    if (!data) {
+      requestStatus.value = undefined;
+      return;
+    }
+
     const status = data.status;
     const _customMessage = data.customMessage ?? '';
     customMessage.value = _customMessage;
