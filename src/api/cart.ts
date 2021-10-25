@@ -107,8 +107,7 @@ onSnapshot(doc(firestore, `users/${uid}`), (doc) => {
 
   const orderedCart = Object.keys(_cart)
     .sort()
-    .reduce((obj, key) => {
-      // @ts-ignore
+    .reduce((obj: Record<string, CartItem>, key) => {
       obj[key] = _cart[key];
       return obj;
     }, {});
