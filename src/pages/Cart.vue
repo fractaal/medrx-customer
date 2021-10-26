@@ -62,12 +62,12 @@
         <q-separator class="my-3" />
 
         <div dense class="grid-cols-3 grid place-items-center">
-          <div>Subtotal</div>
+          <div class="mr-8" >Subtotal</div>
           <div></div>
           
           <div>{{ subTotal }}</div>
 
-          <div class='ml-6'>Delivery fee</div>
+          <div class="mr-3">Delivery fee</div>
           <div></div>
           
           <div>{{ fee }}</div>
@@ -76,7 +76,7 @@
         <q-separator class="my-3" />
 
         <div dense class="grid-cols-3 grid place-items-center">
-          <div class="font-bold">Total</div>
+          <div class="font-bold mr-14">Total</div>
           <div></div>
           
           <div>{{ total }}</div>
