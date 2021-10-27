@@ -26,7 +26,25 @@
         </div>
         <div class="pt-4">
           <div class="grid grid-cols-2 gap-2">
-            <q-input v-model.number="quantity" type="number" min="1" outlined dense maxlength="12" label="Quantity" />
+            <div class="grid-cols-3 grid place-items-center">
+
+            <div class='ml-9'>
+              <q-avatar clickable @click='quantity--' icon='remove'/>
+            </div>
+            <div>
+            <q-input
+              v-model="quantity"
+              type="number"
+              style='max-width:25px'
+              class='mx-2'
+              dense
+            />
+            </div>
+            <div class='mr-9'>
+              <q-avatar lickable @click='quantity++' icon='add' />
+            </div>
+          </div>
+            <!-- <q-input v-model.number="quantity" type="number" min="1" outlined dense maxlength="12" label="Quantity" /> -->
             <q-btn
               class="px-8 bg-gradient-to-tr from-medrx to-green-200"
               text-color="white"

@@ -23,48 +23,62 @@
 
         <q-item-label class="text-h6 mb-4">Order Summary</q-item-label>
 
-        <div class="grid-cols-4 grid">
+        <div class="grid-cols-3 grid place-items-center">
           <div v-for="header in headers" :key="header">
-            <div class="text-l font-semibold mb-4">{{ header }}</div>
+            <div class="text-l font-semibold mb-4 place-items-center">{{ header }}</div>
           </div>
         </div>
 
-        <div dense v-for="item in cart" :key="item" class="grid-cols-4 grid">
+        <div dense v-for="item in cart" :key="item" class="grid-cols-3 grid place-items-center">
           <!--can be a component-->
           <div dense class="font-black">{{ item.productName }}</div>
-          <q-input
-            @change="update(item.productId, item.productName, item.productQuantity, item.productPrice)"
-            v-model="item.productQuantity"
-            dense
-            type="number"
-            style="max-width: 30px"
-            class="ml-3"
-          />
-          <div class="pt-2.5">{{ item.productPrice }}</div>
-          <div class="col items-end pt-2.5">{{ item.amount }}</div>
+
+          <div class="grid-cols-3 grid place-items-center">
+
+            <div>
+              <q-avatar clickable @click='item.productQuantity--; update(item.productId, item.productName, item.productQuantity, item.productPrice)' icon='remove'/>
+            </div>
+            <div>
+            <q-input
+              @change="update(item.productId, item.productName, item.productQuantity, item.productPrice)"
+              v-model="item.productQuantity"
+              type="number"
+              style='max-width:25px'
+              class='mx-2'
+              dense
+            />
+            </div>
+            
+            <div>
+              <q-avatar lickable @click='item.productQuantity++; update(item.productId, item.productName, item.productQuantity, item.productPrice)' icon='add' />
+            </div>
+          </div>
+
+          
+          <div>{{ item.amount }}</div>
           <!--can be a component-->
         </div>
 
         <q-separator class="my-3" />
 
-        <div dense class="grid-cols-4 grid">
-          <div>Subtotal</div>
+        <div dense class="grid-cols-3 grid place-items-center">
+          <div class="mr-8" >Subtotal</div>
           <div></div>
-          <div></div>
+          
           <div>{{ subTotal }}</div>
 
-          <div>Delivery fee</div>
+          <div class="mr-3">Delivery fee</div>
           <div></div>
-          <div></div>
+          
           <div>{{ fee }}</div>
         </div>
 
         <q-separator class="my-3" />
 
-        <div dense class="grid-cols-4 grid">
-          <div class="font-bold">Total</div>
+        <div dense class="grid-cols-3 grid place-items-center">
+          <div class="font-bold mr-14">Total</div>
           <div></div>
-          <div></div>
+          
           <div>{{ total }}</div>
         </div>
       </div>
@@ -111,7 +125,7 @@ export default {
     return {
       model: ref(null),
       options: ['Cash-on-Delivery'],
-      headers: ['General Items', 'Quantity', 'Unit Price', 'Amount'],
+      headers: ['General Items', 'Quantity', 'Amount'],
       address,
       cart,
       subTotal,
