@@ -12,6 +12,7 @@ import {
 import { fetchAndActivate, getRemoteConfig } from '@firebase/remote-config';
 import { Notify } from 'quasar';
 import { init as initAxios } from 'src/boot/axios';
+import { FirebaseStorage, getStorage } from '@firebase/storage';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -32,11 +33,13 @@ const firebaseConfig = {
 export let app: FirebaseApp;
 export let firestore: Firestore;
 export let database: Database;
+export let storage: FirebaseStorage;
 
 export const init = async () => {
   app = initializeApp(firebaseConfig);
   firestore = getFirestore(app);
   database = getDatabase(app, 'https://medrx-test-default-rtdb.asia-southeast1.firebasedatabase.app/');
+  storage = getStorage();
   getAnalytics(app);
   getAuth().setPersistence(browserLocalPersistence);
   if (await fetchAndActivate(getRemoteConfig())) {
