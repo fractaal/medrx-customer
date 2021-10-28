@@ -26,6 +26,7 @@ export const performPrescriptionRequest = async () => {
   }
   try {
     const user = await getUser();
+    // TODO: Never trust the client. This should be done on the Pharmacist's side instead.
     const photoUrl = await getDownloadURL(storageRef(storage, `/users/${getAuth().currentUser?.uid}/prescription.png`));
     await set(location, {
       __dummy: true,
