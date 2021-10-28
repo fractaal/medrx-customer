@@ -156,7 +156,9 @@
         <div v-if="token && token.claims.roles && token.claims.roles.includes('pharmacist')">
           <q-item-label header overline class="font-black">SPECIAL</q-item-label>
 
-          <list-item color="primary" name="dashboard" size="2rem">Pharmacist Interface</list-item>
+          <list-item color="primary" name="dashboard" size="2rem" @click="$router.push('/pharmacist')"
+            >Pharmacist Interface</list-item
+          >
         </div>
       </q-list>
     </div>
