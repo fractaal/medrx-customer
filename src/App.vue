@@ -47,6 +47,7 @@ export default defineComponent({
       try {
         await initFirebase();
         currentUser = await getCurrentUser(getAuth());
+        await import('src/api/auth');
         await initAxios();
       } catch (err) {
         Dialog.create({
