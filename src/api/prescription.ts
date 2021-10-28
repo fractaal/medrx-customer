@@ -1,7 +1,8 @@
 import { ref } from 'vue';
 import { getAuth, IdTokenResult } from 'firebase/auth';
-import { set, ref as storageRef, onValue, DatabaseReference } from 'firebase/database';
-import { database } from './firebase';
+import { set, ref as dbRef, onValue, DatabaseReference } from 'firebase/database';
+import { getDownloadURL, ref as storageRef } from 'firebase/storage';
+import { database, getUser, storage } from './firebase';
 import { Notify, Dialog } from 'quasar';
 
 export enum PrescriptionRequestStatus {
@@ -24,7 +25,15 @@ export const performPrescriptionRequest = async () => {
     return;
   }
   try {
-    await set(location, { __dummy: true });
+    const user = await getUser();
+    const photoUrl = await getDownloadURL(storageRef(storage, `/users/${getAuth().currentUser?.uid}/prescription.png`));
+    await set(location, {
+      __dummy: true,
+      firstName: user?.firstName,
+      middleName: user?.middleName,
+      lastName: user?.lastName,
+      photoUrl,
+    });
   } catch (err) {
     requestStatus.value = PrescriptionRequestStatus.FAILED;
     Dialog.create({
@@ -47,7 +56,7 @@ export const performPrescriptionRequest = async () => {
     return;
   }
 
-  location = storageRef(
+  location = dbRef(
     database,
     `/${token.claims.region}/${token.claims.city}/${auth.currentUser?.uid}/prescriptionRequests`
   );
