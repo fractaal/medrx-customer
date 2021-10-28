@@ -16,7 +16,7 @@ interface PrescriptionRequest {
 export const prescriptionRequests = ref<Record<string, PrescriptionRequest>>({});
 
 db.onValue(db.ref(database, `/${token.value?.claims.region}/${token.value?.claims.city}/`), (snapshot) => {
-  const raw: Record<string, { prescriptionRequests: PrescriptionRequest }> = snapshot.val();
+  const raw: Record<string, { prescriptionRequests: PrescriptionRequest }> = snapshot.val() ?? {};
   const transformed: Record<string, PrescriptionRequest> = {};
 
   Object.keys(raw).map((id) => {
