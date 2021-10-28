@@ -84,6 +84,17 @@ const routes: RouteRecordRaw[] = [
       statusBarIsDark: true,
     },
   },
+  // Pharmacist Routes
+  {
+    path: '/pharmacist',
+    component: () => import('layouts/PharmacistLayout.vue'),
+    // children: [],
+    meta: {
+      name: 'Pharmacist',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
+    },
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
