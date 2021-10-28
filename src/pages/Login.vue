@@ -2,13 +2,7 @@
   <q-page class="p-8">
     <div class="text-6xl font-black mt-32">{{ $t('welcome') }}</div>
     <div class="p-4">
-      <q-input
-        v-model="email"
-        id="email"
-        label="Email"
-        type="email"
-        placeholder="username@mail.com"
-      />
+      <q-input v-model="email" id="email" label="Email" type="email" placeholder="username@mail.com" />
       <q-input v-model="password" id="password" label="Password" type="password" />
       <q-btn
         text-color="white"
@@ -32,19 +26,21 @@
                   <q-item-section
                     v-model="locale"
                     @click="
-                    locale = 'TGL';
-                    chlang = false;
+                      locale = 'TGL';
+                      chlang = false;
                     "
-                  >Filipino</q-item-section>
+                    >Filipino</q-item-section
+                  >
                 </q-item>
                 <q-item clickable v-ripple>
                   <q-item-section
                     v-model="locale"
                     @click="
-                    locale = 'en-US';
-                    chlang = false;
+                      locale = 'en-US';
+                      chlang = false;
                     "
-                  >English</q-item-section>
+                    >English</q-item-section
+                  >
                 </q-item>
               </q-list>
             </q-card>
