@@ -1,10 +1,10 @@
 <template>
   <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-    <div class="max-w-md mx-auto">
+    <div class="mx-auto">
       <div>
         <q-item-label class="text-h6 mb-4">My Cart</q-item-label>
 
-        <q-item dense clickable v-ripple @click="printCart()">
+        <q-item dense clickable v-ripple @click="printCart()" class="rounded-xl p-4">
           <q-item-section avatar top>
             <q-avatar icon="place" color="primary" text-color="white" />
           </q-item-section>
@@ -29,36 +29,36 @@
           </div>
         </div>
 
-        <div dense v-for="item in cart" :key="item" class="grid-cols-3 grid place-items-center">
+        <div
+          dense
+          v-for="item in cart"
+          :key="item"
+          class="relative grid-cols-3 grid place-items-center rounded-xl p-4 hover:bg-gray-200"
+          v-ripple
+        >
           <!--can be a component-->
-          <div dense class="font-black">{{ item.productName }}</div>
+          <div dense class="font-black" @click="$router.push(`/product/${item.productId}`)">{{ item.productName }}</div>
 
           <div class="grid-cols-3 grid place-items-center">
-            <div>
-              <q-avatar
-                clickable
-                @click="item.productQuantity--; update(item.productId, item.productName, item.productQuantity, item.productPrice)"
-                icon="remove"
-              />
-            </div>
-            <div>
-              <q-input
-                @change="update(item.productId, item.productName, item.productQuantity, item.productPrice)"
-                v-model="item.productQuantity"
-                type="number"
-                style="max-width:25px"
-                class="mx-2"
-                dense
-              />
-            </div>
-
-            <div>
-              <q-avatar
-                lickable
-                @click="item.productQuantity++; update(item.productId, item.productName, item.productQuantity, item.productPrice)"
-                icon="add"
-              />
-            </div>
+            <q-btn
+              round
+              flat
+              @click="
+                item.productQuantity--;
+                update(item.productId, item.productName, item.productQuantity, item.productPrice);
+              "
+              icon="remove"
+            />
+            <q-input v-model="item.productQuantity" type="number" style="max-width: 50px" dense />
+            <q-btn
+              round
+              flat
+              @click="
+                item.productQuantity++;
+                update(item.productId, item.productName, item.productQuantity, item.productPrice);
+              "
+              icon="add"
+            />
           </div>
 
           <div>{{ item.amount }}</div>
@@ -97,7 +97,10 @@
       </q-select>
       <div class="row justify-center">
         <q-btn
-          @click="resetCart(); $router.push('/order')"
+          @click="
+            resetCart();
+            $router.push('/order');
+          "
           class="mt-10"
           unelevated
           rounded
