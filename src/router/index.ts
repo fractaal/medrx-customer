@@ -32,6 +32,7 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   Router.beforeEach(async (to, from, next) => {
+    // Splash screen navigation guard
     if (to.path === '/' && hasAlreadyNavigatedToOtherRoutes) {
       next('/home');
       return;
@@ -39,10 +40,12 @@ export default route(function (/* { store, ssrContext } */) {
       hasAlreadyNavigatedToOtherRoutes = true;
     }
 
+    // Route navigation delay
     if (from.fullPath !== '/') {
       await new Promise((r) => setTimeout(r, 250));
     }
 
+    // Setting status bar color per route
     mobile.setStatusBarColor(to.meta?.statusBarColor, to.meta?.statusBarIsDark);
     next();
   });
