@@ -2,16 +2,18 @@
   <q-page class="p-8">
     <div class="text-6xl font-black mt-32">{{ $t('welcome') }}</div>
     <div class="p-4">
-      <q-input v-model="email" id="email" label="Email" type="email" placeholder="username@mail.com" />
-      <q-input v-model="password" id="password" label="Password" type="password" />
-      <q-btn
-        text-color="white"
-        unelevated
-        class="mt-4 px-8 py-2 font-black bg-gradient-to-tr from-medrx to-green-200"
-        rounded
-        @click="signIn()"
-        label="Log in"
-      />
+      <q-form @submit="signIn">
+        <q-input v-model="email" id="email" label="Email" type="email" placeholder="username@mail.com" />
+        <q-input v-model="password" id="password" label="Password" type="password" />
+        <q-btn
+          text-color="white"
+          unelevated
+          class="mt-4 px-8 py-2 font-black bg-gradient-to-tr from-medrx to-green-200"
+          rounded
+          type="submit"
+          label="Log in"
+        />
+      </q-form>
       <!-- <q-btn color="green" class="mt-4 px-8" to="/register1" outline label="Sign Up" /> -->
       <q-footer class="p-4 flex justify-between" color="white">
         <p class="m-0 p-0">
