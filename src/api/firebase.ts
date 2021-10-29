@@ -8,11 +8,14 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   browserLocalPersistence,
+  signOut,
 } from 'firebase/auth';
 import { fetchAndActivate, getRemoteConfig } from '@firebase/remote-config';
 import { Notify } from 'quasar';
 import { init as initAxios } from 'src/boot/axios';
 import { FirebaseStorage, getStorage } from '@firebase/storage';
+import { setSessionInvalidationFunction } from 'src/boot/axios';
+import { routerInstance } from 'src/boot/router';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -149,5 +152,10 @@ export const getUser = async () => {
     // return { email: null, name: null };
   }
 };
+
+setSessionInvalidationFunction(async () => {
+  await signOut(getAuth());
+  await routerInstance.push('/login');
+});
 
 console.log('Firebase app initialized!');
