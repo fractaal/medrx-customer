@@ -65,7 +65,7 @@ export const resetCart = async () => {
 
     if (user !== null) {
       const ref = doc(firestore, `users/${uid}`);
-      await updateDoc(ref, { cart: deleteField() });
+      await updateDoc(ref, { cart: 0 });
       await updateDoc(ref, { subTotal: 0 });
     }
   } catch (err) {
