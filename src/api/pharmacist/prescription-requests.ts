@@ -5,6 +5,12 @@ import * as db from 'firebase/database';
 import * as storage from 'firebase/storage';
 import { PrescriptionRequestStatus } from '../prescription';
 
+if (!token.value?.claims.roles.includes('pharmacist')) {
+  console.warn(
+    'Unauthorized access to the pharmacist prescription requests API - This user does not have "pharmacist" in their roles.'
+  );
+}
+
 interface PrescriptionRequest {
   status: PrescriptionRequestStatus | undefined;
   customMessage: string | undefined;
