@@ -43,6 +43,17 @@ const routes: RouteRecordRaw[] = [
     },
   },
   {
+    path: '/order',
+    name: 'Order',
+    component: () => import('layouts/HeaderLayout.vue'),
+    children: [{ path: '', component: () => import('src/pages/Order.vue') }],
+    meta: {
+      name: 'Order',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
+    },
+  },
+  {
     path: '/register',
     component: () => import('layouts/FancyLayout.vue'),
     children: [{ path: '', component: () => import('src/pages/Register.vue') }],

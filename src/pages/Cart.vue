@@ -97,7 +97,7 @@
       </q-select>
       <div class="row justify-center">
         <q-btn
-          @click="resetCart()"
+          @click="resetCart(); $router.push('/order')"
           class="mt-10"
           unelevated
           rounded
