@@ -1,8 +1,7 @@
 import { ref } from 'vue';
 import { getAuth, IdTokenResult } from 'firebase/auth';
 import { set, ref as dbRef, onValue, DatabaseReference } from 'firebase/database';
-import { getDownloadURL, ref as storageRef } from 'firebase/storage';
-import { database, getUser, storage } from './firebase';
+import { database, getUser } from './firebase';
 import { Notify, Dialog } from 'quasar';
 
 export enum PrescriptionRequestStatus {
@@ -26,14 +25,11 @@ export const performPrescriptionRequest = async () => {
   }
   try {
     const user = await getUser();
-    // TODO: Never trust the client. This should be done on the Pharmacist's side instead.
-    const photoUrl = await getDownloadURL(storageRef(storage, `/users/${getAuth().currentUser?.uid}/prescription.png`));
     await set(location, {
       __dummy: true,
       firstName: user?.firstName,
       middleName: user?.middleName,
       lastName: user?.lastName,
-      photoUrl,
     });
   } catch (err) {
     requestStatus.value = PrescriptionRequestStatus.FAILED;
@@ -46,6 +42,29 @@ export const performPrescriptionRequest = async () => {
     return;
   }
   requestStatus.value = PrescriptionRequestStatus.IN_QUEUE;
+};
+
+export const revokePrescriptionRequest = () => {
+  const revoke = async () => {
+    try {
+      await set(location, null);
+    } catch (err) {
+      Dialog.create({
+        color: 'red',
+        persistent: true,
+        message:
+          'You might be restricted from interacting with prescriptions for a period of time. Check back again later!',
+      });
+    }
+  };
+
+  Dialog.create({
+    color: 'red',
+    title: 'Are you sure?',
+    message: "You'll be removing this prescription from being transcribed or saved.",
+    cancel: true,
+    focus: 'cancel',
+  }).onOk(revoke);
 };
 
 (async () => {
