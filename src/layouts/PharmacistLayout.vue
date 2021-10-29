@@ -1,5 +1,17 @@
 <template>
-  <q-layout>
+  <div class="h-screen flex content-center justify-center flex-col px-8" v-if="$q.screen.xs && !warnedMobileExperience">
+    <q-icon name="sentiment_dissatisfied" size="64px" />
+    <div class="text-xl font-black">MedRx Pharmacist is not optimized to work on mobile</div>
+    <div>
+      The Pharmacist interface is designed to work on desktop-size screens. Your experience with MedRx Pharmacist on
+      this display might be less than ideal.
+    </div>
+    <div class="flex mt-4 space-y-4">
+      <q-btn class="bg-medrx text-white mr-2 px-16" rounded label="Go back" @click="$router.back()" />
+      <q-btn rounded flat label="Okay, take me there anyway" @click="warnedMobileExperience = true" />
+    </div>
+  </div>
+  <q-layout v-else>
     <q-header class="bg-transparent">
       <q-toolbar class="bg-transparent text-black">
         <q-btn flat round dense icon="arrow_left" @click="$router.back()" class="q-mr-sm" />
@@ -63,6 +75,7 @@ export default defineComponent({
     import('src/api/pharmacist/prescription-requests');
     const leftDrawerOpen = ref(true);
     const pingDrawer = ref(false);
+    const warnedMobileExperience = ref(false);
 
     watch(prescriptionRequests, () => {
       if (!leftDrawerOpen.value) {
@@ -78,6 +91,7 @@ export default defineComponent({
       leftDrawerOpen,
       prescriptionRequests,
       pingDrawer,
+      warnedMobileExperience,
     };
   },
 });
