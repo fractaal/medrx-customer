@@ -101,6 +101,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/PharmacistLayout.vue'),
     // children: [],
     meta: {
+      requiredRoles: 'pharmacist',
       name: 'Pharmacist',
       statusBarColor: '#30b59e',
       statusBarIsDark: true,
