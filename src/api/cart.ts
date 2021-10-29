@@ -58,6 +58,25 @@ export const removeProduct = async (productId: string) => {
   }
 };
 
+export const resetCart = async () => {
+  try {
+    const user = auth.currentUser;
+    const uid = auth.currentUser?.uid;
+
+    if (user !== null) {
+      const ref = doc(firestore, `users/${uid}`);
+      await updateDoc(ref, { cart: 0 });
+      await updateDoc(ref, { subTotal: 0 });
+    }
+  } catch (err) {
+    Notify.create(`An error occured: ${(err as Error).message}`);
+    return false;
+  }
+};
+
+
+
+
 export const updateCart = async (
   productId: string,
   productName: string,

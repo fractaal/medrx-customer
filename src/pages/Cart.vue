@@ -34,27 +34,33 @@
           <div dense class="font-black">{{ item.productName }}</div>
 
           <div class="grid-cols-3 grid place-items-center">
+            <div>
+              <q-avatar
+                clickable
+                @click="item.productQuantity--; update(item.productId, item.productName, item.productQuantity, item.productPrice)"
+                icon="remove"
+              />
+            </div>
+            <div>
+              <q-input
+                @change="update(item.productId, item.productName, item.productQuantity, item.productPrice)"
+                v-model="item.productQuantity"
+                type="number"
+                style="max-width:25px"
+                class="mx-2"
+                dense
+              />
+            </div>
 
             <div>
-              <q-avatar clickable @click='item.productQuantity--; update(item.productId, item.productName, item.productQuantity, item.productPrice)' icon='remove'/>
-            </div>
-            <div>
-            <q-input
-              @change="update(item.productId, item.productName, item.productQuantity, item.productPrice)"
-              v-model="item.productQuantity"
-              type="number"
-              style='max-width:25px'
-              class='mx-2'
-              dense
-            />
-            </div>
-            
-            <div>
-              <q-avatar lickable @click='item.productQuantity++; update(item.productId, item.productName, item.productQuantity, item.productPrice)' icon='add' />
+              <q-avatar
+                lickable
+                @click="item.productQuantity++; update(item.productId, item.productName, item.productQuantity, item.productPrice)"
+                icon="add"
+              />
             </div>
           </div>
 
-          
           <div>{{ item.amount }}</div>
           <!--can be a component-->
         </div>
@@ -62,14 +68,14 @@
         <q-separator class="my-3" />
 
         <div dense class="grid-cols-3 grid place-items-center">
-          <div class="mr-8" >Subtotal</div>
+          <div class="mr-8">Subtotal</div>
           <div></div>
-          
+
           <div>{{ subTotal }}</div>
 
           <div class="mr-3">Delivery fee</div>
           <div></div>
-          
+
           <div>{{ fee }}</div>
         </div>
 
@@ -78,7 +84,7 @@
         <div dense class="grid-cols-3 grid place-items-center">
           <div class="font-bold mr-14">Total</div>
           <div></div>
-          
+
           <div>{{ total }}</div>
         </div>
       </div>
@@ -90,7 +96,14 @@
         <template v-slot:prepend></template>
       </q-select>
       <div class="row justify-center">
-        <q-btn class="mt-10" unelevated rounded color="primary" label="Place Order" />
+        <q-btn
+          @click="resetCart(); $router.push('/order')"
+          class="mt-10"
+          unelevated
+          rounded
+          color="primary"
+          label="Place Order"
+        />
       </div>
     </div>
   </div>
@@ -99,7 +112,7 @@
 <script lang="ts">
 import { ref, onMounted } from 'vue';
 import { getUser } from 'src/api/firebase';
-import { cart, total, subTotal, updateCart, removeProduct } from 'src/api/cart';
+import { cart, total, subTotal, updateCart, removeProduct, resetCart } from 'src/api/cart';
 import { useQuasar } from 'quasar';
 
 export default {
@@ -132,6 +145,7 @@ export default {
       total,
       fee,
       update,
+      resetCart,
       printCart: () => console.log(cart.value),
     };
   },
