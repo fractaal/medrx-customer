@@ -11,7 +11,7 @@
         :max-file-size="1024 * 1024 * 2.5"
         @uploaded="performPrescriptionRequest"
       />
-      <div v-else class="text-center h-screen flex content-center justify-center">
+      <div v-else class="text-center flex content-center justify-center flex-col" style="height: calc(100vh - 200px)">
         <transition name="fade" mode="out-in">
           <div v-if="requestStatus === 'IN_QUEUE'">
             <q-spinner class="mx-auto" size="128px" :thickness="3" />
@@ -37,7 +37,15 @@
             </p>
           </div>
         </transition>
-        <p>{{ customMessage }}</p>
+        <q-btn
+          class="mt-32"
+          label="CANCEL MY REQUEST"
+          color="red"
+          unelevated
+          outline
+          @click="revokePrescriptionRequest"
+        />
+        <p v-if="customMessage.length != 0">{{ customMessage }}</p>
       </div>
     </transition>
   </q-page>
@@ -45,12 +53,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import {
-  performPrescriptionRequest,
-  requestStatus,
-  PrescriptionRequestStatus,
-  customMessage,
-} from 'src/api/prescription';
+import * as prescription from 'src/api/prescription';
 
 import FirebaseUploader from 'src/components/FirebaseUploader';
 
@@ -59,10 +62,7 @@ export default defineComponent({
   components: { FirebaseUploader },
   setup() {
     return {
-      PrescriptionRequestStatus,
-      requestStatus,
-      performPrescriptionRequest,
-      customMessage,
+      ...prescription,
     };
   },
 });
