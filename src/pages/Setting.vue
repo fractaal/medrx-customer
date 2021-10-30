@@ -51,7 +51,13 @@
               <div class="text-h6">Change your mobile number:</div>
             </q-card-section>
             <q-card-section class="q-pt-none">
-              <q-input dense v-model="mobileNumber" autofocus label="Phone Number" placeholder="+639123456789" />
+              <q-input
+                dense
+                v-model="mobileNumber"
+                autofocus
+                label="Phone Number"
+                placeholder="+639123456789"
+              />
             </q-card-section>
 
             <q-card-actions align="right" class="text-primary">
@@ -65,7 +71,13 @@
               <div class="text-h6">Enter code:</div>
             </q-card-section>
             <q-card-section class="q-pt-none">
-              <q-input dense v-model="verificationCode" autofocus label="Verification Code" maxlength="6" />
+              <q-input
+                dense
+                v-model="verificationCode"
+                autofocus
+                label="Verification Code"
+                maxlength="6"
+              />
             </q-card-section>
 
             <q-card-actions align="right" class="text-primary">
@@ -74,8 +86,8 @@
                 label="Cancel"
                 v-close-popup
                 @click="
-                  pageNum = 0;
-                  phonechange = false;
+  pageNum = 0;
+phonechange = false;
                 "
               />
               <q-btn flat label="Update" v-close-popup @click="updatePhone()" />
@@ -83,7 +95,12 @@
           </q-card>
         </q-dialog>
 
-        <list-item @click="addresschange = true" color="primary" name="home" size="2rem">Delivery Address</list-item>
+        <list-item
+          @click="addresschange = true"
+          color="primary"
+          name="home"
+          size="2rem"
+        >Delivery Address</list-item>
 
         <q-dialog v-model="addresschange" persistent>
           <q-card style="min-width: 350px">
@@ -102,11 +119,16 @@
           </q-card>
         </q-dialog>
 
+        <list-item color="primary" name="shop" size="2rem">Order History</list-item>
+
         <q-item-label header overline class="font-black">USER CONTROLS</q-item-label>
 
-        <list-item @click="chlang = true" color="primary" name="language" size="2rem"
-          >Current Language: {{ locale }}</list-item
-        >
+        <list-item
+          @click="chlang = true"
+          color="primary"
+          name="language"
+          size="2rem"
+        >Current Language: {{ locale }}</list-item>
 
         <q-dialog v-model="chlang">
           <q-card>
@@ -115,21 +137,19 @@
                 <q-item-section
                   v-model="locale"
                   @click="
-                    locale = 'TGL';
-                    chlang = false;
+  locale = 'TGL';
+chlang = false;
                   "
-                  >Filipino</q-item-section
-                >
+                >Filipino</q-item-section>
               </q-item>
               <q-item clickable v-ripple>
                 <q-item-section
                   v-model="locale"
                   @click="
-                    locale = 'en-US';
-                    chlang = false;
+  locale = 'en-US';
+chlang = false;
                   "
-                  >English</q-item-section
-                >
+                >English</q-item-section>
               </q-item>
             </q-list>
           </q-card>
@@ -147,7 +167,14 @@
 
               <q-card-actions>
                 <q-btn flat label="No" color="primary" style="width: 150px" v-close-popup />
-                <q-btn flat label="Yes" color="primary" style="width: 150px" v-close-popup @click="logout" />
+                <q-btn
+                  flat
+                  label="Yes"
+                  color="primary"
+                  style="width: 150px"
+                  v-close-popup
+                  @click="logout"
+                />
               </q-card-actions>
             </q-list>
           </q-card>
@@ -156,9 +183,12 @@
         <div v-if="token && token.claims.roles && token.claims.roles.includes('pharmacist')">
           <q-item-label header overline class="font-black">SPECIAL</q-item-label>
 
-          <list-item color="primary" name="dashboard" size="2rem" @click="$router.push('/pharmacist')"
-            >Pharmacist Interface</list-item
-          >
+          <list-item
+            color="primary"
+            name="dashboard"
+            size="2rem"
+            @click="$router.push('/pharmacist')"
+          >Pharmacist Interface</list-item>
         </div>
       </q-list>
     </div>
