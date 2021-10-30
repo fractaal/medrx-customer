@@ -202,11 +202,11 @@ import { useI18n } from 'vue-i18n';
 import { ref, onMounted, watch } from 'vue';
 import { getAuth, signOut, updatePhoneNumber, RecaptchaVerifier, PhoneAuthProvider } from 'firebase/auth';
 import { useRouter } from 'vue-router';
-import { getUser, update } from 'src/api/firebase';
+import { update } from 'src/api/firebase';
 import { useQuasar } from 'quasar';
 import { token } from 'src/api/auth';
 import ListItem from 'src/components/ListItem.vue';
-
+import { firstName, middleName, lastName, phoneNumber, address, email, region, city } from 'src/api/settings';
 export default {
   components: { ListItem },
   setup() {
@@ -214,12 +214,11 @@ export default {
     const { locale } = useI18n({ useScope: 'global' });
     const auth = getAuth();
     const quasar = useQuasar();
-    const email = auth.currentUser?.email;
-    const firstName = ref('');
-    const middleName = ref('');
-    const lastName = ref('');
+    const first = ref('');
+    const middle = ref('');
+    const last = ref('');
     const locations = ref({ city: '', region: '' });
-    const mobileNumber = ref('');
+    const mobNumber = ref('');
     const pageNum = ref(0);
     const verificationCode = ref('');
     const verificationId = ref('');
@@ -227,17 +226,17 @@ export default {
     const namechange = ref(false);
     const addresschange = ref(false);
     const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
-    const address = ref('');
+    const add = ref('');
 
     //get User data
     onMounted(async () => {
-      firstName.value = (await getUser())?.firstName as string;
-      middleName.value = (await getUser())?.middleName as string;
-      lastName.value = (await getUser())?.lastName as string;
-      locations.value.region = (await getUser())?.region as string;
-      locations.value.city = (await getUser())?.city as string;
-      address.value = (await getUser())?.address as string;
-      mobileNumber.value = (await getUser())?.phoneNumber as string;
+      first.value = firstName.value
+      middle.value = middleName.value
+      last.value = lastName.value
+      mobNumber.value = phoneNumber.value
+      add.value = address.value
+      locations.value.region = region.value
+      locations.value.city = city.value
     });
 
     //Add methods here to update specific User data.
@@ -252,7 +251,7 @@ export default {
 
         if (auth.currentUser) {
           const provider = new PhoneAuthProvider(auth);
-          verificationId.value = await provider.verifyPhoneNumber(mobileNumber.value, recaptchaVerifier.value);
+          verificationId.value = await provider.verifyPhoneNumber(mobNumber.value, recaptchaVerifier.value);
           console.log('OTP code sent');
         } else {
           quasar.notify({
@@ -265,7 +264,7 @@ export default {
     });
 
     const verify = async () => {
-      if (mobileNumber.value.length === 13 && mobileNumber.value.includes('+639')) {
+      if (mobNumber.value.length === 13 && mobNumber.value.includes('+639')) {
         pageNum.value = 1;
 
         recaptchaVerifier.value = new RecaptchaVerifier('verify', { size: 'invisible' }, getAuth());
@@ -312,7 +311,7 @@ export default {
       firstName,
       middleName,
       lastName,
-      mobileNumber,
+      mobNumber,
       address,
 
       //methods

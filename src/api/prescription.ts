@@ -1,7 +1,8 @@
 import { ref } from 'vue';
 import { getAuth, IdTokenResult } from 'firebase/auth';
 import { set, ref as dbRef, onValue, DatabaseReference } from 'firebase/database';
-import { database, getUser } from './firebase';
+import { database } from './firebase';
+import { firstName, middleName, lastName } from './settings';
 import { Notify, Dialog } from 'quasar';
 
 export enum PrescriptionRequestStatus {
@@ -24,12 +25,11 @@ export const performPrescriptionRequest = async () => {
     return;
   }
   try {
-    const user = await getUser();
     await set(location, {
       __dummy: true,
-      firstName: user?.firstName,
-      middleName: user?.middleName,
-      lastName: user?.lastName,
+      firstName: firstName,
+      middleName: middleName,
+      lastName: lastName,
     });
   } catch (err) {
     requestStatus.value = PrescriptionRequestStatus.FAILED;

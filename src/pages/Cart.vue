@@ -111,7 +111,7 @@
 
 <script lang="ts">
 import { ref, onMounted } from 'vue';
-import { getUser } from 'src/api/firebase';
+import { address as add } from 'src/api/settings';
 import { cart, total, subTotal, updateCart, removeProduct, resetCart, itemsInCart } from 'src/api/cart';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
@@ -123,8 +123,8 @@ export default {
     const quasar = useQuasar();
     const router = useRouter();
 
-    onMounted(async () => {
-      address.value = (await getUser())?.address as string;
+    onMounted(() => {
+      address.value = add.value
     });
 
     const update = async (productId: string, productName: string, productQuantity: number, productPrice: number) => {
