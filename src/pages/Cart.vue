@@ -97,7 +97,7 @@
       </q-select>
       <div class="row justify-center">
         <q-btn
-          @click="resetCart(); $router.push('/order')"
+          @click="reset()"
           class="mt-10"
           unelevated
           rounded
@@ -112,14 +112,16 @@
 <script lang="ts">
 import { ref, onMounted } from 'vue';
 import { getUser } from 'src/api/firebase';
-import { cart, total, subTotal, updateCart, removeProduct, resetCart } from 'src/api/cart';
+import { cart, total, subTotal, updateCart, removeProduct, resetCart, itemsInCart } from 'src/api/cart';
 import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
     const address = ref('');
     const fee = ref(0);
     const quasar = useQuasar();
+    const router = useRouter();
 
     onMounted(async () => {
       address.value = (await getUser())?.address as string;
@@ -135,6 +137,13 @@ export default {
       }
     };
 
+    const reset = async () => {
+      if (itemsInCart.value !== 0) {
+        await resetCart();
+        router.push('/order');
+      }
+    }
+
     return {
       model: ref(null),
       options: ['Cash-on-Delivery'],
@@ -146,6 +155,7 @@ export default {
       fee,
       update,
       resetCart,
+      reset,
       printCart: () => console.log(cart.value),
     };
   },
