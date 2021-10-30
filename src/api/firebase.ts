@@ -72,14 +72,15 @@ export const register = async (
   mname: string,
   lname: string,
   address: string,
-  locations: { city: string; region: string }
+  region: string,
+  city: string,
 ) => {
-  console.log(locations);
+  console.log(region, city);
   const auth = getAuth();
   try {
     await createUserWithEmailAndPassword(auth, email, password);
     await initAxios();
-    update(fname, mname, lname, address, locations);
+    update(fname, mname, lname, address, region, city);
     Notify.create('Almost there!');
     return true;
   } catch (err) {
@@ -93,9 +94,10 @@ export const update = (
   mname: string,
   lname: string,
   address: string,
-  locations: { city: string; region: string }
+  region: string,
+  city: string
 ) => {
-  console.log(locations);
+  console.log(region, city);
   const auth = getAuth();
   const uid = auth.currentUser?.uid;
   try {
@@ -105,8 +107,8 @@ export const update = (
       middleName: mname,
       lastName: lname,
       address: address,
-      region: locations.region,
-      city: locations.city,
+      region: region,
+      city: city,
     });
     return true;
   } catch (err) {

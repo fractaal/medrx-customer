@@ -53,7 +53,7 @@
             <q-card-section class="q-pt-none">
               <q-input
                 dense
-                v-model="mobileNumber"
+                v-model="phoneNumber"
                 autofocus
                 label="Phone Number"
                 placeholder="+639123456789"
@@ -199,7 +199,7 @@ chlang = false;
 <script lang="ts">
 import { seed, randomizeSeed } from 'src/api/seed';
 import { useI18n } from 'vue-i18n';
-import { ref, onMounted, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { getAuth, signOut, updatePhoneNumber, RecaptchaVerifier, PhoneAuthProvider } from 'firebase/auth';
 import { useRouter } from 'vue-router';
 import { update } from 'src/api/firebase';
@@ -214,11 +214,6 @@ export default {
     const { locale } = useI18n({ useScope: 'global' });
     const auth = getAuth();
     const quasar = useQuasar();
-    const first = ref('');
-    const middle = ref('');
-    const last = ref('');
-    const locations = ref({ city: '', region: '' });
-    const mobNumber = ref('');
     const pageNum = ref(0);
     const verificationCode = ref('');
     const verificationId = ref('');
@@ -226,22 +221,13 @@ export default {
     const namechange = ref(false);
     const addresschange = ref(false);
     const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
-    const add = ref('');
 
-    //get User data
-    onMounted(async () => {
-      first.value = firstName.value
-      middle.value = middleName.value
-      last.value = lastName.value
-      mobNumber.value = phoneNumber.value
-      add.value = address.value
-      locations.value.region = region.value
-      locations.value.city = city.value
-    });
+
+    //get User dat
 
     //Add methods here to update specific User data.
     const updateUser = () => {
-      update(firstName.value, middleName.value, lastName.value, address.value, locations.value);
+      update(firstName.value, middleName.value, lastName.value, address.value, region.value, city.value);
     };
 
     watch(pageNum, async (newPageNum) => {
@@ -251,7 +237,7 @@ export default {
 
         if (auth.currentUser) {
           const provider = new PhoneAuthProvider(auth);
-          verificationId.value = await provider.verifyPhoneNumber(mobNumber.value, recaptchaVerifier.value);
+          verificationId.value = await provider.verifyPhoneNumber(phoneNumber.value, recaptchaVerifier.value);
           console.log('OTP code sent');
         } else {
           quasar.notify({
@@ -264,7 +250,7 @@ export default {
     });
 
     const verify = async () => {
-      if (mobNumber.value.length === 13 && mobNumber.value.includes('+639')) {
+      if (phoneNumber.value.length === 13 && phoneNumber.value.includes('+639')) {
         pageNum.value = 1;
 
         recaptchaVerifier.value = new RecaptchaVerifier('verify', { size: 'invisible' }, getAuth());
@@ -311,7 +297,7 @@ export default {
       firstName,
       middleName,
       lastName,
-      mobNumber,
+      phoneNumber,
       address,
 
       //methods
