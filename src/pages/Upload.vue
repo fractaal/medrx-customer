@@ -37,15 +37,10 @@
             </p>
           </div>
         </transition>
-        <q-btn
-          class="mt-32"
-          label="CANCEL MY REQUEST"
-          color="red"
-          unelevated
-          outline
-          @click="revokePrescriptionRequest"
-        />
-        <p v-if="customMessage.length != 0">{{ customMessage }}</p>
+        <span class="mx-8" v-if="customMessage.length != 0">{{ customMessage }}</span>
+        <div class="mt-32 mx-8">
+          <q-btn label="CANCEL MY REQUEST" color="red" unelevated outline @click="revokePrescriptionRequest" />
+        </div>
       </div>
     </transition>
   </q-page>
