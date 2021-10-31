@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { getAuth, IdTokenResult } from 'firebase/auth';
-import { set, ref as dbRef, onValue, DatabaseReference } from 'firebase/database';
+import { set, ref as dbRef, onValue, DatabaseReference, serverTimestamp } from 'firebase/database';
 import { database, getUser } from './firebase';
 import { Notify, Dialog } from 'quasar';
 
@@ -30,6 +30,7 @@ export const performPrescriptionRequest = async () => {
       firstName: user?.firstName,
       middleName: user?.middleName,
       lastName: user?.lastName,
+      startedAt: serverTimestamp(),
     });
   } catch (err) {
     requestStatus.value = PrescriptionRequestStatus.FAILED;
