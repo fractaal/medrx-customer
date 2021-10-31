@@ -70,7 +70,6 @@
             "
             :class="leftDrawerOpen ? 'w-3/4' : 'w-full'"
           >
-            <q-item-label class="font-black" overline>PRESCRIPTION VIEW</q-item-label>
             <q-btn
               class="absolute h-full w-2 left-0 top-0"
               flat
@@ -79,83 +78,7 @@
               :icon="leftDrawerOpen ? 'arrow_left' : 'arrow_right'"
               @click="leftDrawerOpen = !leftDrawerOpen"
             />
-
-            <transition
-              enter-active-class="animated slideInRight"
-              leave-active-class="animated slideOutRight"
-              mode="out-in"
-              appear
-              :duration="150"
-            >
-              <div v-if="viewedPrescriptionRequest" class="w-full">
-                <div class="text-4xl font-bold">
-                  {{ viewedPrescriptionRequest.firstName }}
-                  {{ viewedPrescriptionRequest.middleName }}
-                  {{ viewedPrescriptionRequest.lastName }}
-                </div>
-                <q-img
-                  ratio="4/3"
-                  height="500px"
-                  class="rounded-xl shadow-lg flex content-center justify-center cursor-pointer"
-                  :src="viewedPrescriptionRequest.photoUrl"
-                />
-                <div class="my-4">
-                  <q-btn
-                    outline
-                    label="View original image"
-                    @click="redirectToPhoto(viewedPrescriptionRequest?.photoUrl ?? '')"
-                  />
-                </div>
-                <q-separator></q-separator>
-                <div class="flex md:grid grid-cols-12 gap-4 mt-4">
-                  <q-btn class="col-span-6 w-full bg-medrx text-white p-4 shadow-lg" flat no-caps rounded>
-                    <div>
-                      <div class="text-2xl font-black"><q-icon name="check" size="32px" class="-mt-1 mr-2" />CLAIM</div>
-                      <div>
-                        Start transcribing this prescription.<br /><br />
-                        This option prompts you to search for the appropriate items in this prescription among MedRx
-                        stores.
-                      </div>
-                    </div>
-                  </q-btn>
-                  <q-btn
-                    class="col-span-4 w-full bg-yellow-600 text-white p-4 shadow-lg"
-                    flat
-                    no-caps
-                    rounded
-                    @click="returnPrescriptionRequest(viewedPrescriptionRequest?.userId ?? '')"
-                  >
-                    <div>
-                      <div class="text-2xl font-black">
-                        <q-icon name="logout" size="32px" class="-mt-1 mr-2" />RETURN
-                      </div>
-                      <div>
-                        The image is too blurry, or some other reason makes it difficult to transcribe. <br /><br />
-                        This option fails the user’s prescription request.
-                      </div>
-                    </div>
-                  </q-btn>
-                  <q-btn
-                    class="col-span-2 w-full bg-red-600 text-white p-4 shadow-lg"
-                    flat
-                    no-caps
-                    rounded
-                    @click="restrictUser(viewedPrescriptionRequest?.userId ?? '')"
-                  >
-                    <div>
-                      <div class="text-2xl font-black">
-                        <q-icon name="dangerous" size="32px" class="-mt-1 mr-2" />RESTRICT
-                      </div>
-                      <div>This image is inappropriate.</div>
-                    </div>
-                  </q-btn>
-                </div>
-              </div>
-              <div v-else class="h-full w-full flex flex-col content-center justify-center opacity-50">
-                <q-icon name="help" size="72px" class="mx-auto" />
-                <div class="font-black italic text-2xl">No prescription request selected</div>
-              </div>
-            </transition>
+            <View :viewedPrescriptionRequest="viewedPrescriptionRequest" />
           </div>
         </div>
       </q-page-container>
@@ -168,15 +91,13 @@ import {
   PrescriptionRequest,
   prescriptionRequests,
   numPrescriptionRequests,
-  returnPrescriptionRequest as _returnPrescriptionRequest,
-  restrictUser as _restrictUser,
 } from 'src/api/pharmacist/prescription-requests';
 import { defineComponent, ref, watch } from 'vue';
-import { LocalStorage, Dialog } from 'quasar';
-
-import ReturnPrescriptionDialog from 'src/components/ReturnPrescriptionDialog.vue';
+import { LocalStorage } from 'quasar';
+import View from 'src/pages/Pharmacist/View.vue';
 
 export default defineComponent({
+  components: { View },
   name: 'PharmacistLayout',
   setup() {
     import('src/api/pharmacist/prescription-requests');
@@ -184,29 +105,6 @@ export default defineComponent({
     const pingDrawer = ref(false);
     const warnedMobileExperience = ref(false);
     const viewedPrescriptionRequest = ref<PrescriptionRequest | null>(null);
-
-    const restrictUser = (prescriptionRequestId: string) => {
-      Dialog.create({
-        title: 'Are you sure?',
-        message: "By restricting this user, they won't be able send their prescriptions until they are unrestricted.",
-        color: 'red',
-        cancel: true,
-        focus: 'cancel',
-      }).onOk(async () => {
-        await _restrictUser(
-          prescriptionRequestId,
-          'The image you sent was inappropriate and you have been restricted from uploading more prescriptions for a time.'
-        );
-      });
-    };
-
-    const returnPrescriptionRequest = (prescriptionRequestId: string) => {
-      Dialog.create({ component: ReturnPrescriptionDialog, componentProps: { prescriptionRequestId } }).onOk(
-        (data: { message: string }) => {
-          _returnPrescriptionRequest(prescriptionRequestId, data.message);
-        }
-      );
-    };
 
     const viewPrescriptionRequest = (prescriptionRequestId: string) => {
       if (prescriptionRequestId === viewedPrescriptionRequest.value?.userId) {
@@ -251,14 +149,9 @@ export default defineComponent({
       pingDrawer,
       warnedMobileExperience,
       viewedPrescriptionRequest,
-      returnPrescriptionRequest,
-      restrictUser,
 
       // Methods
       viewPrescriptionRequest,
-      redirectToPhoto(url: string) {
-        window.open(url);
-      },
     };
   },
 });
