@@ -23,10 +23,18 @@
         <div class="flex flex-nowrap transition-all duration-100 px-4 pb-4" style="height: calc(100vh - 50px)">
           <div
             class="h-full overflow-y-auto shadow-lg rounded-xl ring-medrx transition-all duration-200 mr-4"
-            :class="leftDrawerOpen ? 'w-1/4 ring-1' : 'w-0 ring-0'"
+            :class="leftDrawerOpen ? 'w-1/4 ring-1 p-4' : 'w-0 ring-0'"
           >
-            <div v-show="leftDrawerOpen" class="space-y-2 p-4">
-              <q-item-label class="font-black" overline>PRESCRIPTION REQUESTS</q-item-label>
+            <q-item-label v-show="leftDrawerOpen" class="font-black" overline>PRESCRIPTION REQUESTS</q-item-label>
+            <div
+              v-if="numPrescriptionRequests == 0"
+              v-show="leftDrawerOpen"
+              class="h-full w-full flex flex-col content-center justify-center opacity-50"
+            >
+              <q-icon name="help" size="72px" class="mx-auto" />
+              <div class="font-black italic text-2xl">No prescription requests available</div>
+            </div>
+            <div v-else v-show="leftDrawerOpen" class="space-y-2 mt-2">
               <transition-group name="list">
                 <div v-for="(request, id) in prescriptionRequests" :key="id">
                   <q-card
@@ -127,7 +135,13 @@
                       </div>
                     </div>
                   </q-btn>
-                  <q-btn class="col-span-2 w-full bg-red-600 text-white p-4 shadow-lg" flat no-caps rounded>
+                  <q-btn
+                    class="col-span-2 w-full bg-red-600 text-white p-4 shadow-lg"
+                    flat
+                    no-caps
+                    rounded
+                    @click="restrictUser(viewedPrescriptionRequest?.userId ?? '')"
+                  >
                     <div>
                       <div class="text-2xl font-black">
                         <q-icon name="dangerous" size="32px" class="-mt-1 mr-2" />RESTRICT
@@ -153,7 +167,9 @@
 import {
   PrescriptionRequest,
   prescriptionRequests,
+  numPrescriptionRequests,
   returnPrescriptionRequest as _returnPrescriptionRequest,
+  restrictUser as _restrictUser,
 } from 'src/api/pharmacist/prescription-requests';
 import { defineComponent, ref, watch } from 'vue';
 import { LocalStorage, Dialog } from 'quasar';
@@ -168,6 +184,21 @@ export default defineComponent({
     const pingDrawer = ref(false);
     const warnedMobileExperience = ref(false);
     const viewedPrescriptionRequest = ref<PrescriptionRequest | null>(null);
+
+    const restrictUser = (prescriptionRequestId: string) => {
+      Dialog.create({
+        title: 'Are you sure?',
+        message: "By restricting this user, they won't be able send their prescriptions until they are unrestricted.",
+        color: 'red',
+        cancel: true,
+        focus: 'cancel',
+      }).onOk(async () => {
+        await _restrictUser(
+          prescriptionRequestId,
+          'The image you sent was inappropriate and you have been restricted from uploading more prescriptions for a time.'
+        );
+      });
+    };
 
     const returnPrescriptionRequest = (prescriptionRequestId: string) => {
       Dialog.create({ component: ReturnPrescriptionDialog, componentProps: { prescriptionRequestId } }).onOk(
@@ -216,10 +247,12 @@ export default defineComponent({
     return {
       leftDrawerOpen,
       prescriptionRequests,
+      numPrescriptionRequests,
       pingDrawer,
       warnedMobileExperience,
       viewedPrescriptionRequest,
       returnPrescriptionRequest,
+      restrictUser,
 
       // Methods
       viewPrescriptionRequest,
