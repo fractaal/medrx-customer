@@ -27,13 +27,14 @@ export const performPrescriptionRequest = async () => {
   try {
     await set(location, {
       __dummy: true,
-      firstName: firstName,
-      middleName: middleName,
-      lastName: lastName,
+      firstName: firstName.value,
+      middleName: middleName.value,
+      lastName: lastName.value,
       startedAt: serverTimestamp(),
     });
   } catch (err) {
-    requestStatus.value = PrescriptionRequestStatus.FAILED;
+    // requestStatus.value = PrescriptionRequestStatus.FAILED;
+    console.log(err);
     Dialog.create({
       color: 'red',
       persistent: true,
@@ -85,6 +86,8 @@ export const revokePrescriptionRequest = () => {
   onValue(location, (snapshot) => {
     const data = snapshot.val();
 
+    console.log(data);
+
     if (!data) {
       requestStatus.value = undefined;
       return;
@@ -94,7 +97,7 @@ export const revokePrescriptionRequest = () => {
     const _customMessage = data.customMessage ?? '';
     customMessage.value = _customMessage;
     requestStatus.value = status;
-    if (data.__dummy) {
+    if (data.__dummy && data.status === null) {
       requestStatus.value = PrescriptionRequestStatus.IN_QUEUE;
     }
   });
