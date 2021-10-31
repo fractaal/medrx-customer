@@ -34,10 +34,11 @@
           v-for="item in cart"
           :key="item"
           class="relative grid-cols-3 grid place-items-center rounded-xl p-4 hover:bg-gray-200"
-          v-ripple
         >
           <!--can be a component-->
-          <div dense class="font-black" @click="$router.push(`/product/${item.productId}`)">{{ item.productName }}</div>
+          <div v-ripple dense class="relative font-black p-4" @click="$router.push(`/product/${item.productId}`)">
+            {{ item.productName }}
+          </div>
 
           <div class="grid-cols-3 grid place-items-center">
             <q-btn
