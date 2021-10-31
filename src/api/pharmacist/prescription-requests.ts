@@ -4,6 +4,7 @@ import { token } from '../auth';
 import * as db from 'firebase/database';
 import * as storage from 'firebase/storage';
 import { PrescriptionRequestStatus } from '../prescription';
+import { Notify } from 'quasar';
 
 if (!token.value?.claims.roles.includes('pharmacist')) {
   console.warn(
@@ -11,13 +12,15 @@ if (!token.value?.claims.roles.includes('pharmacist')) {
   );
 }
 
-interface PrescriptionRequest {
+export interface PrescriptionRequest {
   status: PrescriptionRequestStatus | undefined;
   customMessage: string | undefined;
   firstName: string;
   middleName: string;
   lastName: string;
   photoUrl: string;
+  userId: string;
+  startedAt: string;
 }
 
 export const prescriptionRequests = ref<Record<string, PrescriptionRequest>>({});
@@ -28,6 +31,7 @@ db.onValue(db.ref(database, `/${token.value?.claims.region}/${token.value?.claim
 
   Object.keys(raw).map((id) => {
     transformed[id] = raw[id].prescriptionRequests;
+    transformed[id].userId = id;
   });
 
   await Promise.all(
@@ -40,3 +44,18 @@ db.onValue(db.ref(database, `/${token.value?.claims.region}/${token.value?.claim
 
   prescriptionRequests.value = transformed;
 });
+
+export const returnPrescriptionRequest = async (prescriptionRequestId: string, message: string) => {
+  const location = db.ref(
+    database,
+    `${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}`
+  );
+  try {
+    await db.update(location, {
+      status: PrescriptionRequestStatus.FAILED,
+      customMessage: message ?? null,
+    } as PrescriptionRequest);
+  } catch (err) {
+    Notify.create({ type: 'negative', message: 'Failed to return this prescription request. Please try again!' });
+  }
+};
