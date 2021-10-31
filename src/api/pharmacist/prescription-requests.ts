@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { database } from '../firebase';
 import { token } from '../auth';
 import * as db from 'firebase/database';
@@ -21,9 +21,11 @@ export interface PrescriptionRequest {
   photoUrl: string;
   userId: string;
   startedAt: string;
+  [x: string]: any;
 }
 
 export const prescriptionRequests = ref<Record<string, PrescriptionRequest>>({});
+export const numPrescriptionRequests = computed(() => Object.keys(prescriptionRequests.value).length);
 
 db.onValue(db.ref(database, `/${token.value?.claims.region}/${token.value?.claims.city}/`), async (snapshot) => {
   const raw: Record<string, { prescriptionRequests: PrescriptionRequest }> = snapshot.val() ?? {};
@@ -48,14 +50,29 @@ db.onValue(db.ref(database, `/${token.value?.claims.region}/${token.value?.claim
 export const returnPrescriptionRequest = async (prescriptionRequestId: string, message: string) => {
   const location = db.ref(
     database,
-    `${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}`
+    `${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}/prescriptionRequests`
   );
   try {
     await db.update(location, {
       status: PrescriptionRequestStatus.FAILED,
       customMessage: message ?? null,
-    } as PrescriptionRequest);
+    } as Partial<PrescriptionRequest>);
   } catch (err) {
     Notify.create({ type: 'negative', message: 'Failed to return this prescription request. Please try again!' });
+  }
+};
+
+export const restrictUser = async (prescriptionRequestId: string, message: string) => {
+  const restrictedUsers = db.ref(database, '/restrictedUsers');
+  const location = db.ref(
+    database,
+    `${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}/prescriptionRequests`
+  );
+
+  try {
+    await db.update(location, { status: PrescriptionRequestStatus.FAILED, customMessage: message ?? null });
+    await db.update(restrictedUsers, { [prescriptionRequestId]: true });
+  } catch (err) {
+    Notify.create({ type: 'negative', message: 'Failed to restrict this user. Please try again!' });
   }
 };
