@@ -45,7 +45,12 @@
     </q-header>
     <q-page-container>
       <router-view v-slot="{ Component }" class="mx-auto w-full md:w-3/4 lg:w-3/5">
-        <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" appear :duration="150">
+        <transition
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+          appear
+          :duration="150"
+        >
           <component :is="Component" />
         </transition>
       </router-view>
@@ -80,7 +85,7 @@
 <script lang="ts">
 import { ref, onMounted } from 'vue';
 import { seed, randomizeSeed } from 'src/api/seed';
-import { getUser } from 'src/api/firebase';
+import { firstName as name } from 'src/api/settings';
 import { itemsInCart } from 'src/api/cart';
 import { searchTerm } from 'src/api/search';
 
@@ -90,8 +95,8 @@ export default {
 
     // TODO: Take SQL number of cart items. (Only General Items, medicine not included)
 
-    onMounted(async () => {
-      firstName.value = (await getUser())?.firstName as string;
+    onMounted(() => {
+      firstName.value = name.value
     });
 
     return {

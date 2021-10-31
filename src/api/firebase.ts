@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { FirebaseApp, initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import { getFirestore, setDoc, getDoc, doc, collection, Firestore, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, setDoc, doc, collection, Firestore, serverTimestamp } from 'firebase/firestore';
 import { Database, getDatabase } from 'firebase/database';
 import {
   getAuth,
@@ -72,14 +72,15 @@ export const register = async (
   mname: string,
   lname: string,
   address: string,
-  locations: { city: string; region: string }
+  region: string,
+  city: string,
 ) => {
-  console.log(locations);
+  console.log(region, city);
   const auth = getAuth();
   try {
     await createUserWithEmailAndPassword(auth, email, password);
     await initAxios();
-    update(fname, mname, lname, address, locations);
+    update(fname, mname, lname, address, region, city);
     Notify.create('Almost there!');
     return true;
   } catch (err) {
@@ -93,9 +94,10 @@ export const update = (
   mname: string,
   lname: string,
   address: string,
-  locations: { city: string; region: string }
+  region: string,
+  city: string
 ) => {
-  console.log(locations);
+  console.log(region, city);
   const auth = getAuth();
   const uid = auth.currentUser?.uid;
   try {
@@ -105,8 +107,8 @@ export const update = (
       middleName: mname,
       lastName: lname,
       address: address,
-      region: locations.region,
-      city: locations.city,
+      region: region,
+      city: city,
     });
     return true;
   } catch (err) {
@@ -115,43 +117,43 @@ export const update = (
   }
 };
 
-export const getUser = async () => {
-  const auth = getAuth();
+// export const getUser = async () => {
+//   const auth = getAuth();
 
-  try {
-    // For easy access to all user info, store in object each one
-    const userinfo: {
-      email?: string;
-      firstName?: string;
-      middleName?: string;
-      lastName?: string;
-      address?: string;
-      region?: string;
-      city?: string;
-      phoneNumber?: string;
-    } = {};
-    const user = auth.currentUser;
+//   try {
+//     // For easy access to all user info, store in object each one
+//     const userinfo: {
+//       email?: string;
+//       firstName?: string;
+//       middleName?: string;
+//       lastName?: string;
+//       address?: string;
+//       region?: string;
+//       city?: string;
+//       phoneNumber?: string;
+//     } = {};
+//     const user = auth.currentUser;
 
-    if (user !== null) {
-      // TODO: This can be simplified.
-      userinfo.email = user.email!;
-      userinfo.firstName = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.firstName;
-      userinfo.middleName = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.middleName;
-      userinfo.lastName = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.lastName;
-      userinfo.address = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.address;
-      userinfo.region = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.region;
-      userinfo.city = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.city;
-      if (user.phoneNumber) {
-        userinfo.phoneNumber = user.phoneNumber;
-      }
-    }
+//     if (user !== null) {
+//       // TODO: This can be simplified.
+//       userinfo.email = user.email!;
+//       userinfo.firstName = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.firstName;
+//       userinfo.middleName = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.middleName;
+//       userinfo.lastName = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.lastName;
+//       userinfo.address = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.address;
+//       userinfo.region = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.region;
+//       userinfo.city = (await getDoc(doc(collection(firestore, 'users'), user.uid))).data()!.city;
+//       if (user.phoneNumber) {
+//         userinfo.phoneNumber = user.phoneNumber;
+//       }
+//     }
 
-    return userinfo;
-  } catch (err) {
-    Notify.create(`An error occured: ${(err as Error).message}`);
-    // return { email: null, name: null };
-  }
-};
+//     return userinfo;
+//   } catch (err) {
+//     Notify.create(`An error occured: ${(err as Error).message}`);
+//     // return { email: null, name: null };
+//   }
+// };
 
 setSessionInvalidationFunction(async () => {
   await signOut(getAuth());

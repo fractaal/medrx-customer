@@ -97,17 +97,7 @@
         <template v-slot:prepend></template>
       </q-select>
       <div class="row justify-center">
-        <q-btn
-          @click="
-            resetCart();
-            $router.push('/order');
-          "
-          class="mt-10"
-          unelevated
-          rounded
-          color="primary"
-          label="Place Order"
-        />
+        <q-btn @click="reset()" class="mt-10" unelevated rounded color="primary" label="Place Order" />
       </div>
     </div>
   </div>
@@ -115,18 +105,20 @@
 
 <script lang="ts">
 import { ref, onMounted } from 'vue';
-import { getUser } from 'src/api/firebase';
-import { cart, total, subTotal, updateCart, removeProduct, resetCart } from 'src/api/cart';
+import { address as add } from 'src/api/settings';
+import { cart, total, subTotal, updateCart, removeProduct, resetCart, itemsInCart } from 'src/api/cart';
 import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
     const address = ref('');
     const fee = ref(0);
     const quasar = useQuasar();
+    const router = useRouter();
 
-    onMounted(async () => {
-      address.value = (await getUser())?.address as string;
+    onMounted(() => {
+      address.value = add.value;
     });
 
     const update = async (productId: string, productName: string, productQuantity: number, productPrice: number) => {
@@ -136,6 +128,13 @@ export default {
         removeProduct(productId);
       } else {
         quasar.notify({ type: 'negative', message: 'Please type a valid number!' });
+      }
+    };
+
+    const reset = async () => {
+      if (itemsInCart.value !== 0) {
+        await resetCart();
+        router.push('/order');
       }
     };
 
@@ -150,6 +149,7 @@ export default {
       fee,
       update,
       resetCart,
+      reset,
       printCart: () => console.log(cart.value),
     };
   },

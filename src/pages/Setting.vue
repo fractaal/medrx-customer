@@ -51,7 +51,13 @@
               <div class="text-h6">Change your mobile number:</div>
             </q-card-section>
             <q-card-section class="q-pt-none">
-              <q-input dense v-model="mobileNumber" autofocus label="Phone Number" placeholder="+639123456789" />
+              <q-input
+                dense
+                v-model="phoneNumber"
+                autofocus
+                label="Phone Number"
+                placeholder="+639123456789"
+              />
             </q-card-section>
 
             <q-card-actions align="right" class="text-primary">
@@ -65,7 +71,13 @@
               <div class="text-h6">Enter code:</div>
             </q-card-section>
             <q-card-section class="q-pt-none">
-              <q-input dense v-model="verificationCode" autofocus label="Verification Code" maxlength="6" />
+              <q-input
+                dense
+                v-model="verificationCode"
+                autofocus
+                label="Verification Code"
+                maxlength="6"
+              />
             </q-card-section>
 
             <q-card-actions align="right" class="text-primary">
@@ -74,8 +86,8 @@
                 label="Cancel"
                 v-close-popup
                 @click="
-                  pageNum = 0;
-                  phonechange = false;
+  pageNum = 0;
+phonechange = false;
                 "
               />
               <q-btn flat label="Update" v-close-popup @click="updatePhone()" />
@@ -83,7 +95,12 @@
           </q-card>
         </q-dialog>
 
-        <list-item @click="addresschange = true" color="primary" name="home" size="2rem">Delivery Address</list-item>
+        <list-item
+          @click="addresschange = true"
+          color="primary"
+          name="home"
+          size="2rem"
+        >Delivery Address</list-item>
 
         <q-dialog v-model="addresschange" persistent>
           <q-card style="min-width: 350px">
@@ -102,11 +119,16 @@
           </q-card>
         </q-dialog>
 
+        <list-item color="primary" name="shop" size="2rem">Order History</list-item>
+
         <q-item-label header overline class="font-black">USER CONTROLS</q-item-label>
 
-        <list-item @click="chlang = true" color="primary" name="language" size="2rem"
-          >Current Language: {{ locale }}</list-item
-        >
+        <list-item
+          @click="chlang = true"
+          color="primary"
+          name="language"
+          size="2rem"
+        >Current Language: {{ locale }}</list-item>
 
         <q-dialog v-model="chlang">
           <q-card>
@@ -115,21 +137,19 @@
                 <q-item-section
                   v-model="locale"
                   @click="
-                    locale = 'TGL';
-                    chlang = false;
+  locale = 'TGL';
+chlang = false;
                   "
-                  >Filipino</q-item-section
-                >
+                >Filipino</q-item-section>
               </q-item>
               <q-item clickable v-ripple>
                 <q-item-section
                   v-model="locale"
                   @click="
-                    locale = 'en-US';
-                    chlang = false;
+  locale = 'en-US';
+chlang = false;
                   "
-                  >English</q-item-section
-                >
+                >English</q-item-section>
               </q-item>
             </q-list>
           </q-card>
@@ -147,7 +167,14 @@
 
               <q-card-actions>
                 <q-btn flat label="No" color="primary" style="width: 150px" v-close-popup />
-                <q-btn flat label="Yes" color="primary" style="width: 150px" v-close-popup @click="logout" />
+                <q-btn
+                  flat
+                  label="Yes"
+                  color="primary"
+                  style="width: 150px"
+                  v-close-popup
+                  @click="logout"
+                />
               </q-card-actions>
             </q-list>
           </q-card>
@@ -156,9 +183,12 @@
         <div v-if="token && token.claims.roles && token.claims.roles.includes('pharmacist')">
           <q-item-label header overline class="font-black">SPECIAL</q-item-label>
 
-          <list-item color="primary" name="dashboard" size="2rem" @click="$router.push('/pharmacist')"
-            >Pharmacist Interface</list-item
-          >
+          <list-item
+            color="primary"
+            name="dashboard"
+            size="2rem"
+            @click="$router.push('/pharmacist')"
+          >Pharmacist Interface</list-item>
         </div>
       </q-list>
     </div>
@@ -169,14 +199,14 @@
 <script lang="ts">
 import { seed, randomizeSeed } from 'src/api/seed';
 import { useI18n } from 'vue-i18n';
-import { ref, onMounted, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { getAuth, signOut, updatePhoneNumber, RecaptchaVerifier, PhoneAuthProvider } from 'firebase/auth';
 import { useRouter } from 'vue-router';
-import { getUser, update } from 'src/api/firebase';
+import { update } from 'src/api/firebase';
 import { useQuasar } from 'quasar';
 import { token } from 'src/api/auth';
 import ListItem from 'src/components/ListItem.vue';
-
+import { firstName, middleName, lastName, phoneNumber, address, email, region, city } from 'src/api/settings';
 export default {
   components: { ListItem },
   setup() {
@@ -184,12 +214,6 @@ export default {
     const { locale } = useI18n({ useScope: 'global' });
     const auth = getAuth();
     const quasar = useQuasar();
-    const email = auth.currentUser?.email;
-    const firstName = ref('');
-    const middleName = ref('');
-    const lastName = ref('');
-    const locations = ref({ city: '', region: '' });
-    const mobileNumber = ref('');
     const pageNum = ref(0);
     const verificationCode = ref('');
     const verificationId = ref('');
@@ -197,22 +221,13 @@ export default {
     const namechange = ref(false);
     const addresschange = ref(false);
     const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
-    const address = ref('');
 
-    //get User data
-    onMounted(async () => {
-      firstName.value = (await getUser())?.firstName as string;
-      middleName.value = (await getUser())?.middleName as string;
-      lastName.value = (await getUser())?.lastName as string;
-      locations.value.region = (await getUser())?.region as string;
-      locations.value.city = (await getUser())?.city as string;
-      address.value = (await getUser())?.address as string;
-      mobileNumber.value = (await getUser())?.phoneNumber as string;
-    });
+
+    //get User dat
 
     //Add methods here to update specific User data.
     const updateUser = () => {
-      update(firstName.value, middleName.value, lastName.value, address.value, locations.value);
+      update(firstName.value, middleName.value, lastName.value, address.value, region.value, city.value);
     };
 
     watch(pageNum, async (newPageNum) => {
@@ -222,7 +237,7 @@ export default {
 
         if (auth.currentUser) {
           const provider = new PhoneAuthProvider(auth);
-          verificationId.value = await provider.verifyPhoneNumber(mobileNumber.value, recaptchaVerifier.value);
+          verificationId.value = await provider.verifyPhoneNumber(phoneNumber.value, recaptchaVerifier.value);
           console.log('OTP code sent');
         } else {
           quasar.notify({
@@ -235,7 +250,7 @@ export default {
     });
 
     const verify = async () => {
-      if (mobileNumber.value.length === 13 && mobileNumber.value.includes('+639')) {
+      if (phoneNumber.value.length === 13 && phoneNumber.value.includes('+639')) {
         pageNum.value = 1;
 
         recaptchaVerifier.value = new RecaptchaVerifier('verify', { size: 'invisible' }, getAuth());
@@ -282,7 +297,7 @@ export default {
       firstName,
       middleName,
       lastName,
-      mobileNumber,
+      phoneNumber,
       address,
 
       //methods

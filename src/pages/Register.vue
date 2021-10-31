@@ -165,7 +165,8 @@ export default defineComponent({
         middleName.value,
         lastName.value,
         address.value,
-        locations.value
+        locations.value.region,
+        locations.value.city
       );
     };
 
