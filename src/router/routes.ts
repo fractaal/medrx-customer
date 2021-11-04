@@ -107,6 +107,28 @@ const routes: RouteRecordRaw[] = [
       statusBarIsDark: true,
     },
   },
+  {
+    path: '/pharmacist/view-prescription/:id',
+    component: () => import('layouts/PharmacistLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Pharmacist/View.vue') }],
+    meta: {
+      requiredRoles: 'pharmacist',
+      name: 'View Prescription',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
+    },
+  },
+  {
+    path: '/pharmacist/transcribe-prescription/:id',
+    component: () => import('layouts/PharmacistLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Pharmacist/Transcribe.vue') }],
+    meta: {
+      requiredRoles: 'pharmacist',
+      name: 'Transcribe Prescription',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
+    },
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
