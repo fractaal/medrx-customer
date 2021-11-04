@@ -26,18 +26,20 @@
             :class="leftDrawerOpen ? 'w-1/4 ring-1 p-4' : 'w-0 ring-0'"
           >
             <q-item-label v-show="leftDrawerOpen" class="font-black" overline>PRESCRIPTION REQUESTS</q-item-label>
-            <div
-              v-if="numPrescriptionRequests == 0"
-              v-show="leftDrawerOpen"
-              class="h-full w-full flex flex-col content-center justify-center opacity-50"
-            >
-              <q-icon name="help" size="72px" class="mx-auto" />
-              <div class="font-black italic text-2xl">No prescription requests available</div>
-            </div>
-            <div v-else v-show="leftDrawerOpen" class="space-y-2 mt-2">
+            <div v-show="leftDrawerOpen" class="space-y-2 mt-2 h-full">
               <transition-group name="list">
+                <div
+                  :key="'asasd'"
+                  v-if="numPrescriptionRequests == 0 && !isLoading"
+                  v-show="leftDrawerOpen"
+                  class="h-full w-full flex flex-col content-center justify-center opacity-50"
+                >
+                  <q-icon name="help" size="72px" class="mx-auto" />
+                  <div class="font-black italic text-2xl">No prescription requests available</div>
+                </div>
                 <div v-for="(request, id) in prescriptionRequests" :key="id">
                   <q-card
+                    v-if="!isLoading"
                     v-ripple
                     class="shadow-lg p-4 ring-1 ring-medrx"
                     @click="viewPrescriptionRequest(request.userId)"
@@ -51,6 +53,13 @@
                       {{ request.firstName + ' ' + request.middleName + ' ' + request.lastName }}
                     </div>
                   </q-card>
+                </div>
+                <div v-for="i in 4" :key="i">
+                  <div v-if="isLoading">
+                    <q-card class="p-4 shadow-lg ring-1 ring-gray-300">
+                      <q-skeleton type="text" :width="(Math.random() * 50 + 30).toFixed(0) + 'px'" />
+                    </q-card>
+                  </div>
                 </div>
               </transition-group>
             </div>
@@ -78,7 +87,8 @@
               :icon="leftDrawerOpen ? 'arrow_left' : 'arrow_right'"
               @click="leftDrawerOpen = !leftDrawerOpen"
             />
-            <View :viewedPrescriptionRequest="viewedPrescriptionRequest" />
+            <router-view />
+            <!-- <View :viewedPrescriptionRequest="viewedPrescriptionRequest" /> -->
           </div>
         </div>
       </q-page-container>
@@ -91,13 +101,13 @@ import {
   PrescriptionRequest,
   prescriptionRequests,
   numPrescriptionRequests,
+  isLoading,
 } from 'src/api/pharmacist/prescription-requests';
 import { defineComponent, ref, watch } from 'vue';
 import { LocalStorage } from 'quasar';
-import View from 'src/pages/Pharmacist/View.vue';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
-  components: { View },
   name: 'PharmacistLayout',
   setup() {
     import('src/api/pharmacist/prescription-requests');
@@ -105,17 +115,14 @@ export default defineComponent({
     const pingDrawer = ref(false);
     const warnedMobileExperience = ref(false);
     const viewedPrescriptionRequest = ref<PrescriptionRequest | null>(null);
+    const router = useRouter();
 
     const viewPrescriptionRequest = (prescriptionRequestId: string) => {
       if (prescriptionRequestId === viewedPrescriptionRequest.value?.userId) {
-        viewedPrescriptionRequest.value = null;
-        return;
+        router.push('/pharmacist');
       }
 
-      viewedPrescriptionRequest.value = Object.values(prescriptionRequests.value).filter(
-        (request) => (request.userId = prescriptionRequestId)
-      )[0];
-
+      router.push({ path: '/pharmacist/view-prescription/' + prescriptionRequestId });
       LocalStorage.set('viewedPrescriptionRequestId', prescriptionRequestId);
     };
 
@@ -130,6 +137,17 @@ export default defineComponent({
             viewPrescriptionRequest(previousPrescriptionRequestId);
           }
         });
+      }
+
+      // If previously viewed prescription request is no longer in prescription requests, clear it
+      if (viewedPrescriptionRequest.value) {
+        if (
+          !Object.values(prescriptionRequests.value).some(
+            (request) => request.userId === viewedPrescriptionRequest.value!.userId
+          )
+        ) {
+          viewedPrescriptionRequest.value = null;
+        }
       }
 
       // For visible UI element pinging if an update happens.
@@ -149,6 +167,7 @@ export default defineComponent({
       pingDrawer,
       warnedMobileExperience,
       viewedPrescriptionRequest,
+      isLoading,
 
       // Methods
       viewPrescriptionRequest,
