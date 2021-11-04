@@ -12,13 +12,13 @@ watch(searchTerm, async (newSearchTerm) => {
   searchResults.value = await search(newSearchTerm);
 });
 
-export const search = async (searchTerm: string) => {
+export const search = async (searchTerm: string, pageNumber = 0): Promise<Product[]> => {
   if (searchTerm == '') {
     return [];
   }
   console.log('searching for', searchTerm);
   isLoading.value = true;
-  const res = await api.post<ResponseData<Record<string, any>>>('/search', { searchTerm });
+  const res = await api.post<ResponseData<Record<string, any>>>('/search', { searchTerm, pageNumber });
   isLoading.value = false;
   return res.data.data.results;
 };
