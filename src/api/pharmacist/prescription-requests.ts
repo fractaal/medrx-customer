@@ -28,12 +28,8 @@ export const isLoading = ref(true);
 export const prescriptionRequests = ref<Record<string, PrescriptionRequest>>({});
 export const numPrescriptionRequests = computed(() => Object.keys(prescriptionRequests.value).length);
 
-db.get(db.ref(database, `/${token.value?.claims.region}/${token.value?.claims.city}/`)).then(() => {
-  isLoading.value = false;
-});
-
-db.onValue(db.ref(database, `/${token.value?.claims.region}/${token.value?.claims.city}/`), async (snapshot) => {
-  const raw: Record<string, { prescriptionRequests: PrescriptionRequest }> = snapshot.val() ?? {};
+const updatePrescriptionRequests = async (data: db.DataSnapshot) => {
+  const raw: Record<string, { prescriptionRequests: PrescriptionRequest }> = data.val() ?? {};
   const transformed: Record<string, PrescriptionRequest> = {};
 
   Object.keys(raw).map((id) => {
@@ -53,7 +49,14 @@ db.onValue(db.ref(database, `/${token.value?.claims.region}/${token.value?.claim
   );
 
   prescriptionRequests.value = transformed;
+};
+
+db.get(db.ref(database, `/${token.value?.claims.region}/${token.value?.claims.city}/`)).then(async (data) => {
+  await updatePrescriptionRequests(data);
+  isLoading.value = false;
 });
+
+db.onValue(db.ref(database, `/${token.value?.claims.region}/${token.value?.claims.city}/`), updatePrescriptionRequests);
 
 export const returnPrescriptionRequest = async (prescriptionRequestId: string, message: string) => {
   const location = db.ref(
@@ -106,13 +109,8 @@ export const restrictUser = async (prescriptionRequestId: string, message: strin
 // Unrestrict a user:
 export const unrestrictUser = async (prescriptionRequestId: string) => {
   const restrictedUsers = db.ref(database, '/restrictedUsers');
-  const location = db.ref(
-    database,
-    `${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}/prescriptionRequests`
-  );
 
   try {
-    // await db.update(location, { status: PrescriptionRequestStatus.PENDING });
     await db.update(restrictedUsers, { [prescriptionRequestId]: null });
   } catch (err) {
     Notify.create({ type: 'negative', message: 'Failed to unrestrict this user. Please try again!' });
