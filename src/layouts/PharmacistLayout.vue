@@ -1,5 +1,8 @@
 <template>
-  <div class="h-screen flex content-center justify-center flex-col px-8" v-if="$q.screen.xs && !warnedMobileExperience">
+  <div
+    class="h-screen flex content-center justify-center flex-col px-8"
+    v-show="$q.screen.xs && !warnedMobileExperience"
+  >
     <q-icon name="sentiment_dissatisfied" size="64px" />
     <div class="text-xl font-black">MedRx Pharmacist is not optimized to work on mobile</div>
     <div>
@@ -11,7 +14,7 @@
       <q-btn rounded flat label="Okay, take me there anyway" @click="warnedMobileExperience = true" />
     </div>
   </div>
-  <q-layout v-else>
+  <q-layout v-show="!($q.screen.xs && !warnedMobileExperience)">
     <q-header class="bg-transparent">
       <q-toolbar class="bg-transparent text-black h-4">
         <q-btn flat round dense icon="arrow_left" @click="$router.back()" class="q-mr-sm" />
@@ -28,26 +31,20 @@
             <q-item-label v-show="leftDrawerOpen" class="font-black" overline>PRESCRIPTION REQUESTS</q-item-label>
             <div v-show="leftDrawerOpen" class="space-y-2 mt-2 h-full">
               <transition-group name="list">
-                <div
-                  :key="'asasd'"
+                <empty-placeholder
+                  :key="'empty-placeholder'"
                   v-if="numPrescriptionRequests == 0 && !isLoading"
                   v-show="leftDrawerOpen"
-                  class="h-full w-full flex flex-col content-center justify-center opacity-50"
-                >
-                  <q-icon name="help" size="72px" class="mx-auto" />
-                  <div class="font-black italic text-2xl">No prescription requests available</div>
-                </div>
+                  icon="help"
+                  text="No prescription requests available."
+                />
                 <div v-for="(request, id) in prescriptionRequests" :key="id">
                   <q-card
                     v-if="!isLoading"
                     v-ripple
                     class="shadow-lg p-4 ring-1 ring-medrx"
                     @click="viewPrescriptionRequest(request.userId)"
-                    :class="
-                      viewedPrescriptionRequest?.userId === request.userId
-                        ? ' ring-blue-700 bg-blue-500 text-white'
-                        : ''
-                    "
+                    :class="$route.fullPath.includes(request.userId) ? ' ring-blue-700 bg-blue-500 text-white' : ''"
                   >
                     <div class="font-black">
                       {{ request.firstName + ' ' + request.middleName + ' ' + request.lastName }}
@@ -86,9 +83,23 @@
               size="24px"
               :icon="leftDrawerOpen ? 'arrow_left' : 'arrow_right'"
               @click="leftDrawerOpen = !leftDrawerOpen"
-            />
-            <router-view />
-            <!-- <View :viewedPrescriptionRequest="viewedPrescriptionRequest" /> -->
+            >
+              <span
+                class="h-8 w-8 rounded-full bg-medrx animate-ping absolute -left-4 top-[48.25%]"
+                v-if="pingDrawer"
+              />
+              <span class="h-8 w-8 rounded-full bg-medrx absolute -left-4 top-[48.25%]" v-if="pingDrawer" />
+            </q-btn>
+            <router-view v-slot="{ Component }">
+              <transition
+                enter-active-class="animated fadeIn"
+                leave-active-class="animated fadeOut"
+                appear
+                :duration="150"
+              >
+                <component :is="Component" />
+              </transition>
+            </router-view>
           </div>
         </div>
       </q-page-container>
@@ -97,33 +108,31 @@
 </template>
 
 <script lang="ts">
-import {
-  PrescriptionRequest,
-  prescriptionRequests,
-  numPrescriptionRequests,
-  isLoading,
-} from 'src/api/pharmacist/prescription-requests';
+import { prescriptionRequests, numPrescriptionRequests, isLoading } from 'src/api/pharmacist/prescription-requests';
 import { defineComponent, ref, watch } from 'vue';
 import { LocalStorage } from 'quasar';
 import { useRouter } from 'vue-router';
+import EmptyPlaceholder from 'src/components/EmptyPlaceholder.vue';
 
 export default defineComponent({
   name: 'PharmacistLayout',
+  components: {
+    EmptyPlaceholder,
+  },
   setup() {
     import('src/api/pharmacist/prescription-requests');
     const leftDrawerOpen = ref(true);
     const pingDrawer = ref(false);
     const warnedMobileExperience = ref(false);
-    const viewedPrescriptionRequest = ref<PrescriptionRequest | null>(null);
     const router = useRouter();
 
     const viewPrescriptionRequest = (prescriptionRequestId: string) => {
-      if (prescriptionRequestId === viewedPrescriptionRequest.value?.userId) {
+      // If the user is already viewing the same prescription, redirect back to pharmacist
+      if (router.currentRoute.value.fullPath.includes(prescriptionRequestId)) {
         router.push('/pharmacist');
+        return;
       }
-
       router.push({ path: '/pharmacist/view-prescription/' + prescriptionRequestId });
-      LocalStorage.set('viewedPrescriptionRequestId', prescriptionRequestId);
     };
 
     let hasFirstLoadHappened = false;
@@ -140,13 +149,13 @@ export default defineComponent({
       }
 
       // If previously viewed prescription request is no longer in prescription requests, clear it
-      if (viewedPrescriptionRequest.value) {
+      if (router.currentRoute.value.fullPath.includes('view-prescription')) {
         if (
           !Object.values(prescriptionRequests.value).some(
-            (request) => request.userId === viewedPrescriptionRequest.value!.userId
+            (request) => request.userId === router.currentRoute.value.params.id
           )
         ) {
-          viewedPrescriptionRequest.value = null;
+          router.push('/pharmacist');
         }
       }
 
@@ -166,7 +175,6 @@ export default defineComponent({
       numPrescriptionRequests,
       pingDrawer,
       warnedMobileExperience,
-      viewedPrescriptionRequest,
       isLoading,
 
       // Methods
