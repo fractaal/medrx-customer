@@ -8,59 +8,57 @@
     appear
     :duration="150"
   >
-    <div v-if="viewedPrescriptionRequest" class="w-full">
+    <div v-if="viewedPrescriptionRequest">
       <div class="text-4xl font-bold">
         {{ viewedPrescriptionRequest.firstName }}
         {{ viewedPrescriptionRequest.middleName }}
         {{ viewedPrescriptionRequest.lastName }}
       </div>
-      <q-img
-        ratio="4/3"
-        height="500px"
-        class="rounded-xl shadow-lg flex content-center justify-center cursor-pointer"
-        :src="viewedPrescriptionRequest.photoUrl"
-      />
-      <div class="my-4">
-        <q-btn outline label="View original image" @click="redirectToPhoto()" />
-      </div>
-      <q-separator></q-separator>
-      <div class="flex md:grid grid-cols-12 gap-4 mt-4">
-        <q-btn class="col-span-6 w-full bg-medrx text-white p-4 shadow-lg" flat no-caps rounded>
-          <div>
-            <div class="text-2xl font-black"><q-icon name="check" size="32px" class="-mt-1 mr-2" />CLAIM</div>
+      <div class="grid grid-cols-8 gap-4">
+        <div class="col-span-5">
+          <q-img height="500px" class="rounded-xl shadow-lg cursor-pointer" :src="viewedPrescriptionRequest.photoUrl" />
+          <div class="my-4">
+            <q-btn icon="zoom_in" outline label="View original image" @click="redirectToPhoto()" />
+          </div>
+        </div>
+        <div class="col-span-3 flex space-y-2">
+          <q-btn class="w-full bg-medrx text-white p-4 shadow-lg" flat no-caps rounded>
             <div>
-              Start transcribing this prescription.<br /><br />
-              This option prompts you to search for the appropriate items in this prescription among MedRx stores.
+              <div class="text-2xl font-black"><q-icon name="check" size="32px" class="-mt-1 mr-2" />CLAIM</div>
+              <div>
+                Start transcribing this prescription.<br /><br />
+                This option prompts you to search for the appropriate items in this prescription among MedRx stores.
+              </div>
             </div>
-          </div>
-        </q-btn>
-        <q-btn
-          class="col-span-4 w-full bg-yellow-600 text-white p-4 shadow-lg"
-          flat
-          no-caps
-          rounded
-          @click="returnPrescriptionRequest()"
-        >
-          <div>
-            <div class="text-2xl font-black"><q-icon name="logout" size="32px" class="-mt-1 mr-2" />RETURN</div>
+          </q-btn>
+          <q-btn
+            class="w-full bg-yellow-600 text-white p-4 shadow-lg"
+            flat
+            no-caps
+            rounded
+            @click="returnPrescriptionRequest()"
+          >
             <div>
-              The image is too blurry, or some other reason makes it difficult to transcribe. <br /><br />
-              This option fails the user’s prescription request.
+              <div class="text-2xl font-black"><q-icon name="logout" size="32px" class="-mt-1 mr-2" />RETURN</div>
+              <div>
+                The image is too blurry, or some other reason makes it difficult to transcribe. <br /><br />
+                This option fails the user’s prescription request.
+              </div>
             </div>
-          </div>
-        </q-btn>
-        <q-btn
-          class="col-span-2 w-full bg-red-600 text-white p-4 shadow-lg"
-          flat
-          no-caps
-          rounded
-          @click="restrictUser()"
-        >
-          <div>
-            <div class="text-2xl font-black"><q-icon name="dangerous" size="32px" class="-mt-1 mr-2" />RESTRICT</div>
-            <div>This image is inappropriate.</div>
-          </div>
-        </q-btn>
+          </q-btn>
+          <q-btn
+            class="col-span-2 w-full bg-red-600 text-white p-4 shadow-lg"
+            flat
+            no-caps
+            rounded
+            @click="restrictUser()"
+          >
+            <div>
+              <div class="text-2xl font-black"><q-icon name="dangerous" size="32px" class="-mt-1 mr-2" />RESTRICT</div>
+              <div>This image is inappropriate.</div>
+            </div>
+          </q-btn>
+        </div>
       </div>
     </div>
     <div v-else class="h-full w-full flex flex-col content-center justify-center opacity-50">
@@ -71,25 +69,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import {
   returnPrescriptionRequest as _returnPrescriptionRequest,
   restrictUser as _restrictUser,
   PrescriptionRequest,
+  getPrescriptionRequest,
 } from 'src/api/pharmacist/prescription-requests';
 import { Dialog } from 'quasar';
+import { useRouter } from 'vue-router';
 import ReturnPrescriptionDialog from 'src/components/ReturnPrescriptionDialog.vue';
 
 export default defineComponent({
   name: 'PharmacistView',
-  props: {
-    viewedPrescriptionRequest: {
-      type: Object as () => PrescriptionRequest,
-      required: true,
-    },
-  },
-  setup(props) {
-    const { viewedPrescriptionRequest } = toRefs(props);
+  setup() {
+    const router = useRouter();
+
+    const viewedPrescriptionRequest = ref<PrescriptionRequest | null>(null);
+
     const restrictUser = () => {
       Dialog.create({
         title: 'Are you sure?',
@@ -99,7 +96,7 @@ export default defineComponent({
         focus: 'cancel',
       }).onOk(async () => {
         await _restrictUser(
-          viewedPrescriptionRequest.value.userId ?? '',
+          viewedPrescriptionRequest.value!.userId ?? '',
           'The image you sent was inappropriate and you have been restricted from uploading more prescriptions for a time.'
         );
       });
@@ -108,17 +105,24 @@ export default defineComponent({
     const returnPrescriptionRequest = () => {
       Dialog.create({
         component: ReturnPrescriptionDialog,
-        componentProps: { prescriptionRequestId: viewedPrescriptionRequest.value.userId ?? '' },
+        componentProps: { prescriptionRequestId: viewedPrescriptionRequest.value!.userId ?? '' },
       }).onOk((data: { message: string }) => {
-        _returnPrescriptionRequest(viewedPrescriptionRequest.value.userId ?? '', data.message);
+        _returnPrescriptionRequest(viewedPrescriptionRequest.value!.userId ?? '', data.message);
       });
     };
+
+    onMounted(() => {
+      // Get prescription request based on ID from route params on mount:
+      getPrescriptionRequest((router.currentRoute.value.params.id as string) ?? '').then((prescriptionRequest) => {
+        viewedPrescriptionRequest.value = prescriptionRequest;
+      });
+    });
 
     return {
       restrictUser,
       returnPrescriptionRequest,
-      redirectToPhoto(url: string) {
-        window.open(url);
+      redirectToPhoto() {
+        window.open(viewedPrescriptionRequest.value!.photoUrl);
       },
     };
   },
