@@ -99,7 +99,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/pharmacist',
     component: () => import('layouts/PharmacistLayout.vue'),
-    // children: [],
+    children: [{ path: '', component: () => import('pages/Pharmacist/Idle.vue') }],
     meta: {
       requiredRoles: 'pharmacist',
       name: 'Pharmacist',
