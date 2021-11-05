@@ -58,6 +58,17 @@ db.get(db.ref(database, `/${token.value?.claims.region}/${token.value?.claims.ci
 
 db.onValue(db.ref(database, `/${token.value?.claims.region}/${token.value?.claims.city}/`), updatePrescriptionRequests);
 
+export const claimPrescriptionRequest = async (prescriptionRequestId: string) => {
+  const location = db.ref(
+    database,
+    `/${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}/prescriptionRequests`
+  );
+
+  await db.update(location, {
+    status: PrescriptionRequestStatus.IN_PROCESSING,
+  });
+};
+
 export const returnPrescriptionRequest = async (prescriptionRequestId: string, message: string) => {
   const location = db.ref(
     database,
