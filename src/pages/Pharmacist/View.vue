@@ -7,14 +7,20 @@
       {{ viewedPrescriptionRequest.lastName }}
     </div>
     <div class="grid grid-cols-8 gap-4">
-      <div class="col-span-5">
-        <q-img height="500px" class="rounded-xl shadow-lg cursor-pointer" :src="viewedPrescriptionRequest.photoUrl" />
+      <div class="col-span-5 max-h-[calc(100vh-225px)]">
+        <q-img height="100%" class="rounded-xl shadow-lg cursor-pointer" :src="viewedPrescriptionRequest.photoUrl" />
         <div class="my-4">
           <q-btn icon="zoom_in" outline label="View original image" @click="redirectToPhoto()" />
         </div>
       </div>
       <div class="col-span-3 flex space-y-2">
-        <q-btn class="w-full bg-medrx text-white p-4 shadow-lg" flat no-caps rounded>
+        <q-btn
+          @click="transcribePrescriptionRequest"
+          class="w-full bg-medrx text-white p-4 shadow-lg"
+          flat
+          no-caps
+          rounded
+        >
           <div>
             <div class="text-2xl font-black"><q-icon name="check" size="32px" class="-mt-1 mr-2" />CLAIM</div>
             <div>
@@ -65,6 +71,7 @@ import {
   restrictUser as _restrictUser,
   PrescriptionRequest,
   getPrescriptionRequest,
+  claimPrescriptionRequest,
 } from 'src/api/pharmacist/prescription-requests';
 import { LocalStorage, Dialog } from 'quasar';
 import { useRouter } from 'vue-router';
@@ -90,7 +97,13 @@ export default defineComponent({
           viewedPrescriptionRequest.value!.userId ?? '',
           'The image you sent was inappropriate and you have been restricted from uploading more prescriptions for a time.'
         );
+        router.push('/pharmacist');
       });
+    };
+
+    const transcribePrescriptionRequest = async () => {
+      await claimPrescriptionRequest(viewedPrescriptionRequest.value!.userId);
+      await router.push(`/pharmacist/transcribe-prescription/${viewedPrescriptionRequest.value!.userId}`);
     };
 
     const returnPrescriptionRequest = () => {
@@ -99,6 +112,7 @@ export default defineComponent({
         componentProps: { prescriptionRequestId: viewedPrescriptionRequest.value!.userId ?? '' },
       }).onOk((data: { message: string }) => {
         _returnPrescriptionRequest(viewedPrescriptionRequest.value!.userId ?? '', data.message);
+        router.push('/pharmacist');
       });
     };
 
@@ -114,6 +128,7 @@ export default defineComponent({
 
     return {
       restrictUser,
+      transcribePrescriptionRequest,
       returnPrescriptionRequest,
       viewedPrescriptionRequest,
       redirectToPhoto() {
