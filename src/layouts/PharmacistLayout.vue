@@ -26,7 +26,7 @@
         <div class="flex flex-nowrap transition-all duration-100 px-4 pb-4" style="height: calc(100vh - 50px)">
           <div
             class="h-full overflow-y-auto shadow-lg rounded-xl ring-medrx transition-all duration-200 mr-4"
-            :class="leftDrawerOpen ? 'w-1/4 ring-1 p-4' : 'w-0 ring-0'"
+            :class="leftDrawerOpen ? 'w-1/6 ring-1 p-4' : 'w-0 ring-0'"
           >
             <q-item-label v-show="leftDrawerOpen" class="font-black" overline>PRESCRIPTION REQUESTS</q-item-label>
             <div v-show="leftDrawerOpen" class="space-y-2 mt-2 h-full">
@@ -74,7 +74,7 @@
               p-4
               pl-8
             "
-            :class="leftDrawerOpen ? 'w-3/4' : 'w-full'"
+            :class="leftDrawerOpen ? 'w-5/6' : 'w-full'"
           >
             <q-btn
               class="absolute h-full w-2 left-0 top-0"
@@ -126,37 +126,22 @@ export default defineComponent({
     const warnedMobileExperience = ref(false);
     const router = useRouter();
 
-    const viewPrescriptionRequest = (prescriptionRequestId: string) => {
-      // If the user is already viewing the same prescription, redirect back to pharmacist
-      if (router.currentRoute.value.fullPath.includes(prescriptionRequestId)) {
-        router.push('/pharmacist');
-        return;
-      }
-      router.push({ path: '/pharmacist/view-prescription/' + prescriptionRequestId });
+    const viewPrescriptionRequest = async (prescriptionRequestId: string) => {
+      await router.push({ path: '/pharmacist/view-prescription/' + prescriptionRequestId });
     };
 
     let hasFirstLoadHappened = false;
     watch(prescriptionRequests, () => {
       // Get previously viewed prescription request if just navigating to this page
       if (!hasFirstLoadHappened) {
-        hasFirstLoadHappened = true;
         const previousPrescriptionRequestId = LocalStorage.getItem('viewedPrescriptionRequestId');
         Object.values(prescriptionRequests.value).forEach((request) => {
           if (request.userId === previousPrescriptionRequestId) {
-            viewPrescriptionRequest(previousPrescriptionRequestId);
+            viewPrescriptionRequest(previousPrescriptionRequestId).then(() => {
+              hasFirstLoadHappened = true;
+            });
           }
         });
-      }
-
-      // If previously viewed prescription request is no longer in prescription requests, clear it
-      if (router.currentRoute.value.fullPath.includes('view-prescription')) {
-        if (
-          !Object.values(prescriptionRequests.value).some(
-            (request) => request.userId === router.currentRoute.value.params.id
-          )
-        ) {
-          router.push('/pharmacist');
-        }
       }
 
       // For visible UI element pinging if an update happens.
