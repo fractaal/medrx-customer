@@ -2,25 +2,27 @@
   <div>
     <q-input label="Search for a product..." v-model="searchTerm" />
     <!-- Display some autocomplete based on searchResults -->
-    <q-list dense class="absolute top-4" v-if="searchResults.length !== 0">
-      <q-item v-for="product in searchResults" :key="product.id">
-        <q-item-section>
-          <q-item-label>
-            <q-item-label-title>{{ product.name }}</q-item-label-title>
-          </q-item-label>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label>
-            <q-item-label-subtitle>{{ product.price }}</q-item-label-subtitle>
-          </q-item-label>
-        </q-item-section>
-        <q-item-section>
-          <q-item-label>
-            <q-item-label-subtitle>{{ product.description }}</q-item-label-subtitle>
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-    </q-list>
+    <transition name="list">
+      <q-list dense class="absolute shadow-lg p-4 rounded-lg" v-if="searchResults.length !== 0">
+        <q-item v-for="product in searchResults" :key="product.id">
+          <q-item-section>
+            <q-item-label>
+              <q-item-label-title>{{ product.name }}</q-item-label-title>
+            </q-item-label>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>
+              <q-item-label-subtitle>{{ product.price }}</q-item-label-subtitle>
+            </q-item-label>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>
+              <q-item-label-subtitle>{{ product.description }}</q-item-label-subtitle>
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </transition>
   </div>
 </template>
 
