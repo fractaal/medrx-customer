@@ -53,24 +53,19 @@
 }
 .list-leave-active {
   transition: all 0.2s cubic-bezier(1, 0, 0, 1);
-  position: absolute;
 }
-.list-enter {
-  transform: scale(0.75);
-  opacity: 0;
-}
-
+.list-enter-from,
 .list-leave-to {
   transform: scale(0.75);
   opacity: 0;
 }
 
 .list-move {
-  transition: transform 0.2s;
+  transition: all 0.2s cubic-bezier(1, 0, 0, 1);
 }
 
 .list-enter-to,
-.list-leave {
+.list-leave-from {
   transform: scale(1);
 }
 
