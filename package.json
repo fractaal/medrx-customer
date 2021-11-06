@@ -18,6 +18,7 @@
     "firebaseui": "^5.0.0",
     "quasar": "^2.0.0",
     "tailwindcss": "^2.2.7",
+    "v-viewer": "^3.0.10",
     "vue-i18n": "^9.1.7"
   },
   "devDependencies": {
