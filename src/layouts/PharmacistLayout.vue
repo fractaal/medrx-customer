@@ -26,7 +26,7 @@
         <div class="flex flex-nowrap transition-all duration-100 px-4 pb-4" style="height: calc(100vh - 50px)">
           <div
             class="h-full overflow-y-auto shadow-lg rounded-xl ring-medrx transition-all duration-200 mr-4"
-            :class="leftDrawerOpen ? 'w-1/6 ring-1 p-4' : 'w-0 ring-0'"
+            :class="leftDrawerOpen ? 'w-[300px] ring-1 p-4' : 'w-0 ring-0'"
           >
             <q-item-label v-show="leftDrawerOpen" class="font-black" overline>PRESCRIPTION REQUESTS</q-item-label>
             <div v-show="leftDrawerOpen" class="space-y-2 mt-2 h-full">
@@ -74,7 +74,7 @@
               p-4
               pl-8
             "
-            :class="leftDrawerOpen ? 'w-5/6' : 'w-full'"
+            :class="leftDrawerOpen ? 'w-[calc(100vw-300px)]' : 'w-full'"
           >
             <q-btn
               class="absolute h-full w-2 left-0 top-0"
