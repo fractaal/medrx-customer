@@ -110,7 +110,6 @@
 <script lang="ts">
 import { prescriptionRequests, numPrescriptionRequests, isLoading } from 'src/api/pharmacist/prescription-requests';
 import { defineComponent, ref, watch } from 'vue';
-import { LocalStorage } from 'quasar';
 import { useRouter } from 'vue-router';
 import EmptyPlaceholder from 'src/components/EmptyPlaceholder.vue';
 
@@ -130,20 +129,7 @@ export default defineComponent({
       await router.push({ path: '/pharmacist/view-prescription/' + prescriptionRequestId });
     };
 
-    let hasFirstLoadHappened = false;
     watch(prescriptionRequests, () => {
-      // Get previously viewed prescription request if just navigating to this page
-      if (!hasFirstLoadHappened) {
-        const previousPrescriptionRequestId = LocalStorage.getItem('viewedPrescriptionRequestId');
-        Object.values(prescriptionRequests.value).forEach((request) => {
-          if (request.userId === previousPrescriptionRequestId) {
-            viewPrescriptionRequest(previousPrescriptionRequestId).then(() => {
-              hasFirstLoadHappened = true;
-            });
-          }
-        });
-      }
-
       // For visible UI element pinging if an update happens.
       if (!leftDrawerOpen.value) {
         pingDrawer.value = true;
