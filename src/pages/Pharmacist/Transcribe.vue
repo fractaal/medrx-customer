@@ -24,6 +24,9 @@
             <p class="text-white font-black text-center">View image</p>
           </div>
         </div>
+        <div class="mt-2">
+          <q-btn color="red" label="Return Prescription" @click="returnPrescription" unelevated />
+        </div>
       </div>
       <div class="relative">
         <!-- factor out to search component -->
@@ -46,7 +49,14 @@
                 No product results found for <b>{{ searchTerm }}.</b>
               </p>
               <q-list v-else>
-                <q-item v-for="result in searchResults" :key="result.id" clickable v-ripple>
+                <q-item
+                  v-for="result in searchResults"
+                  :key="result.id"
+                  clickable
+                  v-ripple
+                  class="rounded-lg"
+                  @click="addItem(result)"
+                >
                   <q-item-section>
                     <q-item-label class="font-black" title>{{ result.name }}</q-item-label>
                     <q-item-label caption :lines="1">{{ result.description }}</q-item-label>
@@ -59,11 +69,19 @@
             </transition>
           </div>
         </transition>
-        <div class="flex mt-2">
-          <q-btn label="Add a new item" @click="newItem" color="blue" unelevated class="mr-2" />
-          <q-btn label="Return prescription" color="red" unelevated @click="returnPrescription" class="ml-auto" />
-        </div>
         <q-separator class="mt-2" />
+        <!-- Items list -->
+        <q-list class="mt-2">
+          <q-item v-for="item in items" :key="item.id" clickable v-ripple class="rounded-lg" @click="removeItem(item)">
+            <q-item-section>
+              <q-item-label class="font-black" title>{{ item.productName }}</q-item-label>
+              <q-item-label caption :lines="1">{{ item.productQuantity }}</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-item-label overline class="font-black">{{ item.productPrice }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
       </div>
     </div>
   </q-page>
@@ -77,16 +95,15 @@ import * as prescriptionRequests from 'src/api/pharmacist/prescription-requests'
 import { CartItem } from 'src/models/CartItem';
 import { search as _search } from 'src/api/search';
 
-import ReturnPrescriptionDialog from 'src/components/ReturnPrescriptionDialog.vue';
+import ReturnPrescriptionDialog from 'src/components/Pharmacist/ReturnPrescriptionDialog.vue';
 import { Product } from 'src/models/Product';
-type Item = CartItem | Record<string, never>;
 
 export default defineComponent({
   name: 'PharmacistView',
   components: {},
   setup() {
     const router = useRouter();
-    const items = ref<Item[]>([]);
+    const items = ref<CartItem[]>([]);
     const viewedPrescriptionRequest = ref<prescriptionRequests.PrescriptionRequest | null>(null);
 
     // Search functions
@@ -129,13 +146,28 @@ export default defineComponent({
       });
     };
 
-    const newItem = () => items.value.push({});
-    const removeItem = (idx: number) => items.value.splice(idx, 1);
+    const addItem = (product: Product) => {
+      items.value.push({
+        productId: product.id,
+        productName: product.name,
+        productPrice: product.price,
+        productQuantity: 1,
+      });
+
+      // Also clear search term
+      searchTerm.value = '';
+    };
+
+    const removeItem = (item: CartItem) => {
+      const index = items.value.findIndex((i) => i.productId === item.productId);
+      items.value.splice(index, 1);
+    };
 
     return {
-      newItem,
+      addItem,
       removeItem,
       items,
+
       returnPrescription,
       viewedPrescriptionRequest,
 
