@@ -52,7 +52,7 @@ export default defineComponent({
   },
   setup(props, ctx) {
     console.warn('THIS COMPONENT SHOULD NEVER BE USED AGAIN !!!!!!');
-    const { idx } = toRefs(props);
+    // const { idx } = toRefs(props);
     const searchTerm = ref('');
     const searchResults = ref<Product[]>([]);
 
