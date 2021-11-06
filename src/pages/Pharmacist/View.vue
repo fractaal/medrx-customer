@@ -1,67 +1,86 @@
 <template>
-  <q-item-label class="font-black" overline>PRESCRIPTION VIEW</q-item-label>
-  <div v-if="viewedPrescriptionRequest">
-    <div class="text-4xl font-bold">
-      {{ viewedPrescriptionRequest.firstName }}
-      {{ viewedPrescriptionRequest.middleName }}
-      {{ viewedPrescriptionRequest.lastName }}
-    </div>
-    <div class="grid grid-cols-8 gap-4">
-      <div class="col-span-5 max-h-[calc(100vh-225px)]">
-        <q-img height="100%" class="rounded-xl shadow-lg cursor-pointer" :src="viewedPrescriptionRequest.photoUrl" />
-        <div class="my-4">
-          <q-btn icon="zoom_in" outline label="View original image" @click="redirectToPhoto()" />
+  <q-page>
+    <q-item-label class="font-black" overline>PRESCRIPTION VIEW</q-item-label>
+    <div v-if="viewedPrescriptionRequest">
+      <div class="text-4xl font-bold">
+        {{ viewedPrescriptionRequest.firstName }}
+        {{ viewedPrescriptionRequest.middleName }}
+        {{ viewedPrescriptionRequest.lastName }}
+      </div>
+      <div class="grid grid-cols-8 gap-4">
+        <div class="relative group col-span-5">
+          <!-- MedRx Image Viewer -->
+          <div v-viewer class="h-[calc(100vh-255px)]">
+            <q-img
+              class="
+                rounded-xl
+                shadow-lg
+                cursor-pointer
+                h-[calc(100vh-255px)]
+                filter
+                group-hover:brightness-[0.15]
+                transition-all
+              "
+              :src="viewedPrescriptionRequest && viewedPrescriptionRequest.photoUrl"
+            />
+          </div>
+          <div class="absolute top-0 h-full w-full flex content-center justify-center pointer-events-none">
+            <div class="group-hover:opacity-100 opacity-0 transition-all group-hover:scale-150">
+              <q-icon size="72px" name="zoom_in" color="white" />
+              <p class="text-white font-black text-center">View image</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-span-3 flex space-y-2">
+          <q-btn
+            @click="transcribePrescriptionRequest"
+            class="w-full bg-medrx text-white p-4 shadow-lg"
+            flat
+            no-caps
+            rounded
+          >
+            <div>
+              <div class="text-2xl font-black"><q-icon name="check" size="32px" class="-mt-1 mr-2" />CLAIM</div>
+              <div>
+                Start transcribing this prescription.<br /><br />
+                This option prompts you to search for the appropriate items in this prescription among MedRx stores.
+              </div>
+            </div>
+          </q-btn>
+          <q-btn
+            class="w-full bg-yellow-600 text-white p-4 shadow-lg"
+            flat
+            no-caps
+            rounded
+            @click="returnPrescriptionRequest()"
+          >
+            <div>
+              <div class="text-2xl font-black"><q-icon name="logout" size="32px" class="-mt-1 mr-2" />RETURN</div>
+              <div>
+                The image is too blurry, or some other reason makes it difficult to transcribe. <br /><br />
+                This option fails the user’s prescription request.
+              </div>
+            </div>
+          </q-btn>
+          <q-btn
+            class="col-span-2 w-full bg-red-600 text-white p-4 shadow-lg"
+            flat
+            no-caps
+            rounded
+            @click="restrictUser()"
+          >
+            <div>
+              <div class="text-2xl font-black"><q-icon name="dangerous" size="32px" class="-mt-1 mr-2" />RESTRICT</div>
+              <div>This image is inappropriate.</div>
+            </div>
+          </q-btn>
         </div>
       </div>
-      <div class="col-span-3 flex space-y-2">
-        <q-btn
-          @click="transcribePrescriptionRequest"
-          class="w-full bg-medrx text-white p-4 shadow-lg"
-          flat
-          no-caps
-          rounded
-        >
-          <div>
-            <div class="text-2xl font-black"><q-icon name="check" size="32px" class="-mt-1 mr-2" />CLAIM</div>
-            <div>
-              Start transcribing this prescription.<br /><br />
-              This option prompts you to search for the appropriate items in this prescription among MedRx stores.
-            </div>
-          </div>
-        </q-btn>
-        <q-btn
-          class="w-full bg-yellow-600 text-white p-4 shadow-lg"
-          flat
-          no-caps
-          rounded
-          @click="returnPrescriptionRequest()"
-        >
-          <div>
-            <div class="text-2xl font-black"><q-icon name="logout" size="32px" class="-mt-1 mr-2" />RETURN</div>
-            <div>
-              The image is too blurry, or some other reason makes it difficult to transcribe. <br /><br />
-              This option fails the user’s prescription request.
-            </div>
-          </div>
-        </q-btn>
-        <q-btn
-          class="col-span-2 w-full bg-red-600 text-white p-4 shadow-lg"
-          flat
-          no-caps
-          rounded
-          @click="restrictUser()"
-        >
-          <div>
-            <div class="text-2xl font-black"><q-icon name="dangerous" size="32px" class="-mt-1 mr-2" />RESTRICT</div>
-            <div>This image is inappropriate.</div>
-          </div>
-        </q-btn>
-      </div>
     </div>
-  </div>
-  <q-inner-loading showing="isLoading">
-    <q-spinner size="xl" />
-  </q-inner-loading>
+    <q-inner-loading showing="isLoading">
+      <q-spinner size="xl" />
+    </q-inner-loading>
+  </q-page>
 </template>
 
 <script lang="ts">
@@ -131,9 +150,7 @@ export default defineComponent({
       transcribePrescriptionRequest,
       returnPrescriptionRequest,
       viewedPrescriptionRequest,
-      redirectToPhoto() {
-        window.open(viewedPrescriptionRequest.value!.photoUrl);
-      },
+      redirectToPhoto: () => window.open(viewedPrescriptionRequest.value!.photoUrl),
       isLoading,
     };
   },
