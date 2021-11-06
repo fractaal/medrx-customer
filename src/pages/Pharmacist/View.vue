@@ -34,7 +34,7 @@
         <div class="col-span-3 flex space-y-2">
           <q-btn
             @click="transcribePrescriptionRequest"
-            class="w-full bg-medrx text-white p-4 shadow-lg"
+            class="w-full bg-medrx text-white p-4 shadow-lg ring-1 ring-green-600"
             flat
             no-caps
             rounded
@@ -48,7 +48,7 @@
             </div>
           </q-btn>
           <q-btn
-            class="w-full bg-yellow-600 text-white p-4 shadow-lg"
+            class="w-full bg-yellow-600 text-white p-4 shadow-lg ring-1 ring-yellow-700"
             flat
             no-caps
             rounded
@@ -63,7 +63,7 @@
             </div>
           </q-btn>
           <q-btn
-            class="col-span-2 w-full bg-red-600 text-white p-4 shadow-lg"
+            class="col-span-2 w-full bg-red-600 text-white p-4 shadow-lg ring-1 ring-red-700"
             flat
             no-caps
             rounded
@@ -77,7 +77,7 @@
         </div>
       </div>
     </div>
-    <q-inner-loading showing="isLoading">
+    <q-inner-loading :showing="isLoading">
       <q-spinner size="xl" />
     </q-inner-loading>
   </q-page>
@@ -94,7 +94,7 @@ import {
 } from 'src/api/pharmacist/prescription-requests';
 import { LocalStorage, Dialog } from 'quasar';
 import { useRouter } from 'vue-router';
-import ReturnPrescriptionDialog from 'src/components/ReturnPrescriptionDialog.vue';
+import ReturnPrescriptionDialog from 'src/components/Pharmacist/ReturnPrescriptionDialog.vue';
 
 export default defineComponent({
   name: 'PharmacistView',
