@@ -64,6 +64,7 @@ export default createUploaderComponent({
           helpers.uploadedSize.value = snapshot.bytesTransferred;
         },
         (err) => {
+          if (err.code === 'storage/canceled') return;
           Notify.create({
             type: 'negative',
             message: "Something went wrong and we couldn't upload your prescription.",
