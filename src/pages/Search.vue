@@ -2,10 +2,10 @@
   <q-page>
     <div class="mt-4">
       <transition name="list" mode="out-in">
-        <q-list padding class="space-y-2 px-2" v-if="isLoading">
+        <q-list padding class="space-y-2 px-2" v-if="searchIsLoading">
           <product-item v-for="x in 4" :key="x" :isSkeleton="true" />
         </q-list>
-        <q-list padding class="space-y-2 px-2" v-else-if="!isLoading && searchResults.length !== 0">
+        <q-list padding class="space-y-2 px-2" v-else-if="!searchIsLoading && searchResults.length !== 0">
           <product-item
             v-for="product in searchResults"
             clickable
@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
-import { searchResults, isLoading } from 'src/api/search';
+import { useNamedSearch } from 'src/api/search';
 import ProductItem from 'src/components/ProductItem.vue';
 import EmptyPlaceholder from 'src/components/EmptyPlaceholder.vue';
 
@@ -42,14 +42,14 @@ export default defineComponent({
   name: 'Search',
   components: { ProductItem, EmptyPlaceholder },
   setup() {
+    const search = useNamedSearch('home');
     const isUntouched = ref(true);
 
-    watch(isLoading, () => (isUntouched.value = false));
+    watch(search.searchIsLoading, () => (isUntouched.value = false));
 
     return {
       isUntouched,
-      searchResults,
-      isLoading,
+      ...search,
     };
   },
 });
