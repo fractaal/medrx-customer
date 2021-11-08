@@ -5,7 +5,7 @@
     <q-header unelevated class="px-2 top mx-auto w-full md:w-3/4 lg:w-3/5 py-2">
       <q-toolbar>
         <div>
-          <q-btn dense flat round icon="chevron_left" size="lg" class="-ml-4 -mr-4" @click="$router.back()" />
+          <q-btn dense flat round icon="chevron_left" size="md" class="-ml-4 -mr-3" @click="$router.back()" />
         </div>
         <q-input
           dense
@@ -70,11 +70,14 @@ import { ref, onMounted } from 'vue';
 import { seed, randomizeSeed } from 'src/api/seed';
 import { firstName as name } from 'src/api/settings';
 import { itemsInCart } from 'src/api/cart';
-import { searchTerm } from 'src/api/search';
+// import { searchTerm } from 'src/api/search';
+import { useNamedSearch } from 'src/api/search';
 
 export default {
   setup() {
     const firstName = ref('');
+
+    const search = useNamedSearch('home');
 
     // TODO: Take SQL number of cart items. (Only General Items, medicine not included)
 
@@ -89,7 +92,7 @@ export default {
       firstName,
       itemsInCart,
 
-      searchTerm,
+      searchTerm: search.searchTerm,
     };
   },
 };
