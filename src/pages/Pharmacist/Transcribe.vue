@@ -41,7 +41,7 @@
         <transition name="list">
           <div
             class="absolute top-11 z-20 w-full shadow-xl bg-white p-4 rounded-lg ring-1 ring-medrx"
-            v-if="searchActive"
+            v-if="searchIsActive"
           >
             <transition name="list" mode="out-in">
               <q-spinner-tail v-if="searchIsLoading" class="block mx-auto text-medrx" size="32px" />
@@ -111,12 +111,14 @@ import { onBeforeRouteLeave } from 'vue-router';
 import { Dialog } from 'quasar';
 import { useRouter } from 'vue-router';
 import * as prescriptionRequests from 'src/api/pharmacist/prescription-requests';
-import { CartItem as CartItemModel } from 'src/models/CartItem';
-import { search as _search } from 'src/api/search';
+import * as prescriptionTranscriptions from 'src/api/pharmacist/prescription-transcriptions';
+import { useNamedSearch } from 'src/api/search';
 
 import ReturnPrescriptionDialog from 'src/components/Pharmacist/ReturnPrescriptionDialog.vue';
 import ProductDialog from 'src/components/ProductDialog.vue';
 import CartItem from 'src/components/CartItem.vue';
+
+import { CartItem as CartItemModel } from 'src/models/CartItem';
 import { Product } from 'src/models/Product';
 
 export default defineComponent({
@@ -129,29 +131,16 @@ export default defineComponent({
     const viewedPrescriptionRequest = ref<prescriptionRequests.PrescriptionRequest | null>(null);
 
     // Search functions
-    const searchIsLoading = ref(false);
-    const searchTerm = ref('');
-    const searchActive = computed(() => searchTerm.value.length > 2);
-    const searchResults = ref<Product[]>([]);
+    const _search = useNamedSearch('pharmacist');
 
-    const search = async () => {
-      searchIsLoading.value = true;
-      const results = await _search(searchTerm.value);
-      searchIsLoading.value = false;
-      searchResults.value = results;
-    };
-
-    watch(searchTerm, () => {
-      if (searchActive.value) {
-        search();
-      }
-    });
-
-    // Set viewedPrescriptionRequest onMounted
     onMounted(async () => {
+      // Set viewedPrescriptionRequest onMounted
       const prescriptionRequestId = router.currentRoute.value.params.id as string;
       const prescriptionRequest = await prescriptionRequests.getPrescriptionRequest(prescriptionRequestId);
       viewedPrescriptionRequest.value = prescriptionRequest;
+
+      // Setup prescriptionTranscriptions onMounted
+      prescriptionTranscriptions.createTranscriptionForUser(prescriptionRequestId);
     });
 
     // Confirm navigation away on before route leave
@@ -186,43 +175,16 @@ export default defineComponent({
       });
     };
 
-    const addItem = (product: Product) => {
-      items.value.push({
-        productId: product.id,
-        productName: product.name,
-        productPrice: product.price,
-        productQuantity: 1,
-      });
-
-      // Also clear search term
-      searchTerm.value = '';
-    };
-
-    const removeItem = (item: CartItemModel) => {
-      const index = items.value.findIndex((i) => i.productId === item.productId);
-      items.value.splice(index, 1);
-    };
-
-    const viewItem = (productId: string) => {
-      Dialog.create({
-        component: ProductDialog,
-        componentProps: { productId },
-      });
-    };
-
     return {
-      addItem,
-      removeItem,
-      viewItem,
+      // addItem,
+      // removeItem,
+      // viewItem,
       items,
 
       returnPrescription,
       viewedPrescriptionRequest,
 
-      searchIsLoading,
-      searchTerm,
-      searchActive,
-      searchResults,
+      ..._search,
     };
   },
 });
