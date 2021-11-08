@@ -74,9 +74,6 @@ export const resetCart = async () => {
   }
 };
 
-
-
-
 export const updateCart = async (
   productId: string,
   productName: string,
@@ -113,7 +110,7 @@ onSnapshot(doc(firestore, `users/${uid}`), (doc) => {
 
   for (const productId in _cart) {
     const itemSubtotal = _cart[productId].productQuantity * _cart[productId].productPrice;
-    _cart[productId].amount = itemSubtotal;
+    // _cart[productId].amount = itemSubtotal;
     _subTotal += itemSubtotal;
     _total = _subTotal + fee.value;
 

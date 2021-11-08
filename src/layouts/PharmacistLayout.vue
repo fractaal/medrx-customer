@@ -23,7 +23,7 @@
     </q-header>
     <q-page>
       <q-page-container>
-        <div class="flex flex-nowrap transition-all duration-100 px-4 pb-4" style="height: calc(100vh - 50px)">
+        <div class="flex flex-nowrap transition-all duration-100 px-4 pb-4 h-[calc(100vh-50px)]">
           <div
             class="h-full overflow-y-auto shadow-lg rounded-xl ring-medrx transition-all duration-200 mr-4"
             :class="leftDrawerOpen ? 'w-[300px] ring-1 p-4' : 'w-0 ring-0'"

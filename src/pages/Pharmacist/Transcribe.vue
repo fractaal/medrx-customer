@@ -41,7 +41,7 @@
         <transition name="list">
           <div
             class="absolute top-11 z-20 w-full shadow-xl bg-white p-4 rounded-lg ring-1 ring-medrx"
-            v-if="searchActive"
+            v-if="searchIsActive"
           >
             <transition name="list" mode="out-in">
               <q-spinner-tail v-if="searchIsLoading" class="block mx-auto text-medrx" size="32px" />
@@ -49,20 +49,28 @@
                 No product results found for <b>{{ searchTerm }}.</b>
               </p>
               <q-list v-else>
-                <q-item
-                  v-for="result in searchResults"
-                  :key="result.id"
-                  clickable
-                  v-ripple
-                  class="rounded-lg"
-                  @click="addItem(result)"
-                >
+                <q-item v-for="result in searchResults" :key="result.id" clickable v-ripple class="rounded-lg">
                   <q-item-section>
-                    <q-item-label class="font-black" title>{{ result.name }}</q-item-label>
+                    <q-item-label title
+                      >{{ result.name }} - <b>{{ transformPrice(result.price) }}</b></q-item-label
+                    >
                     <q-item-label caption :lines="1">{{ result.description }}</q-item-label>
                   </q-item-section>
-                  <q-item-section side>
-                    <q-item-label overline class="font-black">{{ result.price }}</q-item-label>
+                  <q-item-section side class="flex flex-row flex-nowrap space-x-2">
+                    <q-btn
+                      round
+                      icon="add"
+                      class="from-medrx to-green-200 bg-gradient-to-tr text-white"
+                      unelevated
+                      @click="addItem(result)"
+                    />
+                    <q-btn
+                      round
+                      icon="zoom_in"
+                      class="from-blue-800 to-blue-300 bg-gradient-to-tr text-white"
+                      unelevated
+                      @click="viewItem(result.id)"
+                    />
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -72,15 +80,25 @@
         <q-separator class="mt-2" />
         <!-- Items list -->
         <q-list class="mt-2">
-          <q-item v-for="item in items" :key="item.id" clickable v-ripple class="rounded-lg" @click="removeItem(item)">
-            <q-item-section>
-              <q-item-label class="font-black" title>{{ item.productName }}</q-item-label>
-              <q-item-label caption :lines="1">{{ item.productQuantity }}</q-item-label>
-            </q-item-section>
-            <q-item-section side>
-              <q-item-label overline class="font-black">{{ item.productPrice }}</q-item-label>
-            </q-item-section>
-          </q-item>
+          <cart-item v-for="(item, idx) in items" :key="item.productId" v-model="items[idx]" />
+          <!-- <div
+            dense
+            v-for="item in items"
+            :key="item"
+            class="relative grid-cols-3 grid place-items-center rounded-xl p-4 hover:bg-gray-200"
+          >
+            <div v-ripple dense class="relative font-black p-4" @click="$router.push(`/product/${item.productId}`)">
+              {{ item.productName }}
+            </div>
+
+            <div class="grid-cols-3 grid place-items-center">
+              <q-btn round flat @click="item.productQuantity--" icon="remove" />
+              <q-input v-model="item.productQuantity" type="number" style="max-width: 50px" dense />
+              <q-btn round flat @click="item.productQuantity++" icon="add" />
+            </div>
+
+            <div>{{ transformPrice(item.productQuantity * item.productPrice) }}</div>
+          </div> -->
         </q-list>
       </div>
     </div>
@@ -89,47 +107,57 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, computed, watch } from 'vue';
+import { onBeforeRouteLeave } from 'vue-router';
 import { Dialog } from 'quasar';
 import { useRouter } from 'vue-router';
 import * as prescriptionRequests from 'src/api/pharmacist/prescription-requests';
-import { CartItem } from 'src/models/CartItem';
-import { search as _search } from 'src/api/search';
+import * as prescriptionTranscriptions from 'src/api/pharmacist/prescription-transcriptions';
+import { useNamedSearch } from 'src/api/search';
 
 import ReturnPrescriptionDialog from 'src/components/Pharmacist/ReturnPrescriptionDialog.vue';
+import ProductDialog from 'src/components/ProductDialog.vue';
+import CartItem from 'src/components/CartItem.vue';
+
+import { CartItem as CartItemModel } from 'src/models/CartItem';
 import { Product } from 'src/models/Product';
 
 export default defineComponent({
   name: 'PharmacistView',
-  components: {},
+  inject: ['transformPrice'],
+  components: { CartItem },
   setup() {
     const router = useRouter();
-    const items = ref<CartItem[]>([]);
+    const items = ref<CartItemModel[]>([]);
     const viewedPrescriptionRequest = ref<prescriptionRequests.PrescriptionRequest | null>(null);
 
     // Search functions
-    const searchIsLoading = ref(false);
-    const searchTerm = ref('');
-    const searchActive = computed(() => searchTerm.value.length > 2);
-    const searchResults = ref<Product[]>([]);
+    const _search = useNamedSearch('pharmacist');
 
-    const search = async () => {
-      searchIsLoading.value = true;
-      const results = await _search(searchTerm.value);
-      searchIsLoading.value = false;
-      searchResults.value = results;
-    };
-
-    watch(searchTerm, () => {
-      if (searchActive.value) {
-        search();
-      }
-    });
-
-    // Set viewedPrescriptionRequest onMounted
     onMounted(async () => {
+      // Set viewedPrescriptionRequest onMounted
       const prescriptionRequestId = router.currentRoute.value.params.id as string;
       const prescriptionRequest = await prescriptionRequests.getPrescriptionRequest(prescriptionRequestId);
       viewedPrescriptionRequest.value = prescriptionRequest;
+
+      // Setup prescriptionTranscriptions onMounted
+      prescriptionTranscriptions.createTranscriptionForUser(prescriptionRequestId);
+    });
+
+    // Confirm navigation away on before route leave
+    onBeforeRouteLeave((_, __, next) => {
+      if (items.value.length > 0) {
+        Dialog.create({
+          title: 'Are you sure?',
+          message: 'You have items in this transcription. Are you sure you want to leave?',
+          focus: 'cancel',
+          cancel: 'Cancel',
+          ok: 'Leave',
+        })
+          .onOk(() => next(true))
+          .onCancel(() => next(false));
+      } else {
+        next();
+      }
     });
 
     // Shows the return prescription dialog and routes back to pharmacist if return was successful
@@ -138,6 +166,7 @@ export default defineComponent({
         component: ReturnPrescriptionDialog,
         componentProps: { prescriptionRequestId: router.currentRoute.value.params.id },
       }).onOk(async (data: { message: string }) => {
+        items.value = []; // Clear items so that navigation confirmation doesn't occur
         await prescriptionRequests.returnPrescriptionRequest(
           (router.currentRoute.value.params.id as string) ?? '',
           data.message
@@ -146,35 +175,16 @@ export default defineComponent({
       });
     };
 
-    const addItem = (product: Product) => {
-      items.value.push({
-        productId: product.id,
-        productName: product.name,
-        productPrice: product.price,
-        productQuantity: 1,
-      });
-
-      // Also clear search term
-      searchTerm.value = '';
-    };
-
-    const removeItem = (item: CartItem) => {
-      const index = items.value.findIndex((i) => i.productId === item.productId);
-      items.value.splice(index, 1);
-    };
-
     return {
-      addItem,
-      removeItem,
+      // addItem,
+      // removeItem,
+      // viewItem,
       items,
 
       returnPrescription,
       viewedPrescriptionRequest,
 
-      searchIsLoading,
-      searchTerm,
-      searchActive,
-      searchResults,
+      ..._search,
     };
   },
 });

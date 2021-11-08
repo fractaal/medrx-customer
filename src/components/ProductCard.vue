@@ -10,8 +10,7 @@
     <q-item>
       <q-item-section>
         <q-item-label class>
-          <span class="font-bold pr-1">{{ price }}</span
-          >PHP
+          <span class="font-bold pr-1">{{ transformPrice(price) }}</span>
         </q-item-label>
       </q-item-section>
     </q-item>
@@ -30,6 +29,7 @@ export default defineComponent({
     price: Number,
     photoUrl: String,
   },
+  inject: ['transformPrice'],
   setup() {
     return {
       placeholderImageUrl,

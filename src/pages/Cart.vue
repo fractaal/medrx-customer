@@ -29,42 +29,7 @@
           </div>
         </div>
 
-        <div
-          dense
-          v-for="item in cart"
-          :key="item"
-          class="relative grid-cols-3 grid place-items-center rounded-xl p-4 hover:bg-gray-200"
-        >
-          <!--can be a component-->
-          <div v-ripple dense class="relative font-black p-4" @click="$router.push(`/product/${item.productId}`)">
-            {{ item.productName }}
-          </div>
-
-          <div class="grid-cols-3 grid place-items-center">
-            <q-btn
-              round
-              flat
-              @click="
-                item.productQuantity--;
-                update(item.productId, item.productName, item.productQuantity, item.productPrice);
-              "
-              icon="remove"
-            />
-            <q-input v-model="item.productQuantity" type="number" style="max-width: 50px" dense />
-            <q-btn
-              round
-              flat
-              @click="
-                item.productQuantity++;
-                update(item.productId, item.productName, item.productQuantity, item.productPrice);
-              "
-              icon="add"
-            />
-          </div>
-
-          <div>{{ item.amount }}</div>
-          <!--can be a component-->
-        </div>
+        <cart-item v-for="(item, idx) in cart" :key="item" v-model="cart[idx]" @update:modelValue="onCartItemUpdate" />
 
         <q-separator class="my-3" />
 
@@ -72,12 +37,12 @@
           <div class="mr-8">Subtotal</div>
           <div></div>
 
-          <div>{{ subTotal }}</div>
+          <div>{{ transformPrice(subTotal) }}</div>
 
           <div class="mr-3">Delivery fee</div>
           <div></div>
 
-          <div>{{ fee }}</div>
+          <div>{{ transformPrice(fee) }}</div>
         </div>
 
         <q-separator class="my-3" />
@@ -86,7 +51,7 @@
           <div class="font-bold mr-14">Total</div>
           <div></div>
 
-          <div>{{ total }}</div>
+          <div>{{ transformPrice(total) }}</div>
         </div>
       </div>
 
@@ -110,7 +75,12 @@ import { cart, total, subTotal, updateCart, removeProduct, resetCart, itemsInCar
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 
+import CartItem from 'src/components/CartItem.vue';
+
 export default {
+  name: 'Cart',
+  inject: ['transformPrice'],
+  components: { CartItem },
   setup() {
     const address = ref('');
     const fee = ref(0);
@@ -138,6 +108,20 @@ export default {
       }
     };
 
+    const onCartItemUpdate = async ({
+      productId,
+      productName,
+      productQuantity,
+      productPrice,
+    }: {
+      productId: string;
+      productName: string;
+      productQuantity: number;
+      productPrice: number;
+    }) => {
+      await update(productId, productName, productQuantity, productPrice);
+    };
+
     return {
       model: ref(null),
       options: ['Cash-on-Delivery'],
@@ -151,6 +135,7 @@ export default {
       resetCart,
       reset,
       printCart: () => console.log(cart.value),
+      onCartItemUpdate,
     };
   },
 };

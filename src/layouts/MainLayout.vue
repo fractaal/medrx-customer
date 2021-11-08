@@ -5,26 +5,8 @@
     <q-header unelevated class="px-2 top mx-auto w-full md:w-3/4 lg:w-3/5 py-2">
       <q-toolbar>
         <div>
-          <q-btn
-            dense
-            flat
-            round
-            icon="chevron_left"
-            size="lg"
-            v-if="$route.path !== '/home'"
-            class="-ml-14 mr-2"
-            @click="$router.back()"
-          />
-          <q-btn dense flat round @click="$router.push('/settings')">
-            <q-avatar color="primary" size="40px" class="shadow-xl">
-              <q-img :src="`https://avatars.dicebear.com/api/micah/${seed}.svg`" />
-            </q-avatar>
-          </q-btn>
+          <q-btn dense flat round icon="chevron_left" size="md" class="-ml-4 -mr-3" @click="$router.back()" />
         </div>
-
-        <!-- <div class="ml-4 text-h6 font-black">{{ $t('hello') }}, {{ firstName }}!</div> -->
-
-        <!-- <q-space /> -->
         <q-input
           dense
           flat
@@ -34,23 +16,24 @@
           to="/search"
           class="mx-4 w-full"
           v-model="searchTerm"
+          :debounce="500"
           @click="$router.push('/search')"
         >
           <template v-slot:append>
             <q-icon name="search" size="sm" />
           </template>
         </q-input>
+        <q-btn dense flat round @click="$router.push('/settings')">
+          <q-avatar color="primary" size="40px" class="shadow-xl">
+            <q-img :src="`https://avatars.dicebear.com/api/micah/${seed}.svg`" />
+          </q-avatar>
+        </q-btn>
         <!-- <q-btn dense flat round icon="search" to="/search" /> -->
       </q-toolbar>
     </q-header>
     <q-page-container>
       <router-view v-slot="{ Component }" class="mx-auto w-full md:w-3/4 lg:w-3/5">
-        <transition
-          enter-active-class="animated fadeIn"
-          leave-active-class="animated fadeOut"
-          appear
-          :duration="150"
-        >
+        <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" appear :duration="150">
           <component :is="Component" />
         </transition>
       </router-view>
@@ -87,16 +70,19 @@ import { ref, onMounted } from 'vue';
 import { seed, randomizeSeed } from 'src/api/seed';
 import { firstName as name } from 'src/api/settings';
 import { itemsInCart } from 'src/api/cart';
-import { searchTerm } from 'src/api/search';
+// import { searchTerm } from 'src/api/search';
+import { useNamedSearch } from 'src/api/search';
 
 export default {
   setup() {
     const firstName = ref('');
 
+    const search = useNamedSearch('home');
+
     // TODO: Take SQL number of cart items. (Only General Items, medicine not included)
 
     onMounted(() => {
-      firstName.value = name.value
+      firstName.value = name.value;
     });
 
     return {
@@ -106,7 +92,7 @@ export default {
       firstName,
       itemsInCart,
 
-      searchTerm,
+      searchTerm: search.searchTerm,
     };
   },
 };

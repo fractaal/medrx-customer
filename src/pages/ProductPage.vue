@@ -2,11 +2,9 @@
   <q-page>
     <medrx-loader v-if="isLoading" style="height: calc(100vh - 150px)" />
     <div class="flex" v-else>
-      <q-img
-        :src="product?.photoUrl || placeholderImageUrl"
-        ratio="1"
-        class="w-full md:w-1/2 rounded-none md:rounded-xl shadow-md"
-      ></q-img>
+      <div v-viewer class="w-full md:w-1/2">
+        <q-img :src="product?.photoUrl || placeholderImageUrl" ratio="1" class="rounded-none md:rounded-xl shadow-md" />
+      </div>
       <div class="mt-4 md:mt-0 divide-y divide-gray-300 px-8 space-y-4 w-full md:w-1/2">
         <div>
           <p class="text-h6 font-black">{{ product?.name }}</p>
@@ -20,8 +18,7 @@
           </div>
           <div>{{ product?.description }}</div>
           <div class="flex content-center justify-end">
-            <div class="text-h6 font-black p-0 m-0">{{ product?.price }}</div>
-            <div class="text-h6 p-0 m-0">PHP</div>
+            <div class="text-h6 font-black p-0 m-0">{{ transformPrice(product?.price ?? 0) }}</div>
           </div>
         </div>
         <div class="pt-4">
@@ -64,6 +61,7 @@ import MedrxLoader from 'src/components/MedrxLoader.vue';
 export default defineComponent({
   components: { MedrxLoader },
   name: 'ProductPage',
+  inject: ['transformPrice'],
   setup() {
     const router = useRouter();
     const productId = router.currentRoute.value.params.id;

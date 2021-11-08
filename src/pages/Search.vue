@@ -1,36 +1,55 @@
 <template>
   <q-page>
     <div class="mt-4">
-      <medrx-loader v-if="isLoading" style="height: calc(100vh - 150px)" />
-      <q-list padding class="space-y-2 px-2" v-else>
-        <product-item
-          v-for="product in searchResults"
-          clickable
-          @click="$router.push(`/product/${product.id}`)"
-          :photo-url="product.photoUrl"
-          :key="product.id"
-          :itemname="product.name"
-          :description="product.description"
-          :price="product.price"
+      <transition name="list" mode="out-in">
+        <q-list padding class="space-y-2 px-2" v-if="searchIsLoading">
+          <product-item v-for="x in 4" :key="x" :isSkeleton="true" />
+        </q-list>
+        <q-list padding class="space-y-2 px-2" v-else-if="!searchIsLoading && searchResults.length !== 0">
+          <product-item
+            v-for="product in searchResults"
+            clickable
+            @click="$router.push(`/product/${product.id}`)"
+            :photo-url="product.photoUrl"
+            :key="product.id"
+            :itemname="product.name"
+            :description="product.description"
+            :price="product.price"
+          />
+        </q-list>
+        <empty-placeholder
+          v-else-if="!isUntouched"
+          icon="sentiment_dissatisfied"
+          text="No results found. Try again with a different search!"
         />
-      </q-list>
+        <empty-placeholder
+          v-else-if="isUntouched"
+          icon="fas fa-rocket"
+          text="Try typing in the search box anything you want to look for!"
+        />
+      </transition>
     </div>
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { searchResults, isLoading } from 'src/api/search';
+import { defineComponent, ref, watch } from 'vue';
+import { useNamedSearch } from 'src/api/search';
 import ProductItem from 'src/components/ProductItem.vue';
-import MedrxLoader from 'src/components/MedrxLoader.vue';
+import EmptyPlaceholder from 'src/components/EmptyPlaceholder.vue';
 
 export default defineComponent({
   name: 'Search',
-  components: { ProductItem, MedrxLoader },
+  components: { ProductItem, EmptyPlaceholder },
   setup() {
+    const search = useNamedSearch('home');
+    const isUntouched = ref(true);
+
+    watch(search.searchIsLoading, () => (isUntouched.value = false));
+
     return {
-      searchResults,
-      isLoading,
+      isUntouched,
+      ...search,
     };
   },
 });
