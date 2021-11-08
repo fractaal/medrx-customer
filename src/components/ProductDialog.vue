@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import { useDialogPluginComponent, Notify } from 'quasar';
+import { useDialogPluginComponent } from 'quasar';
 import { getProduct } from 'src/api/product';
 import { Product } from 'src/models/Product';
 
