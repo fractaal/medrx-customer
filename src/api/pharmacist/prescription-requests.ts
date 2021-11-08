@@ -65,6 +65,8 @@ export const claimPrescriptionRequest = async (prescriptionRequestId: string) =>
   );
 
   await db.update(location, {
+    claimed: true,
+    claimedBy: token.value?.claims.userId,
     status: PrescriptionRequestStatus.IN_PROCESSING,
   });
 };
