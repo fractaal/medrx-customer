@@ -122,7 +122,7 @@ import { CartItem as CartItemModel } from 'src/models/CartItem';
 import { Product } from 'src/models/Product';
 
 export default defineComponent({
-  name: 'PharmacistView',
+  name: 'PharmacistTranscribe',
   inject: ['transformPrice'],
   components: { CartItem },
   setup() {
