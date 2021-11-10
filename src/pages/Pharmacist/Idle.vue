@@ -10,6 +10,6 @@ import EmptyPlaceholder from 'src/components/EmptyPlaceholder.vue';
 import { defineComponent } from 'vue';
 export default defineComponent({
   components: { EmptyPlaceholder },
-  name: 'PharmacistView',
+  name: 'PharmacistIdle',
 });
 </script>
