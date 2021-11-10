@@ -19,6 +19,9 @@
       <q-toolbar class="bg-transparent text-black h-4">
         <q-btn flat round dense icon="arrow_left" @click="$router.back()" class="q-mr-sm" />
         <q-toolbar-title>MedRx Pharmacist</q-toolbar-title>
+        <q-btn rounded outline size="12px" icon="block" to="/pharmacist/restricted-users"
+          ><p class="ml-2">Restricted Users</p></q-btn
+        >
       </q-toolbar>
     </q-header>
     <q-page-container>
