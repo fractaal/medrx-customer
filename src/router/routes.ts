@@ -129,6 +129,17 @@ const routes: RouteRecordRaw[] = [
       statusBarIsDark: true,
     },
   },
+  {
+    path: '/pharmacist/restricted-users',
+    component: () => import('layouts/PharmacistLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Pharmacist/Restricted.vue') }],
+    meta: {
+      requiredRoles: 'pharmacist',
+      name: 'Restricted Users',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
+    },
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
