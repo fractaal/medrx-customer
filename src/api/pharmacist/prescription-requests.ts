@@ -103,29 +103,3 @@ export const getPrescriptionRequest = async (prescriptionRequestId: string) => {
     return null;
   }
 };
-
-export const restrictUser = async (prescriptionRequestId: string, message: string) => {
-  const restrictedUsers = db.ref(database, '/restrictedUsers');
-  const location = db.ref(
-    database,
-    `${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}/prescriptionRequests`
-  );
-
-  try {
-    await db.update(location, { status: PrescriptionRequestStatus.FAILED, customMessage: message ?? null });
-    await db.update(restrictedUsers, { [prescriptionRequestId]: true });
-  } catch (err) {
-    Notify.create({ type: 'negative', message: 'Failed to restrict this user. Please try again!' });
-  }
-};
-
-// Unrestrict a user:
-export const unrestrictUser = async (prescriptionRequestId: string) => {
-  const restrictedUsers = db.ref(database, '/restrictedUsers');
-
-  try {
-    await db.update(restrictedUsers, { [prescriptionRequestId]: null });
-  } catch (err) {
-    Notify.create({ type: 'negative', message: 'Failed to unrestrict this user. Please try again!' });
-  }
-};
