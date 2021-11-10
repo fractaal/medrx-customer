@@ -21,8 +21,8 @@
         <q-toolbar-title>MedRx Pharmacist</q-toolbar-title>
       </q-toolbar>
     </q-header>
-    <q-page>
-      <q-page-container>
+    <q-page-container>
+      <q-page>
         <div class="flex flex-nowrap transition-all duration-100 px-4 pb-4 h-[calc(100vh-50px)]">
           <div
             class="h-full overflow-y-auto shadow-lg rounded-xl ring-medrx transition-all duration-200 mr-4"
@@ -102,8 +102,8 @@
             </router-view>
           </div>
         </div>
-      </q-page-container>
-    </q-page>
+      </q-page>
+    </q-page-container>
   </q-layout>
 </template>
 
