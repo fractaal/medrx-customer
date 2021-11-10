@@ -20,7 +20,22 @@
       <q-list>
         <q-item-label header overline class="font-black">PROFILE</q-item-label>
 
-        <list-item color="primary" name="person" size="2rem">Profile Picture</list-item>
+        <list-item
+          @click="picturechange = true"
+          color="primary"
+          name="person"
+          size="2rem"
+        >Profile Picture</list-item>
+
+        <q-dialog v-model="picturechange">
+          <q-card style="min-width: 300px">
+            <image-uploader></image-uploader>
+            <q-card-actions align="right" class="text-primary">
+              <q-btn flat label="Cancel" v-close-popup />
+              <q-btn flat label="Upload" @click="upload()" />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
 
         <list-item @click="namechange = true" color="primary" name="badge" size="2rem">Name</list-item>
 
@@ -206,9 +221,10 @@ import { update } from 'src/api/firebase';
 import { useQuasar } from 'quasar';
 import { token } from 'src/api/auth';
 import ListItem from 'src/components/ListItem.vue';
+import ImageUploader from 'src/components/ImageUploader.vue';
 import { firstName, middleName, lastName, phoneNumber, address, email, region, city } from 'src/api/settings';
 export default {
-  components: { ListItem },
+  components: { ListItem, ImageUploader },
   setup() {
     const router = useRouter();
     const { locale } = useI18n({ useScope: 'global' });
@@ -220,7 +236,9 @@ export default {
     const phonechange = ref(false);
     const namechange = ref(false);
     const addresschange = ref(false);
+    const picturechange = ref(false);
     const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
+
 
 
     //get User dat
@@ -284,6 +302,12 @@ export default {
     };
     // Sign-out successful.
 
+    const upload = () => {
+      console.log('Uploaded oten');
+      picturechange.value = false;
+
+    }
+
     return {
       randomizeSeed,
       seed,
@@ -305,11 +329,13 @@ export default {
       updatePhone,
       verificationCode,
       verify,
+      upload,
 
       //dialog triggers
       namechange,
       phonechange,
       addresschange,
+      picturechange,
 
       // auth token
       token,
