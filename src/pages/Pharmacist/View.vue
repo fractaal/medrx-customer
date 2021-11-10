@@ -87,11 +87,11 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import {
   returnPrescriptionRequest as _returnPrescriptionRequest,
-  restrictUser as _restrictUser,
   PrescriptionRequest,
   getPrescriptionRequest,
   claimPrescriptionRequest,
 } from 'src/api/pharmacist/prescription-requests';
+import { restrictUser as _restrictUser } from 'src/api/pharmacist/restricted-users';
 import { LocalStorage, Dialog } from 'quasar';
 import { useRouter } from 'vue-router';
 import ReturnPrescriptionDialog from 'src/components/Pharmacist/ReturnPrescriptionDialog.vue';
