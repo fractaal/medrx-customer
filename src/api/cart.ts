@@ -74,12 +74,25 @@ export const resetCart = async () => {
   }
 };
 
+/* TODO: Refactor this to only update the cart once the
+ * user has left the page. That way, we don't update the cart
+ * every time the user modifies quantity, wasting resources.
+ **/
+
 export const updateCart = async (
   productId: string,
   productName: string,
-  productQuantity: number,
-  productPrice: number
+  productQuantity: number | string,
+  productPrice: number | string
 ) => {
+  if (typeof productQuantity === 'string') {
+    productQuantity = parseInt(productQuantity);
+  }
+
+  if (typeof productPrice === 'string') {
+    productPrice = parseInt(productPrice);
+  }
+
   try {
     const user = auth.currentUser;
     const uid = auth.currentUser?.uid;
