@@ -33,12 +33,23 @@ export default defineComponent({
   setup(props, ctx) {
     // Implement v-model
     const updateItemQuantity = (increment: number) => {
+      if (typeof increment === 'string') {
+        increment = parseInt(increment);
+      }
+
+      if (props.modelValue.productQuantity > 100 && increment > 0) {
+        console.warn('Product quantity seems outrageously high - not updating');
+        return;
+      }
+
       ctx.emit('update:modelValue', {
         productId: props.modelValue.productId,
         productName: props.modelValue.productName,
         productQuantity: props.modelValue.productQuantity + increment,
         productPrice: props.modelValue.productPrice,
       });
+
+      console.log(`Updated product quantity to ${props.modelValue.productQuantity + increment}`);
     };
 
     return {
