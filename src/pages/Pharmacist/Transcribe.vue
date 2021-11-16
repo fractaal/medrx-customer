@@ -106,7 +106,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed, watch } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 import { Dialog } from 'quasar';
 import { useRouter } from 'vue-router';
@@ -115,11 +115,9 @@ import * as prescriptionTranscriptions from 'src/api/pharmacist/prescription-tra
 import { useNamedSearch } from 'src/api/search';
 
 import ReturnPrescriptionDialog from 'src/components/Pharmacist/ReturnPrescriptionDialog.vue';
-import ProductDialog from 'src/components/ProductDialog.vue';
 import CartItem from 'src/components/CartItem.vue';
 
 import { CartItem as CartItemModel } from 'src/models/CartItem';
-import { Product } from 'src/models/Product';
 
 export default defineComponent({
   name: 'PharmacistTranscribe',

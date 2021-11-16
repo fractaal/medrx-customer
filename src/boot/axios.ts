@@ -29,7 +29,7 @@ let sessionInvalidationFunction: ((...args: any[]) => Promise<void>) | null = nu
 
 // Firebase uses this function to set the variable above.
 export const setSessionInvalidationFunction = (func: (...args: any[]) => Promise<void>) => {
-  console.log('Session invalidation function set to ', func);
+  console.log('Session invalidation function set to', func.name.length === 0 ? 'Anonymous function' : func.name);
   sessionInvalidationFunction = func;
 };
 

@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { Notify } from 'quasar';
 import * as db from 'firebase/database';
 import { database } from '../firebase';
@@ -11,15 +11,16 @@ interface RestrictedUser {
   firstName: string;
   middleName: string;
   lastName: string;
-  restrictedOn: ReturnType<typeof db.serverTimestamp>;
+  restrictedOn: number;
 }
 
 export const restrictedUsers = ref<Record<string, RestrictedUser>>({});
+export const numRestrictedUsers = computed(() => Object.keys(restrictedUsers.value).length);
 
-const location = db.ref(db.getDatabase(), 'restrictedUsers');
+const location = db.ref(database, '/restrictedUsers');
 
 db.onValue(location, (snapshot) => {
-  restrictedUsers.value = snapshot.val();
+  restrictedUsers.value = snapshot.val() ?? {};
 });
 
 export const restrictUser = async (prescriptionRequestId: string, message: string) => {
@@ -39,10 +40,11 @@ export const restrictUser = async (prescriptionRequestId: string, message: strin
         middleName: userData.middleName,
         lastName: userData.lastName,
         id: userData.userId,
-        restrictedOn: db.serverTimestamp(),
+        restrictedOn: db.serverTimestamp() as unknown as number,
       },
     });
   } catch (err) {
+    console.error(err);
     Notify.create({ type: 'negative', message: 'Failed to restrict this user. Please try again!' });
   }
 };
@@ -54,6 +56,7 @@ export const unrestrictUser = async (prescriptionRequestId: string) => {
   try {
     await db.update(restrictedUsers, { [prescriptionRequestId]: null });
   } catch (err) {
+    console.error(err);
     Notify.create({ type: 'negative', message: 'Failed to unrestrict this user. Please try again!' });
   }
 };
