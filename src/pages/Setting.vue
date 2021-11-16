@@ -27,11 +27,36 @@
           size="2rem"
         >Profile Picture</list-item>
 
-        <q-dialog v-model="picturechange">
+        <q-dialog persistent v-model="picturechange">
           <q-card style="min-width: 300px">
-            <image-uploader></image-uploader>
+            <q-card style="min-width: 300px">
+              <q-card-section v-show="process === 0">
+                <q-btn id="fileSelect" color="primary" unelevated @click="getFile()">
+                  <input
+                    id="fileSelector"
+                    type="file"
+                    name="img"
+                    style="display: none;"
+                    @change="showitnow()"
+                  />
+                  <q-avatar square size="300px">
+                    <q-img :src="`https://avatars.dicebear.com/api/micah/${seed}.svg`">
+                      <div class="rounded-full absolute-center">
+                        <q-avatar dense icon="add" size="100px" />
+                      </div>
+                    </q-img>
+                  </q-avatar>
+                </q-btn>
+              </q-card-section>
+              <q-card-section v-show="process === 1">
+                <q-avatar square size="300px">
+                  <img v-viewer id="pleaseWork" class="object-contain" />
+                  <img />
+                </q-avatar>
+              </q-card-section>
+            </q-card>
             <q-card-actions align="right" class="text-primary">
-              <q-btn flat label="Cancel" v-close-popup />
+              <q-btn flat label="Cancel" v-close-popup @click="process = 0" />
               <q-btn flat label="Upload" @click="upload()" />
             </q-card-actions>
           </q-card>
@@ -221,16 +246,18 @@ import { update } from 'src/api/firebase';
 import { useQuasar } from 'quasar';
 import { token } from 'src/api/auth';
 import ListItem from 'src/components/ListItem.vue';
-import ImageUploader from 'src/components/ImageUploader.vue';
 import { firstName, middleName, lastName, phoneNumber, address, email, region, city } from 'src/api/settings';
+import { uploadImage } from 'src/api/profpicuploader';
+
 export default {
-  components: { ListItem, ImageUploader },
+  components: { ListItem },
   setup() {
     const router = useRouter();
     const { locale } = useI18n({ useScope: 'global' });
     const auth = getAuth();
     const quasar = useQuasar();
     const pageNum = ref(0);
+    const process = ref(0);
     const verificationCode = ref('');
     const verificationId = ref('');
     const phonechange = ref(false);
@@ -239,9 +266,6 @@ export default {
     const picturechange = ref(false);
     const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
 
-
-
-    //get User dat
 
     //Add methods here to update specific User data.
     const updateUser = () => {
@@ -305,7 +329,22 @@ export default {
     const upload = () => {
       console.log('Uploaded oten');
       picturechange.value = false;
+      process.value = 0;
+      const image = (<HTMLInputElement>document.getElementById('fileSelector')).files![0];
+      uploadImage(image);
+    }
 
+    const getFile = () => {
+      document.getElementById('fileSelector')?.click();
+    }
+
+    const showitnow = () => {
+      process.value = 1;
+      const image = (<HTMLInputElement>document.getElementById('fileSelector')).files![0];
+      const objectURL = window.URL.createObjectURL(image);
+      const img = document.getElementById('pleaseWork');
+      console.log(img);
+      img?.setAttribute('src', objectURL);
     }
 
     return {
@@ -341,6 +380,9 @@ export default {
       token,
 
       logout,
+      process,
+      getFile,
+      showitnow
     };
   },
 };
