@@ -3,6 +3,7 @@ import { database } from '../firebase';
 import { token } from '../auth';
 import * as db from 'firebase/database';
 import * as storage from 'firebase/storage';
+import * as auth from 'firebase/auth';
 import { PrescriptionRequestStatus } from '../prescription';
 import { Notify } from 'quasar';
 
@@ -66,7 +67,7 @@ export const claimPrescriptionRequest = async (prescriptionRequestId: string) =>
 
   await db.update(location, {
     claimed: true,
-    claimedBy: token.value?.claims.userId,
+    claimedBy: auth.getAuth().currentUser?.uid,
     status: PrescriptionRequestStatus.IN_PROCESSING,
   });
 };
