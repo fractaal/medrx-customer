@@ -64,7 +64,10 @@ export const submitPrescription = async () => {
   }
 
   // TODO: This api call doesn't work yet, do some stuff with it
-  return api.post<ResponseData<Record<string, Product>>>(`/prescription/${prescription.value.userId}`, {
-    transcription: prescription.value,
+  return api.post<ResponseData<Record<string, Product>>>('/prescription', {
+    userId: prescription.value.userId,
+    products: prescription.value.cartItems.map((cartItem) => {
+      return { productId: cartItem.productId, productQuantity: cartItem.productQuantity };
+    }),
   });
 };
