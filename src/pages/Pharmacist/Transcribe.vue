@@ -26,7 +26,7 @@
         </div>
         <div class="mt-2 space-x-2">
           <q-btn color="red" label="Return Prescription" @click="returnPrescription" outline />
-          <q-btn color="primary" label="Submit Prescription" @click="submitTranscription" unelevated />
+          <q-btn color="primary" label="Submit Prescription" @click="submitPrescription" unelevated />
         </div>
       </div>
       <div class="relative">
@@ -65,7 +65,7 @@
                       unelevated
                       @click="
                         searchTerm = '';
-                        addItemToTranscription(result);
+                        addItemToPrescription(result);
                       "
                     />
                     <q-btn
@@ -85,9 +85,9 @@
         <!-- Items list -->
         <q-list class="mt-2">
           <cart-item
-            v-for="(item, idx) in transcription.cartItems"
+            v-for="(item, idx) in prescription.cartItems"
             :key="item.productId"
-            v-model="transcription.cartItems[idx]"
+            v-model="prescription.cartItems[idx]"
           />
         </q-list>
       </div>
@@ -101,7 +101,7 @@ import { onBeforeRouteLeave } from 'vue-router';
 import { Dialog } from 'quasar';
 import { useRouter } from 'vue-router';
 import * as prescriptionRequests from 'src/api/pharmacist/prescription-requests';
-import * as prescriptionTranscriptions from 'src/api/pharmacist/prescription-transcriptions';
+import * as prescriptions from 'src/api/pharmacist/prescriptions';
 import { useNamedSearch } from 'src/api/search';
 
 import ProductDialog from 'src/components/ProductDialog.vue';
@@ -126,13 +126,13 @@ export default defineComponent({
       const prescriptionRequest = await prescriptionRequests.getPrescriptionRequest(prescriptionRequestId);
       viewedPrescriptionRequest.value = prescriptionRequest;
 
-      // Setup prescriptionTranscriptions onMounted
-      prescriptionTranscriptions.createTranscriptionForUser(prescriptionRequestId);
+      // Setup prescriptions onMounted
+      prescriptions.createPrescriptionForUser(prescriptionRequestId);
     });
 
     // Confirm navigation away on before route leave
     onBeforeRouteLeave((_, __, next) => {
-      if (prescriptionTranscriptions.transcription.value.cartItems.length > 0) {
+      if (prescriptions.prescription.value.cartItems.length > 0) {
         Dialog.create({
           title: 'Are you sure?',
           message: 'You have items in this transcription. Are you sure you want to leave?',
@@ -153,7 +153,7 @@ export default defineComponent({
         component: ReturnPrescriptionDialog,
         componentProps: { prescriptionRequestId: router.currentRoute.value.params.id },
       }).onOk(async (data: { message: string }) => {
-        prescriptionTranscriptions.transcription.value.cartItems = []; // Clear items so that navigation confirmation doesn't occur
+        prescriptions.prescription.value.cartItems = []; // Clear items so that navigation confirmation doesn't occur
         await prescriptionRequests.returnPrescriptionRequest(
           (router.currentRoute.value.params.id as string) ?? '',
           data.message
@@ -174,7 +174,7 @@ export default defineComponent({
         });
       },
 
-      ...prescriptionTranscriptions,
+      ...prescriptions,
       ..._search,
     };
   },
