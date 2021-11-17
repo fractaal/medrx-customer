@@ -9,22 +9,22 @@ import { Notify } from 'quasar';
 
 let lastCreatedPrescriptionUserId: string | null = null;
 
-const resetTranscription = () => {
-  transcription.value = {
+const resetPrescription = () => {
+  prescription.value = {
     userId: '',
     cartItems: [],
     extraRemarks: '',
   };
 };
 
-export const transcription = ref({
+export const prescription = ref({
   userId: '',
   cartItems: [] as CartItem[],
   extraRemarks: '',
 });
 
-export const addItemToTranscription = (product: Product) => {
-  if (transcription.value.cartItems.find((item) => item.productId === product.id)) {
+export const addItemToPrescription = (product: Product) => {
+  if (prescription.value.cartItems.find((item) => item.productId === product.id)) {
     Notify.create({ type: 'negative', message: 'This product is already in the cart!' });
     return;
   }
@@ -35,35 +35,36 @@ export const addItemToTranscription = (product: Product) => {
     productQuantity: 1,
     productPrice: product.price,
   };
-  transcription.value.cartItems.push(cartItem);
+  prescription.value.cartItems.push(cartItem);
 };
 
-export const removeItemFromTranscription = (product: Product) => {
-  const index = transcription.value.cartItems.findIndex((cartItem) => cartItem.productId === product.id);
-  transcription.value.cartItems.splice(index, 1);
+export const removeItemFromPrescription = (product: Product) => {
+  const index = prescription.value.cartItems.findIndex((cartItem) => cartItem.productId === product.id);
+  prescription.value.cartItems.splice(index, 1);
 };
 
-export const createTranscriptionForUser = (userId: string, force = false) => {
+export const createPrescriptionForUser = (userId: string, force = false) => {
   if (lastCreatedPrescriptionUserId === userId && !force) {
     return;
   }
-  resetTranscription();
-  transcription.value.userId = userId;
+  resetPrescription();
+  prescription.value.userId = userId;
   lastCreatedPrescriptionUserId = userId;
 };
 
-export const submitTranscription = async () => {
-  if (transcription.value.cartItems.length === 0) {
+export const submitPrescription = async () => {
+  if (prescription.value.cartItems.length === 0) {
     Notify.create({ type: 'negative', message: 'Please add at least one product to the cart!' });
     return;
   }
 
-  if (transcription.value.userId === '') {
+  if (prescription.value.userId === '') {
     Notify.create({ type: 'negative', message: 'Please select a user!' });
     return;
   }
 
-  return api.post<ResponseData<Record<string, Product>>>(`/transcription/${transcription.value.userId}`, {
-    transcription: transcription.value,
+  // TODO: This api call doesn't work yet, do some stuff with it
+  return api.post<ResponseData<Record<string, Product>>>(`/prescription/${prescription.value.userId}`, {
+    transcription: prescription.value,
   });
 };
