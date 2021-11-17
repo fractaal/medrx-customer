@@ -1,6 +1,6 @@
 {
   "name": "medrx-customer",
-  "version": "1.41.1",
+  "version": "1.41.2",
   "description": "Nimble hands for comfort and efficiency!",
   "productName": "MedRx",
   "author": "",
@@ -14,6 +14,7 @@
     "acorn": "^8.4.1",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "date-fns": "^2.25.0",
     "firebase": "^9.0.0",
     "firebaseui": "^5.0.0",
     "quasar": "^2.0.0",

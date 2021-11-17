@@ -24,8 +24,9 @@
             <p class="text-white font-black text-center">View image</p>
           </div>
         </div>
-        <div class="mt-2">
-          <q-btn color="red" label="Return Prescription" @click="returnPrescription" unelevated />
+        <div class="mt-2 space-x-2">
+          <q-btn color="red" label="Return Prescription" @click="returnPrescription" outline />
+          <q-btn color="primary" label="Submit Prescription" @click="submitPrescription" unelevated />
         </div>
       </div>
       <div class="relative">
@@ -49,7 +50,7 @@
                 No product results found for <b>{{ searchTerm }}.</b>
               </p>
               <q-list v-else>
-                <q-item v-for="result in searchResults" :key="result.id" clickable v-ripple class="rounded-lg">
+                <q-item v-for="result in searchResults" :key="result.id" clickable class="rounded-lg">
                   <q-item-section>
                     <q-item-label title
                       >{{ result.name }} - <b>{{ transformPrice(result.price) }}</b></q-item-label
@@ -62,7 +63,10 @@
                       icon="add"
                       class="from-medrx to-green-200 bg-gradient-to-tr text-white"
                       unelevated
-                      @click="addItem(result)"
+                      @click="
+                        searchTerm = '';
+                        addItemToPrescription(result);
+                      "
                     />
                     <q-btn
                       round
@@ -80,25 +84,11 @@
         <q-separator class="mt-2" />
         <!-- Items list -->
         <q-list class="mt-2">
-          <cart-item v-for="(item, idx) in items" :key="item.productId" v-model="items[idx]" />
-          <!-- <div
-            dense
-            v-for="item in items"
-            :key="item"
-            class="relative grid-cols-3 grid place-items-center rounded-xl p-4 hover:bg-gray-200"
-          >
-            <div v-ripple dense class="relative font-black p-4" @click="$router.push(`/product/${item.productId}`)">
-              {{ item.productName }}
-            </div>
-
-            <div class="grid-cols-3 grid place-items-center">
-              <q-btn round flat @click="item.productQuantity--" icon="remove" />
-              <q-input v-model="item.productQuantity" type="number" style="max-width: 50px" dense />
-              <q-btn round flat @click="item.productQuantity++" icon="add" />
-            </div>
-
-            <div>{{ transformPrice(item.productQuantity * item.productPrice) }}</div>
-          </div> -->
+          <cart-item
+            v-for="(item, idx) in prescription.cartItems"
+            :key="item.productId"
+            v-model="prescription.cartItems[idx]"
+          />
         </q-list>
       </div>
     </div>
@@ -106,20 +96,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed, watch } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 import { Dialog } from 'quasar';
 import { useRouter } from 'vue-router';
 import * as prescriptionRequests from 'src/api/pharmacist/prescription-requests';
-import * as prescriptionTranscriptions from 'src/api/pharmacist/prescription-transcriptions';
+import * as prescriptions from 'src/api/pharmacist/prescriptions';
 import { useNamedSearch } from 'src/api/search';
 
-import ReturnPrescriptionDialog from 'src/components/Pharmacist/ReturnPrescriptionDialog.vue';
 import ProductDialog from 'src/components/ProductDialog.vue';
-import CartItem from 'src/components/CartItem.vue';
 
-import { CartItem as CartItemModel } from 'src/models/CartItem';
-import { Product } from 'src/models/Product';
+import ReturnPrescriptionDialog from 'src/components/Pharmacist/ReturnPrescriptionDialog.vue';
+import CartItem from 'src/components/CartItem.vue';
 
 export default defineComponent({
   name: 'PharmacistTranscribe',
@@ -127,7 +115,6 @@ export default defineComponent({
   components: { CartItem },
   setup() {
     const router = useRouter();
-    const items = ref<CartItemModel[]>([]);
     const viewedPrescriptionRequest = ref<prescriptionRequests.PrescriptionRequest | null>(null);
 
     // Search functions
@@ -139,13 +126,13 @@ export default defineComponent({
       const prescriptionRequest = await prescriptionRequests.getPrescriptionRequest(prescriptionRequestId);
       viewedPrescriptionRequest.value = prescriptionRequest;
 
-      // Setup prescriptionTranscriptions onMounted
-      prescriptionTranscriptions.createTranscriptionForUser(prescriptionRequestId);
+      // Setup prescriptions onMounted
+      prescriptions.createPrescriptionForUser(prescriptionRequestId);
     });
 
     // Confirm navigation away on before route leave
     onBeforeRouteLeave((_, __, next) => {
-      if (items.value.length > 0) {
+      if (prescriptions.prescription.value.cartItems.length > 0) {
         Dialog.create({
           title: 'Are you sure?',
           message: 'You have items in this transcription. Are you sure you want to leave?',
@@ -166,7 +153,7 @@ export default defineComponent({
         component: ReturnPrescriptionDialog,
         componentProps: { prescriptionRequestId: router.currentRoute.value.params.id },
       }).onOk(async (data: { message: string }) => {
-        items.value = []; // Clear items so that navigation confirmation doesn't occur
+        prescriptions.prescription.value.cartItems = []; // Clear items so that navigation confirmation doesn't occur
         await prescriptionRequests.returnPrescriptionRequest(
           (router.currentRoute.value.params.id as string) ?? '',
           data.message
@@ -176,14 +163,18 @@ export default defineComponent({
     };
 
     return {
-      // addItem,
-      // removeItem,
-      // viewItem,
-      items,
-
       returnPrescription,
       viewedPrescriptionRequest,
+      viewItem: (productId: string) => {
+        Dialog.create({
+          component: ProductDialog,
+          componentProps: {
+            productId,
+          },
+        });
+      },
 
+      ...prescriptions,
       ..._search,
     };
   },

@@ -26,11 +26,11 @@ export const performPrescriptionRequest = async () => {
   }
   try {
     await set(location, {
-      __dummy: true,
       firstName: firstName.value,
       middleName: middleName.value,
       lastName: lastName.value,
       startedAt: serverTimestamp(),
+      userId: auth.currentUser?.uid,
     });
   } catch (err) {
     // requestStatus.value = PrescriptionRequestStatus.FAILED;
