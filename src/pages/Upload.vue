@@ -33,12 +33,19 @@
             <p class="text-h4 font-black">Awesome!</p>
             <p class="font-black">
               Prescription successfully analyzed!
-              <br />You should get a delivery notification shortly.
+              <br />You should now check if the analyzed prescription is correct.
             </p>
+            <br />
+            <q-btn
+              class="py-4 px-8 bg-gradient-to-tr from-medrx to-green-300 text-white"
+              unelevated
+              @click="$router.push('/confirm-prescription')"
+              >Check</q-btn
+            >
           </div>
         </transition>
         <span class="mx-8" v-if="customMessage.length != 0">{{ customMessage }}</span>
-        <div class="mt-32 mx-8">
+        <div class="mt-32 mx-8" v-if="requestStatus !== 'OK'">
           <q-btn label="CANCEL MY REQUEST" color="red" unelevated outline @click="revokePrescriptionRequest" />
         </div>
       </div>
