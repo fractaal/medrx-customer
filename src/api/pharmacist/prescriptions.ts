@@ -63,11 +63,14 @@ export const submitPrescription = async () => {
     return;
   }
 
-  // TODO: This api call doesn't work yet, do some stuff with it
-  return api.post<ResponseData<Record<string, Product>>>('/prescription', {
-    userId: prescription.value.userId,
-    products: prescription.value.cartItems.map((cartItem) => {
-      return { productId: cartItem.productId, productQuantity: cartItem.productQuantity };
-    }),
-  });
+  try {
+    await api.post<ResponseData<Record<string, Product>>>('/prescription', {
+      userId: prescription.value.userId,
+      products: prescription.value.cartItems.map((cartItem) => {
+        return { productId: cartItem.productId, productQuantity: cartItem.productQuantity };
+      }),
+    });
+  } catch (err) {
+    Notify.create({ message: `Failed to submit this prescription - ${err.response.data.message}` });
+  }
 };
