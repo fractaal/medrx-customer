@@ -95,6 +95,16 @@ const routes: RouteRecordRaw[] = [
       statusBarIsDark: true,
     },
   },
+  {
+    path: '/confirm-prescription',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/ConfirmPrescription.vue') }],
+    meta: {
+      name: 'Confirm',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
+    },
+  },
   // Pharmacist Routes
   {
     path: '/pharmacist',
