@@ -4,6 +4,7 @@ import { set, ref as dbRef, onValue, DatabaseReference, serverTimestamp } from '
 import { database } from './firebase';
 import { firstName, middleName, lastName } from './settings';
 import { Notify, Dialog } from 'quasar';
+import { api } from 'src/boot/axios';
 
 export enum PrescriptionRequestStatus {
   IN_QUEUE = 'IN_QUEUE',
@@ -67,6 +68,11 @@ export const revokePrescriptionRequest = () => {
     cancel: true,
     focus: 'cancel',
   }).onOk(revoke);
+};
+
+export const getLatestPrescription = async () => {
+  const { data } = await api.get('/prescription/latest');
+  return data.data;
 };
 
 (async () => {
