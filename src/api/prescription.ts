@@ -75,6 +75,32 @@ export const getLatestPrescription = async () => {
   return data.data;
 };
 
+export const confirmLatestPrescription = async () => {
+  try {
+    const { data } = await api.patch('/prescription/confirm');
+    console.log('Prescription confirmed - ', data);
+  } catch (err) {
+    Notify.create({
+      type: 'negative',
+      message: 'Failed to confirm your prescription. Please try again.',
+    });
+    console.error(err);
+  }
+};
+
+export const cancelLatestPrescription = async () => {
+  try {
+    const { data } = await api.patch('/prescription/cancel');
+    console.log('Prescription cancelled - ', data);
+  } catch (err) {
+    Notify.create({
+      type: 'negative',
+      message: 'Failed to cancel your prescription. Please try again.',
+    });
+    console.error(err);
+  }
+};
+
 (async () => {
   token = await auth.currentUser?.getIdTokenResult();
 
