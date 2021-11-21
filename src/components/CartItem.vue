@@ -1,5 +1,5 @@
 <template>
-  <div dense class="relative grid-cols-3 grid place-items-center rounded-xl p-4 hover:bg-gray-200">
+  <div dense class="relative grid-cols-3 grid place-items-center rounded-xl p-4 hover:bg-gray-200 ring-1 ring-gray-200">
     <!--can be a component-->
     <div v-ripple dense class="relative font-black p-4" @click="$router.push(`/product/${modelValue.productId}`)">
       {{ modelValue.productName }}
@@ -7,7 +7,15 @@
 
     <div class="grid-cols-3 grid place-items-center">
       <q-btn v-if="!disable" round flat @click="updateItemQuantity(-1)" icon="remove" />
-      <q-input disable type="number" style="max-width: 50px" dense :model-value="modelValue.productQuantity" />
+      <q-input
+        v-if="!disable"
+        disable
+        type="number"
+        style="max-width: 50px"
+        dense
+        :model-value="modelValue.productQuantity"
+      />
+      <p v-if="disable">{{ modelValue.productQuantity }} pc(s)</p>
       <q-btn v-if="!disable" round flat @click="updateItemQuantity(1)" icon="add" />
     </div>
 
