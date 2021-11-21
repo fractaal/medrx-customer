@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="mt-4">
-      <transition name="list" mode="out-in">
+      <transition name="list" mode="out-in" :duration="100">
         <q-list padding class="space-y-2 px-2" v-if="searchIsLoading">
           <product-item v-for="x in 4" :key="x" :isSkeleton="true" />
         </q-list>
