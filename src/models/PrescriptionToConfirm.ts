@@ -10,4 +10,5 @@ export interface PrescriptionToConfirm {
   isConfirmed: boolean;
   dateSubmitted: Date;
   dateConfirmedOrCancelled?: any;
+  extraRemarks: string;
 }
