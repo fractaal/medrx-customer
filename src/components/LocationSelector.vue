@@ -33,7 +33,7 @@ export default defineComponent({
 
     onMounted(async () => {
       quasar.loading.show();
-      data.value = (await getDoc(doc(collection(firestore, 'service'), 'regions'))).data() as DocumentData;
+      data.value = (await getDoc(doc(collection(firestore, 'service'), 'regions'))).data() ?? {};
 
       regions.value = Object.keys(data.value).map((region) => region);
       quasar.loading.hide();

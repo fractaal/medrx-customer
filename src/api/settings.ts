@@ -23,13 +23,13 @@ auth.onAuthStateChanged((user) => {
     unsubscribeUserChange = onSnapshot(doc(firestore, `users/${uid}`), (doc) => {
       const data = doc.data();
       console.log('user data changed!', data);
-      firstName.value = data!.firstName;
-      middleName.value = data!.middleName;
-      lastName.value = data!.lastName;
-      address.value = data!.address;
-      region.value = data!.region;
-      city.value = data!.city;
-      email.value = data!.email;
+      firstName.value = data.firstName;
+      middleName.value = data.middleName;
+      lastName.value = data.lastName;
+      address.value = data.address;
+      region.value = data.region;
+      city.value = data.city;
+      email.value = data.email;
       if (user.phoneNumber) {
         phoneNumber.value = user.phoneNumber;
       }

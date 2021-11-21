@@ -113,7 +113,7 @@ export default defineComponent({
         focus: 'cancel',
       }).onOk(async () => {
         await _restrictUser(
-          viewedPrescriptionRequest.value!.userId ?? '',
+          viewedPrescriptionRequest.value.userId ?? '',
           'The image you sent was inappropriate and you have been restricted from uploading more prescriptions for a time.'
         );
         router.push('/pharmacist');
@@ -121,16 +121,16 @@ export default defineComponent({
     };
 
     const transcribePrescriptionRequest = async () => {
-      await claimPrescriptionRequest(viewedPrescriptionRequest.value!.userId);
-      await router.push(`/pharmacist/transcribe-prescription/${viewedPrescriptionRequest.value!.userId}`);
+      await claimPrescriptionRequest(viewedPrescriptionRequest.value.userId);
+      await router.push(`/pharmacist/transcribe-prescription/${viewedPrescriptionRequest.value.userId}`);
     };
 
     const returnPrescriptionRequest = () => {
       Dialog.create({
         component: ReturnPrescriptionDialog,
-        componentProps: { prescriptionRequestId: viewedPrescriptionRequest.value!.userId ?? '' },
+        componentProps: { prescriptionRequestId: viewedPrescriptionRequest.value.userId ?? '' },
       }).onOk((data: { message: string }) => {
-        _returnPrescriptionRequest(viewedPrescriptionRequest.value!.userId ?? '', data.message);
+        _returnPrescriptionRequest(viewedPrescriptionRequest.value.userId ?? '', data.message);
         router.push('/pharmacist');
       });
     };
@@ -150,7 +150,7 @@ export default defineComponent({
       transcribePrescriptionRequest,
       returnPrescriptionRequest,
       viewedPrescriptionRequest,
-      redirectToPhoto: () => window.open(viewedPrescriptionRequest.value!.photoUrl),
+      redirectToPhoto: () => window.open(viewedPrescriptionRequest.value.photoUrl),
       isLoading,
     };
   },

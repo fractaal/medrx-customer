@@ -78,7 +78,7 @@ api.interceptors.response.use(
 
 const getIdToken = async (auth: Auth) => {
   console.log('Updating ID token in axios...');
-  api.defaults.headers.common['Authorization'] = await auth.currentUser!.getIdToken();
+  api.defaults.headers.common['Authorization'] = await auth.currentUser.getIdToken();
   console.log('New axios defaults: ', api.defaults);
 };
 
