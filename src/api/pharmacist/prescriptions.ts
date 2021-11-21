@@ -69,6 +69,7 @@ export const submitPrescription = async () => {
       products: prescription.value.cartItems.map((cartItem) => {
         return { productId: cartItem.productId, productQuantity: cartItem.productQuantity };
       }),
+      extraRemarks: prescription.value.extraRemarks,
     });
   } catch (err) {
     Notify.create({ message: `Failed to submit this prescription - ${err.response.data.message}` });
