@@ -57,6 +57,18 @@
           <p class="text-xs font-black">PRESCRIBE</p>
         </q-route-tab>
 
+        <q-route-tab to="/orders">
+          <q-icon name="assignment" size="sm" />
+          <p class="text-xs font-black">ORDERS</p>
+        </q-route-tab>
+
+        <q-route-tab to="/tracking" v-if="hasActiveDelivery">
+          <span class="absolute rounded-full bg-blue-500 h-4 w-4 top-0 right-0" />
+          <span class="absolute rounded-full bg-blue-500 h-4 w-4 top-0 right-0 animate-ping" />
+          <q-icon name="gps_fixed" size="sm" />
+          <p class="text-xs font-black">TRACKING</p>
+        </q-route-tab>
+
         <!-- <q-route-tab name="movies" label="Soon">
               <img src='../../public/icons/soon.svg'>
         </q-route-tab>-->
@@ -72,6 +84,7 @@ import { firstName as name } from 'src/api/settings';
 import { itemsInCart } from 'src/api/cart';
 // import { searchTerm } from 'src/api/search';
 import { useNamedSearch } from 'src/api/search';
+import { hasActiveDelivery } from 'src/api/delivery';
 
 export default {
   setup() {
@@ -91,6 +104,7 @@ export default {
       seed,
       firstName,
       itemsInCart,
+      hasActiveDelivery,
 
       searchTerm: search.searchTerm,
     };
