@@ -56,7 +56,7 @@ export default defineComponent({
     onMounted(async () => {
       isLoading.value = true;
       const x = await prescription.getLatestPrescription();
-      if (!prescriptionToConfirm.value?.isValid) {
+      if (!x.isValid) {
         router.push('/home');
         Dialog.create({
           persistent: true,
