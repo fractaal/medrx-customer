@@ -62,7 +62,7 @@ db.onValue(db.ref(database, `/${token.value?.claims.region}/${token.value?.claim
 export const claimPrescriptionRequest = async (prescriptionRequestId: string) => {
   const location = db.ref(
     database,
-    `/${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}/prescriptionRequests`
+    `/${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}/prescription`
   );
 
   await db.update(location, {
@@ -75,7 +75,7 @@ export const claimPrescriptionRequest = async (prescriptionRequestId: string) =>
 export const returnPrescriptionRequest = async (prescriptionRequestId: string, message: string) => {
   const location = db.ref(
     database,
-    `${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}/prescriptionRequests`
+    `${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}/prescription`
   );
   try {
     await db.update(location, {
@@ -90,7 +90,7 @@ export const returnPrescriptionRequest = async (prescriptionRequestId: string, m
 export const getPrescriptionRequest = async (prescriptionRequestId: string) => {
   const location = db.ref(
     database,
-    `${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}/prescriptionRequests`
+    `${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}/prescription`
   );
   try {
     const prescriptionRequest: PrescriptionRequest = (await db.get(location)).val() ?? {};

@@ -110,10 +110,7 @@ export const cancelLatestPrescription = async () => {
     return;
   }
 
-  location = dbRef(
-    database,
-    `/${token.claims.region}/${token.claims.city}/${auth.currentUser?.uid}/prescriptionRequests`
-  );
+  location = dbRef(database, `/${token.claims.region}/${token.claims.city}/${auth.currentUser?.uid}/prescription`);
 
   onValue(location, (snapshot) => {
     const data = snapshot.val();
