@@ -122,7 +122,7 @@
               <q-separator class="my-4" />
               <div class="px-2 pb-4">
                 <div class="text-h6 font-black">What's the difference?</div>
-                <p class="space-y-4">
+                <span class="space-y-4">
                   <li>
                     <b>Privacy.</b><br />Your location is not stored on our servers. It's
                     <b>stored on your device only</b>, and it is
@@ -142,7 +142,7 @@
                     <b>Inclusivity.</b><br />You can provide both an address and an exact location, and we'll use the
                     exact location to deliver!
                   </li>
-                </p>
+                </span>
               </div>
             </q-card-section>
           </q-card>
