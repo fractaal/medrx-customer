@@ -54,15 +54,33 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import * as prescription from 'src/api/prescription';
+import { Dialog } from 'quasar';
+import { useRouter } from 'vue-router';
 
 import FirebaseUploader from 'src/components/FirebaseUploader';
+import { getOrPromptForDeliveryLocation } from 'src/api/delivery-location';
 
 export default defineComponent({
   name: 'PageIndex',
   components: { FirebaseUploader },
   setup() {
+    const router = useRouter();
+    onMounted(async () => {
+      await new Promise((r) => setTimeout(r, 1000));
+      const loc = await getOrPromptForDeliveryLocation();
+      console.log(loc, !loc);
+      if (!loc) {
+        router.push('/home');
+        Dialog.create({
+          title: 'Cannot proceed without a delivery location',
+          message:
+            'Without a delivery location, we cannot process your prescription. Please set one up, be it in the settings page or on the prescribe page.',
+          persistent: true,
+        });
+      }
+    });
     return {
       ...prescription,
     };
