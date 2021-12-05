@@ -13,7 +13,7 @@
       >
         <span v-if="i === 10" class="absolute h-6 w-6 rounded-full bg-blue-500 animate-ping duration-75" />
         <span class="absolute h-6 w-6 rounded-full" :class="i === 10 ? 'bg-blue-500' : 'bg-gray-600'" />
-        <span class="absolute h-[86px] -mt-8 w-0.5 ml-[11px] z-[-5] bg-gray-400" />
+        <span class="absolute h-[86px] -mt-8 w-0.5 ml-[11px] z-[-5] bg-gray-300" />
         <p class="ml-12 font-medium">Waiting on a driver</p>
       </q-skeleton>
     </q-item-section>
