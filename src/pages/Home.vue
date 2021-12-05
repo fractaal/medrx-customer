@@ -1,7 +1,7 @@
 <template>
   <q-page class="bg-body">
     <medrx-loader v-if="storefrontIsLoading" style="height: calc(100vh - 150px)" />
-    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mx-4">
+    <div v-else class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mx-4">
       <product-card
         v-for="item in storefront"
         clickable
