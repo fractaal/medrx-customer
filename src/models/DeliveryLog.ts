@@ -1,5 +1,5 @@
 export interface DeliveryLog {
-  dateTime: string;
+  dateTime: number;
   message: string;
   icon: string;
 }
