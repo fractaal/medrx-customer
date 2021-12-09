@@ -1,10 +1,6 @@
 import { Dialog, LocalStorage } from 'quasar';
 import CoordinateSelectorDialog from 'src/components/CoordinateSelectorDialog.vue';
-
-export interface Location {
-  lat: number;
-  lng: number;
-}
+import { Location } from 'src/models/Location';
 
 /**
  * Get the local delivery location of this user
