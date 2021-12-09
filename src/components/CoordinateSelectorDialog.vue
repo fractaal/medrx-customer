@@ -25,7 +25,7 @@ import { defineComponent, onMounted, ref, watch } from 'vue';
 import { useDialogPluginComponent } from 'quasar';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { Location } from 'src/api/delivery-location';
+import { Location } from 'src/models/Location';
 
 export default defineComponent({
   name: 'CoordinateSelectorDialog',
