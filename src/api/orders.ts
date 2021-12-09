@@ -1,8 +1,8 @@
 import { ref, watchEffect } from 'vue';
-import * as db from '@firebase/database';
-import { token } from './auth';
-import { database } from './firebase';
-import { getAuth } from 'firebase/auth';
+// import * as db from '@firebase/database';
+// import { token } from './auth';
+// import { database } from './firebase';
+// import { getAuth } from 'firebase/auth';
 import { api } from 'src/boot/axios';
 import { Notify } from 'quasar';
 
