@@ -19,6 +19,7 @@
           <div
             @click="$router.push('/product/' + product.productId)"
             v-for="product in order.products"
+            :key="product.productId"
             class="p-4 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-200"
           >
             <span class="flex justify-between"
