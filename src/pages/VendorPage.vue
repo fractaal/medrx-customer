@@ -1,16 +1,16 @@
 <template>
   <q-page>
-    <medrx-loader v-if="isLoading" class="h-screen" />
+    <medrx-loader v-if="vendorIsLoading" class="h-screen" />
     <div v-else>
       <div class="flex">
         <q-img
-          :src="vendorData?.vendor.photoUrl || placeholderImageUrl"
+          :src="vendorData?.photoUrl || placeholderImageUrl"
           class="w-full h-32 md:h-64 rounded-none md:rounded-md shadow-md"
         >
         </q-img>
-        <p class="px-4 mt-2 text-h6 font-black">{{ vendorData?.vendor.name }}</p>
+        <p class="px-4 mt-2 text-h6 font-black">{{ vendorData?.name }}</p>
         <div class="divide-y divide-gray-300 px-4 space-y-4">
-          <p>{{ vendorData?.vendor.content }}</p>
+          <p>{{ vendorData?.content }}</p>
         </div>
       </div>
       <br />
@@ -37,20 +37,23 @@
             ></q-btn>
           </div>
           <span class="flex content-center">
-            {{ vendorData?.products.total }} products in total (Page {{ pageNumber + 1 }} of {{ maxPageNumber + 1 }})
+            {{ productsData?.total }} products in total (Page {{ pageNumber + 1 }} of {{ maxPageNumber + 1 }})
           </span>
         </div>
         <br />
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mx-4">
-          <product-card
-            v-for="item in vendorData?.products.results"
-            :key="item.id"
-            :name="item.name"
-            :photoUrl="item.photoUrl"
-            :description="item.description"
-            :price="item.price"
-            @click="$router.push(`/product/${item.id}`)"
-          />
+        <div>
+          <medrx-loader v-if="productsIsLoading" />
+          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" v-else>
+            <product-card
+              v-for="item in productsData?.results"
+              :key="item.id"
+              :name="item.name"
+              :photoUrl="item.photoUrl"
+              :description="item.description"
+              :price="item.price"
+              @click="$router.push(`/product/${item.id}`)"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -60,8 +63,8 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { Data } from 'src/models/Vendor';
-import { isLoading, getVendor } from 'src/api/vendor';
+import { Data, Products, Vendor } from 'src/models/Vendor';
+import { vendorIsLoading, productsIsLoading, getVendor, getVendorProducts } from 'src/api/vendor';
 import { addToCart } from 'src/api/cart';
 import { placeholderImageUrl } from 'src/api/storage';
 import ProductCard from 'src/components/ProductCard.vue';
@@ -73,18 +76,20 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const vendorId = router.currentRoute.value.params.id;
-    const vendorData = ref<Data | null>(null);
+    const vendorData = ref<Vendor | null>(null);
+    const productsData = ref<Products | null>(null);
     const pageNumber = ref(0);
     const maxPageNumber = ref(0);
 
     onMounted(async () => {
       vendorData.value = await getVendor(vendorId as string);
-      maxPageNumber.value = Math.floor((vendorData.value?.products.total ?? 0) / 10);
+      productsData.value = await getVendorProducts(vendorId as string, pageNumber.value);
+      maxPageNumber.value = Math.floor((productsData.value.total ?? 0) / 10);
     });
 
     watch(pageNumber, async (newPageNumber) => {
-      vendorData.value = await getVendor(vendorId as string, newPageNumber);
-      maxPageNumber.value = Math.floor((vendorData.value?.products.total ?? 0) / 10);
+      productsData.value = await getVendorProducts(vendorId as string, newPageNumber);
+      // maxPageNumber.value = Math.floor((vendorData.value?.products.total ?? 0) / 10);
     });
 
     const changePageNumber = (inc: number) => {
@@ -94,8 +99,10 @@ export default defineComponent({
     return {
       placeholderImageUrl,
       addToCart,
-      isLoading,
+      vendorIsLoading,
+      productsIsLoading,
       vendorData,
+      productsData,
       pageNumber,
       maxPageNumber,
       changePageNumber,
