@@ -14,16 +14,21 @@
     </q-card-section>
     <q-card-section v-show="process === 1">
       <q-avatar square size="300px">
-        <img id="pleaseWork" />
+        <img v-viewer id="pleaseWork" class="object-contain" />
         <img />
       </q-avatar>
     </q-card-section>
   </q-card>
+  <q-card-actions align="right" class="text-primary">
+    <q-btn flat label="Cancel" v-close-popup />
+    <q-btn flat label="Upload" @click="upload()" />
+  </q-card-actions>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { seed } from 'src/api/seed';
+import { uploadImage } from 'src/api/profpicuploader';
 
 export default defineComponent({
   name: 'ImageUploader',
@@ -42,7 +47,7 @@ export default defineComponent({
       process.value = 1;
       const image = (<HTMLInputElement>document.getElementById('fileSelector')).files[0];
       const objectURL = window.URL.createObjectURL(image);
-      const img = document.getElementById('pleaseWork'); //no HAHAHA
+      const img = document.getElementById('pleaseWork');
       console.log(img);
       img?.setAttribute('src', objectURL);
     };

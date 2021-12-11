@@ -5,7 +5,15 @@
     <q-header unelevated class="px-2 top mx-auto w-full md:w-3/4 lg:w-3/5 py-2">
       <q-toolbar>
         <div>
-          <q-btn dense flat round icon="chevron_left" size="md" class="-ml-4 -mr-3" @click="$router.back()" />
+          <q-btn
+            dense
+            flat
+            round
+            icon="chevron_left"
+            size="md"
+            class="-ml-4 -mr-3"
+            @click="$router.back()"
+          />
         </div>
         <q-input
           dense
@@ -25,7 +33,7 @@
         </q-input>
         <q-btn dense flat round @click="$router.push('/settings')">
           <q-avatar color="primary" size="40px" class="shadow-xl">
-            <q-img :src="`https://avatars.dicebear.com/api/micah/${seed}.svg`" />
+            <q-img :src="picURL" />
           </q-avatar>
         </q-btn>
         <!-- <q-btn dense flat round icon="search" to="/search" /> -->
@@ -33,7 +41,12 @@
     </q-header>
     <q-page-container>
       <router-view v-slot="{ Component }" class="mx-auto w-full md:w-3/4 lg:w-3/5">
-        <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" appear :duration="150">
+        <transition
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+          appear
+          :duration="150"
+        >
           <component :is="Component" />
         </transition>
       </router-view>
@@ -79,7 +92,7 @@
 
 <script lang="ts">
 import { ref, onMounted } from 'vue';
-import { seed, randomizeSeed } from 'src/api/seed';
+import { randomizeSeed } from 'src/api/seed';
 import { firstName as name } from 'src/api/settings';
 import { itemsInCart } from 'src/api/cart';
 // import { searchTerm } from 'src/api/search';
@@ -89,6 +102,7 @@ import { hasActiveDelivery } from 'src/api/delivery';
 export default {
   setup() {
     const firstName = ref('');
+    const picURL = ref('');
 
     const search = useNamedSearch('home');
 
@@ -96,12 +110,13 @@ export default {
 
     onMounted(() => {
       firstName.value = name.value;
+      picURL.value = downloadURL.value;
+      console.log(picURL.value);
     });
 
     return {
       tab: ref('mails'),
       randomizeSeed,
-      seed,
       firstName,
       itemsInCart,
       hasActiveDelivery,
