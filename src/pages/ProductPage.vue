@@ -46,20 +46,40 @@
         </div>
       </div>
     </div>
+    <div v-if="!isLoading" class="pt-4">
+      <q-item-label overline class="font-black"
+        >OTHER PRODUCTS SOLD BY {{ product?.vendorName.toUpperCase() }}</q-item-label
+      >
+      <medrx-loader v-if="productsIsLoading" />
+      <div class="mt-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" v-else>
+        <product-card
+          v-for="item in productsData?.results"
+          :key="item.id"
+          :name="item.name"
+          :photoUrl="item.photoUrl"
+          :description="item.description"
+          :price="item.price"
+          @click="$router.push(`/product/${item.id}`)"
+        />
+      </div>
+    </div>
   </q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, onBeforeRouteUpdate } from 'vue-router';
 import { Product } from 'src/models/Product';
 import { isLoading, getProduct } from 'src/api/product';
+import { productsIsLoading, getVendorProducts } from 'src/api/vendor';
 import { addToCart } from 'src/api/cart';
 import { placeholderImageUrl } from 'src/api/storage';
 import MedrxLoader from 'src/components/MedrxLoader.vue';
+import ProductCard from 'src/components/ProductCard.vue';
+import { Products } from 'src/models/Vendor';
 
 export default defineComponent({
-  components: { MedrxLoader },
+  components: { MedrxLoader, ProductCard },
   name: 'ProductPage',
   inject: ['transformPrice'],
   setup() {
@@ -68,12 +88,20 @@ export default defineComponent({
     const product = ref<Product | null>(null);
     const quantity = ref(1);
 
+    const productsData = ref<Products | null>(null);
+
     // const addToCart = async () => {
     //   addToCart(productId as string, product.value?.name, quantity.value, product.value?.price)
     // }
 
+    onBeforeRouteUpdate(async (to, from) => {
+      product.value = await getProduct(to.params.id as string);
+      // productsData.value = await getVendorProducts(product.value?.vendorId);
+    });
+
     onMounted(async () => {
       product.value = await getProduct(productId as string);
+      productsData.value = await getVendorProducts(product.value?.vendorId);
     });
 
     watch(quantity, (newQuantity) => {
@@ -86,6 +114,8 @@ export default defineComponent({
       placeholderImageUrl,
       addToCart,
       isLoading,
+      productsIsLoading,
+      productsData,
       product,
       quantity,
     };
