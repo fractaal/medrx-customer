@@ -70,19 +70,25 @@ api.interceptors.response.use(
           );
         }
       });
+    } else {
+      throw error;
     }
   }
 );
 
 const getIdToken = async (auth: Auth) => {
   console.log('Updating ID token in axios...');
-  api.defaults.headers.common['Authorization'] = await auth.currentUser!.getIdToken();
+  api.defaults.headers.common['Authorization'] = await auth.currentUser.getIdToken();
   console.log('New axios defaults: ', api.defaults);
 };
 
 const init = () => {
   return new Promise<boolean>((resolve) => {
-    api.defaults.baseURL = getString(getRemoteConfig(), 'serverAddress');
+    if (process.env.DEV) {
+      api.defaults.baseURL = 'http://localhost:3000';
+    } else {
+      api.defaults.baseURL = getString(getRemoteConfig(), 'serverAddress');
+    }
 
     const auth = getAuth();
 

@@ -27,7 +27,7 @@ export const restrictUser = async (prescriptionRequestId: string, message: strin
   const restrictedUsers = db.ref(database, '/restrictedUsers');
   const location = db.ref(
     database,
-    `${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}/prescriptionRequests`
+    `${token.value?.claims.region}/${token.value?.claims.city}/${prescriptionRequestId}/prescription`
   );
 
   const userData: PrescriptionRequest = (await db.get(location)).val();

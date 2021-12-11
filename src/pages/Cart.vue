@@ -1,9 +1,7 @@
 <template>
-  <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+  <div class="relative px-4 py-2 bg-white shadow-lg sm:rounded-3xl sm:p-20">
     <div class="mx-auto">
       <div>
-        <q-item-label class="text-h6 mb-4">My Cart</q-item-label>
-
         <q-item dense clickable v-ripple @click="printCart()" class="rounded-xl p-4">
           <q-item-section avatar top>
             <q-avatar icon="place" color="primary" text-color="white" />

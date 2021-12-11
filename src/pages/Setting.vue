@@ -126,8 +126,8 @@
                 label="Cancel"
                 v-close-popup
                 @click="
-  pageNum = 0;
-phonechange = false;
+                  pageNum = 0;
+                  phonechange = false;
                 "
               />
               <q-btn flat label="Update" v-close-popup @click="updatePhone()" />
@@ -136,11 +136,69 @@ phonechange = false;
         </q-dialog>
 
         <list-item
-          @click="addresschange = true"
+          @click="addressAndLocationChange = true"
           color="primary"
           name="home"
           size="2rem"
-        >Delivery Address</list-item>
+        >Delivery Address & Location</list-item>
+
+        <q-dialog v-model="addressAndLocationChange">
+          <q-card>
+            <q-card-section>
+              <div class="text-h6">Change your delivery address or location</div>
+            </q-card-section>
+            <q-card-section>
+              <list-item name="home" @click="addresschange = true">
+                <p class="font-black">Change Address</p>
+                <p
+                  class="text-sm"
+                >We'll ask you to write your address down, like how you write it in letters or forms.</p>
+              </list-item>
+              <list-item name="gps_fixed" @click="setDeliveryLocation">
+                <p class="font-black">Change Location</p>
+                <p
+                  class="text-sm"
+                >We'll show you a map and ask for the exact location, making it easier for us to deliver to you.</p>
+              </list-item>
+              <list-item class="border-red-200" name="delete" @click="deleteDeliveryLocation">
+                <p class="font-black">Delete Location</p>
+                <p
+                  class="text-sm"
+                >If you've previously set a location, press this button to delete it.</p>
+              </list-item>
+              <q-separator class="my-4" />
+              <div class="px-2 pb-4">
+                <div class="text-h6 font-black">What's the difference?</div>
+                <span class="space-y-4">
+                  <li>
+                    <b>Privacy.</b>
+                    <br />Your location is not stored on our servers. It's
+                    <b>stored on your device only</b>, and it is
+                    <b>only given to the driver that delivers to you.</b> But, if you use MedRx on multiple devices, you
+                    may have to set your location on each device.
+                  </li>
+                  <li>
+                    <b>Ease.</b>
+                    <br />Providing an exact location as opposed to just an address will allow us to
+                    <b>deliver exactly to where you want without any difficulties.</b>
+                  </li>
+                  <li>
+                    <b>Optionality.</b>
+                    <br />You
+                    <b>can opt to not provide an exact location</b>, and just provide an
+                    address, but you'll have to
+                    <b>guide us to the exact location of your address.</b>
+                  </li>
+                  <li>
+                    <b>Inclusivity.</b>
+                    <br />You can provide both an address and an exact location, and we'll use the
+                    exact location to deliver!
+                  </li>
+                </span>
+              </div>
+            </q-card-section>
+          </q-card>
+        </q-dialog>
 
         <q-dialog v-model="addresschange" persistent>
           <q-card style="min-width: 350px">
@@ -177,8 +235,8 @@ phonechange = false;
                 <q-item-section
                   v-model="locale"
                   @click="
-  locale = 'TGL';
-chlang = false;
+                    locale = 'TGL';
+                    chlang = false;
                   "
                 >Filipino</q-item-section>
               </q-item>
@@ -186,8 +244,8 @@ chlang = false;
                 <q-item-section
                   v-model="locale"
                   @click="
-  locale = 'en-US';
-chlang = false;
+                    locale = 'en-US';
+                    chlang = false;
                   "
                 >English</q-item-section>
               </q-item>
@@ -243,11 +301,11 @@ import { ref, watch } from 'vue';
 import { getAuth, signOut, updatePhoneNumber, RecaptchaVerifier, PhoneAuthProvider } from 'firebase/auth';
 import { useRouter } from 'vue-router';
 import { update } from 'src/api/firebase';
-import { useQuasar } from 'quasar';
+import { Dialog, useQuasar } from 'quasar';
 import { token } from 'src/api/auth';
 import ListItem from 'src/components/ListItem.vue';
 import { firstName, middleName, lastName, phoneNumber, address, email, region, city } from 'src/api/settings';
-import { uploadImage } from 'src/api/profpicuploader';
+import * as deliveryLocation from 'src/api/delivery-location';
 
 export default {
   components: { ListItem },
@@ -264,8 +322,9 @@ export default {
     const namechange = ref(false);
     const addresschange = ref(false);
     const picturechange = ref(false);
+    const addressAndLocationChange = ref(false);
     const recaptchaVerifier = ref(null as unknown as RecaptchaVerifier);
-
+    //get User dat
 
     //Add methods here to update specific User data.
     const updateUser = () => {
@@ -329,23 +388,7 @@ export default {
     const upload = () => {
       console.log('Uploaded oten');
       picturechange.value = false;
-      process.value = 0;
-      const image = (<HTMLInputElement>document.getElementById('fileSelector')).files![0];
-      uploadImage(image);
-    }
-
-    const getFile = () => {
-      document.getElementById('fileSelector')?.click();
-    }
-
-    const showitnow = () => {
-      process.value = 1;
-      const image = (<HTMLInputElement>document.getElementById('fileSelector')).files![0];
-      const objectURL = window.URL.createObjectURL(image);
-      const img = document.getElementById('pleaseWork');
-      console.log(img);
-      img?.setAttribute('src', objectURL);
-    }
+    };
 
     return {
       randomizeSeed,
@@ -369,12 +412,25 @@ export default {
       verificationCode,
       verify,
       upload,
-
+      setDeliveryLocation: deliveryLocation.promptForDeliveryLocationAndSet,
+      deleteDeliveryLocation: () => {
+        Dialog.create({
+          title: 'Delete Delivery Location',
+          message: 'Are you sure you want to delete your delivery location?',
+          color: 'red',
+          focus: 'cancel',
+          cancel: true,
+          persistent: true,
+        }).onOk(() => {
+          deliveryLocation.setDeliveryLocation(null);
+        });
+      },
       //dialog triggers
       namechange,
       phonechange,
       addresschange,
       picturechange,
+      addressAndLocationChange,
 
       // auth token
       token,

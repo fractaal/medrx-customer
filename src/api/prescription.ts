@@ -4,6 +4,7 @@ import { set, ref as dbRef, onValue, DatabaseReference, serverTimestamp } from '
 import { database } from './firebase';
 import { firstName, middleName, lastName } from './settings';
 import { Notify, Dialog } from 'quasar';
+import { api } from 'src/boot/axios';
 
 export enum PrescriptionRequestStatus {
   IN_QUEUE = 'IN_QUEUE',
@@ -69,6 +70,37 @@ export const revokePrescriptionRequest = () => {
   }).onOk(revoke);
 };
 
+export const getLatestPrescription = async () => {
+  const { data } = await api.get('/prescription/latest');
+  return data.data;
+};
+
+export const confirmLatestPrescription = async () => {
+  try {
+    const { data } = await api.patch('/prescription/confirm');
+    console.log('Prescription confirmed - ', data);
+  } catch (err) {
+    Notify.create({
+      type: 'negative',
+      message: 'Failed to confirm your prescription. Please try again.',
+    });
+    console.error(err);
+  }
+};
+
+export const cancelLatestPrescription = async () => {
+  try {
+    const { data } = await api.patch('/prescription/cancel');
+    console.log('Prescription cancelled - ', data);
+  } catch (err) {
+    Notify.create({
+      type: 'negative',
+      message: 'Failed to cancel your prescription. Please try again.',
+    });
+    console.error(err);
+  }
+};
+
 (async () => {
   token = await auth.currentUser?.getIdTokenResult();
 
@@ -78,10 +110,7 @@ export const revokePrescriptionRequest = () => {
     return;
   }
 
-  location = dbRef(
-    database,
-    `/${token.claims.region}/${token.claims.city}/${auth.currentUser?.uid}/prescriptionRequests`
-  );
+  location = dbRef(database, `/${token.claims.region}/${token.claims.city}/${auth.currentUser?.uid}/prescription`);
 
   onValue(location, (snapshot) => {
     const data = snapshot.val();

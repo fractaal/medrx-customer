@@ -1,14 +1,22 @@
 <template>
-  <div dense class="relative grid-cols-3 grid place-items-center rounded-xl p-4 hover:bg-gray-200">
+  <div dense class="relative grid-cols-3 grid place-items-center rounded-xl p-4 hover:bg-gray-200 ring-1 ring-gray-200">
     <!--can be a component-->
     <div v-ripple dense class="relative font-black p-4" @click="$router.push(`/product/${modelValue.productId}`)">
       {{ modelValue.productName }}
     </div>
 
     <div class="grid-cols-3 grid place-items-center">
-      <q-btn round flat @click="updateItemQuantity(-1)" icon="remove" />
-      <q-input disable type="number" style="max-width: 50px" dense :model-value="modelValue.productQuantity" />
-      <q-btn round flat @click="updateItemQuantity(1)" icon="add" />
+      <q-btn v-if="!disable" round flat @click="updateItemQuantity(-1)" icon="remove" />
+      <q-input
+        v-if="!disable"
+        disable
+        type="number"
+        style="max-width: 50px"
+        dense
+        :model-value="modelValue.productQuantity"
+      />
+      <p v-if="disable">{{ modelValue.productQuantity }} pc(s)</p>
+      <q-btn v-if="!disable" round flat @click="updateItemQuantity(1)" icon="add" />
     </div>
 
     <div class="font-black">{{ transformPrice(modelValue.productQuantity * modelValue.productPrice) }}</div>
@@ -27,6 +35,9 @@ export default defineComponent({
     modelValue: {
       type: Object as () => CartItem,
       required: true,
+    },
+    disable: {
+      type: Boolean,
     },
   },
   emits: ['update:modelValue'],

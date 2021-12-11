@@ -95,6 +95,36 @@ const routes: RouteRecordRaw[] = [
       statusBarIsDark: true,
     },
   },
+  {
+    path: '/confirm-prescription',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/ConfirmPrescription.vue') }],
+    meta: {
+      name: 'Confirm',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
+    },
+  },
+  {
+    path: '/orders',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Orders.vue') }],
+    meta: {
+      name: 'Orders',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
+    },
+  },
+  {
+    path: '/tracking',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Tracking.vue') }],
+    meta: {
+      name: 'Tracking',
+      statusBarColor: '#30b59e',
+      statusBarIsDark: true,
+    },
+  },
   // Pharmacist Routes
   {
     path: '/pharmacist',

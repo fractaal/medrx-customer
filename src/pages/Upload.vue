@@ -33,12 +33,19 @@
             <p class="text-h4 font-black">Awesome!</p>
             <p class="font-black">
               Prescription successfully analyzed!
-              <br />You should get a delivery notification shortly.
+              <br />You should now check if the analyzed prescription is correct.
             </p>
+            <br />
+            <q-btn
+              class="py-4 px-8 bg-gradient-to-tr from-medrx to-green-300 text-white"
+              unelevated
+              @click="$router.push('/confirm-prescription')"
+              >Check</q-btn
+            >
           </div>
         </transition>
         <span class="mx-8" v-if="customMessage.length != 0">{{ customMessage }}</span>
-        <div class="mt-32 mx-8">
+        <div class="mt-32 mx-8" v-if="requestStatus !== 'OK'">
           <q-btn label="CANCEL MY REQUEST" color="red" unelevated outline @click="revokePrescriptionRequest" />
         </div>
       </div>
@@ -47,15 +54,33 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import * as prescription from 'src/api/prescription';
+import { Dialog } from 'quasar';
+import { useRouter } from 'vue-router';
 
 import FirebaseUploader from 'src/components/FirebaseUploader';
+import { getOrPromptForDeliveryLocation } from 'src/api/delivery-location';
 
 export default defineComponent({
   name: 'PageIndex',
   components: { FirebaseUploader },
   setup() {
+    const router = useRouter();
+    onMounted(async () => {
+      await new Promise((r) => setTimeout(r, 1000));
+      const loc = await getOrPromptForDeliveryLocation();
+      console.log(loc, !loc);
+      if (!loc) {
+        router.push('/home');
+        Dialog.create({
+          title: 'Cannot proceed without a delivery location',
+          message:
+            'Without a delivery location, we cannot process your prescription. Please set one up, be it in the settings page or on the prescribe page.',
+          persistent: true,
+        });
+      }
+    });
     return {
       ...prescription,
     };
