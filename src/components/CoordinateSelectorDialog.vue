@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, watch } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import { useDialogPluginComponent } from 'quasar';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
