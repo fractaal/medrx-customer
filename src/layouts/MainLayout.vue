@@ -5,15 +5,7 @@
     <q-header unelevated class="px-2 top mx-auto w-full md:w-3/4 lg:w-3/5 py-2">
       <q-toolbar>
         <div>
-          <q-btn
-            dense
-            flat
-            round
-            icon="chevron_left"
-            size="md"
-            class="-ml-4 -mr-3"
-            @click="$router.back()"
-          />
+          <q-btn dense flat round icon="chevron_left" size="md" class="-ml-4 -mr-3" @click="$router.back()" />
         </div>
         <q-input
           dense
@@ -41,12 +33,7 @@
     </q-header>
     <q-page-container>
       <router-view v-slot="{ Component }" class="mx-auto w-full md:w-3/4 lg:w-3/5">
-        <transition
-          enter-active-class="animated fadeIn"
-          leave-active-class="animated fadeOut"
-          appear
-          :duration="150"
-        >
+        <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" appear :duration="150">
           <component :is="Component" />
         </transition>
       </router-view>
@@ -98,21 +85,15 @@ import { itemsInCart } from 'src/api/cart';
 // import { searchTerm } from 'src/api/search';
 import { useNamedSearch } from 'src/api/search';
 import { hasActiveDelivery } from 'src/api/delivery';
+import { downloadURL as picURL } from 'src/api/profpicuploader';
 
 export default {
   setup() {
     const firstName = ref('');
-    const picURL = ref('');
 
     const search = useNamedSearch('home');
 
     // TODO: Take SQL number of cart items. (Only General Items, medicine not included)
-
-    onMounted(() => {
-      firstName.value = name.value;
-      picURL.value = downloadURL.value;
-      console.log(picURL.value);
-    });
 
     return {
       tab: ref('mails'),
@@ -120,7 +101,7 @@ export default {
       firstName,
       itemsInCart,
       hasActiveDelivery,
-
+      picURL,
       searchTerm: search.searchTerm,
     };
   },
