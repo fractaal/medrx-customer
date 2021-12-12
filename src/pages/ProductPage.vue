@@ -46,7 +46,8 @@
         </div>
       </div>
     </div>
-    <div v-if="!isLoading" class="pt-4">
+    <q-separator class="my-8" />
+    <div v-if="!isLoading" class="py-4 px-4 sm:px-0">
       <q-item-label overline class="font-black"
         >OTHER PRODUCTS SOLD BY {{ product?.vendorName.toUpperCase() }}</q-item-label
       >
