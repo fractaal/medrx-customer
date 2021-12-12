@@ -7,7 +7,15 @@
             <q-avatar icon="place" color="primary" text-color="white" />
           </q-item-section>
 
-          <q-item-section>
+          <q-item-section
+            @click="
+              () => {
+                $router.push('/settings').then(() => {
+                  openDeliveryLocationSelectorDialog();
+                });
+              }
+            "
+          >
             <q-item-label lines="1" class="text-lg">Pin your location</q-item-label>
             <q-item-label caption>{{ address }}</q-item-label>
           </q-item-section>
@@ -27,7 +35,13 @@
           </div>
         </div>
 
-        <cart-item v-for="(item, idx) in cart" :key="item" v-model="cart[idx]" @update:modelValue="onCartItemUpdate" />
+        <cart-item
+          class="mb-2"
+          v-for="(item, idx) in cart"
+          :key="item"
+          v-model="cart[idx]"
+          @update:modelValue="onCartItemUpdate"
+        />
 
         <q-separator class="my-3" />
 
@@ -70,6 +84,7 @@
 import { ref, onMounted } from 'vue';
 import { address as add } from 'src/api/settings';
 import { cart, total, subTotal, updateCart, removeProduct, resetCart, itemsInCart } from 'src/api/cart';
+import { placeOrder } from 'src/api/order';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 
@@ -99,10 +114,20 @@ export default {
       }
     };
 
-    const reset = async () => {
+    const reset = () => {
       if (itemsInCart.value !== 0) {
-        await resetCart();
-        router.push('/order');
+        try {
+          placeOrder();
+        } catch (err) {
+          return;
+        }
+        resetCart();
+        // router.push('/order');
+      } else {
+        quasar.notify({
+          type: 'negative',
+          message: 'Your cart is empty!',
+        });
       }
     };
 
@@ -134,6 +159,10 @@ export default {
       reset,
       printCart: () => console.log(cart.value),
       onCartItemUpdate,
+      openDeliveryLocationSelectorDialog: () => {
+        //@ts-ignore
+        document.querySelector('#addressAndLocation').click();
+      },
     };
   },
 };
