@@ -9,7 +9,7 @@
         <div class="absolute-bottom bg-transparent">
           <q-btn round dense flat>
             <q-avatar color="primary" size="70px" @click="randomizeSeed" class="shadow-xl">
-              <q-img :src="`https://avatars.dicebear.com/api/micah/${seed}.svg`" />
+              <q-img :src="downloadURL" />
             </q-avatar>
           </q-btn>
 
@@ -20,27 +20,16 @@
       <q-list>
         <q-item-label header overline class="font-black">PROFILE</q-item-label>
 
-        <list-item
-          @click="picturechange = true"
-          color="primary"
-          name="person"
-          size="2rem"
-        >Profile Picture</list-item>
+        <list-item @click="picturechange = true" color="primary" name="person" size="2rem">Profile Picture</list-item>
 
         <q-dialog persistent v-model="picturechange">
           <q-card style="min-width: 300px">
             <q-card style="min-width: 300px">
               <q-card-section v-show="process === 0">
                 <q-btn id="fileSelect" color="primary" unelevated @click="getFile()">
-                  <input
-                    id="fileSelector"
-                    type="file"
-                    name="img"
-                    style="display: none;"
-                    @change="showitnow()"
-                  />
+                  <input id="fileSelector" type="file" name="img" style="display: none" @change="showitnow()" />
                   <q-avatar square size="300px">
-                    <q-img :src="`https://avatars.dicebear.com/api/micah/${seed}.svg`">
+                    <q-img :src="downloadURL">
                       <div class="rounded-full absolute-center">
                         <q-avatar dense icon="add" size="100px" />
                       </div>
@@ -91,13 +80,7 @@
               <div class="text-h6">Change your mobile number:</div>
             </q-card-section>
             <q-card-section class="q-pt-none">
-              <q-input
-                dense
-                v-model="phoneNumber"
-                autofocus
-                label="Phone Number"
-                placeholder="+639123456789"
-              />
+              <q-input dense v-model="phoneNumber" autofocus label="Phone Number" placeholder="+639123456789" />
             </q-card-section>
 
             <q-card-actions align="right" class="text-primary">
@@ -111,13 +94,7 @@
               <div class="text-h6">Enter code:</div>
             </q-card-section>
             <q-card-section class="q-pt-none">
-              <q-input
-                dense
-                v-model="verificationCode"
-                autofocus
-                label="Verification Code"
-                maxlength="6"
-              />
+              <q-input dense v-model="verificationCode" autofocus label="Verification Code" maxlength="6" />
             </q-card-section>
 
             <q-card-actions align="right" class="text-primary">
@@ -136,11 +113,13 @@
         </q-dialog>
 
         <list-item
+          id="addressAndLocation"
           @click="addressAndLocationChange = true"
           color="primary"
           name="home"
           size="2rem"
-        >Delivery Address & Location</list-item>
+          >Delivery Address & Location</list-item
+        >
 
         <q-dialog v-model="addressAndLocationChange">
           <q-card>
@@ -150,21 +129,19 @@
             <q-card-section>
               <list-item name="home" @click="addresschange = true">
                 <p class="font-black">Change Address</p>
-                <p
-                  class="text-sm"
-                >We'll ask you to write your address down, like how you write it in letters or forms.</p>
+                <p class="text-sm">
+                  We'll ask you to write your address down, like how you write it in letters or forms.
+                </p>
               </list-item>
               <list-item name="gps_fixed" @click="setDeliveryLocation">
                 <p class="font-black">Change Location</p>
-                <p
-                  class="text-sm"
-                >We'll show you a map and ask for the exact location, making it easier for us to deliver to you.</p>
+                <p class="text-sm">
+                  We'll show you a map and ask for the exact location, making it easier for us to deliver to you.
+                </p>
               </list-item>
               <list-item class="border-red-200" name="delete" @click="deleteDeliveryLocation">
                 <p class="font-black">Delete Location</p>
-                <p
-                  class="text-sm"
-                >If you've previously set a location, press this button to delete it.</p>
+                <p class="text-sm">If you've previously set a location, press this button to delete it.</p>
               </list-item>
               <q-separator class="my-4" />
               <div class="px-2 pb-4">
@@ -172,8 +149,7 @@
                 <span class="space-y-4">
                   <li>
                     <b>Privacy.</b>
-                    <br />Your location is not stored on our servers. It's
-                    <b>stored on your device only</b>, and it is
+                    <br />Your location is not stored on our servers. It's <b>stored on your device only</b>, and it is
                     <b>only given to the driver that delivers to you.</b> But, if you use MedRx on multiple devices, you
                     may have to set your location on each device.
                   </li>
@@ -184,15 +160,14 @@
                   </li>
                   <li>
                     <b>Optionality.</b>
-                    <br />You
-                    <b>can opt to not provide an exact location</b>, and just provide an
-                    address, but you'll have to
+                    <br />You <b>can opt to not provide an exact location</b>, and just provide an address, but you'll
+                    have to
                     <b>guide us to the exact location of your address.</b>
                   </li>
                   <li>
                     <b>Inclusivity.</b>
-                    <br />You can provide both an address and an exact location, and we'll use the
-                    exact location to deliver!
+                    <br />You can provide both an address and an exact location, and we'll use the exact location to
+                    deliver!
                   </li>
                 </span>
               </div>
@@ -221,12 +196,9 @@
 
         <q-item-label header overline class="font-black">USER CONTROLS</q-item-label>
 
-        <list-item
-          @click="chlang = true"
-          color="primary"
-          name="language"
-          size="2rem"
-        >Current Language: {{ locale }}</list-item>
+        <list-item @click="chlang = true" color="primary" name="language" size="2rem"
+          >Current Language: {{ locale }}</list-item
+        >
 
         <q-dialog v-model="chlang">
           <q-card>
@@ -238,7 +210,8 @@
                     locale = 'TGL';
                     chlang = false;
                   "
-                >Filipino</q-item-section>
+                  >Filipino</q-item-section
+                >
               </q-item>
               <q-item clickable v-ripple>
                 <q-item-section
@@ -247,7 +220,8 @@
                     locale = 'en-US';
                     chlang = false;
                   "
-                >English</q-item-section>
+                  >English</q-item-section
+                >
               </q-item>
             </q-list>
           </q-card>
@@ -265,14 +239,7 @@
 
               <q-card-actions>
                 <q-btn flat label="No" color="primary" style="width: 150px" v-close-popup />
-                <q-btn
-                  flat
-                  label="Yes"
-                  color="primary"
-                  style="width: 150px"
-                  v-close-popup
-                  @click="logout"
-                />
+                <q-btn flat label="Yes" color="primary" style="width: 150px" v-close-popup @click="logout" />
               </q-card-actions>
             </q-list>
           </q-card>
@@ -281,12 +248,9 @@
         <div v-if="token && token.claims.roles && token.claims.roles.includes('pharmacist')">
           <q-item-label header overline class="font-black">SPECIAL</q-item-label>
 
-          <list-item
-            color="primary"
-            name="dashboard"
-            size="2rem"
-            @click="$router.push('/pharmacist')"
-          >Pharmacist Interface</list-item>
+          <list-item color="primary" name="dashboard" size="2rem" @click="$router.push('/pharmacist')"
+            >Pharmacist Interface</list-item
+          >
         </div>
       </q-list>
     </div>
@@ -306,6 +270,7 @@ import { token } from 'src/api/auth';
 import ListItem from 'src/components/ListItem.vue';
 import { firstName, middleName, lastName, phoneNumber, address, email, region, city } from 'src/api/settings';
 import * as deliveryLocation from 'src/api/delivery-location';
+import { uploadImage, downloadURL } from 'src/api/profpicuploader';
 
 export default {
   components: { ListItem },
@@ -388,6 +353,22 @@ export default {
     const upload = () => {
       console.log('Uploaded oten');
       picturechange.value = false;
+      process.value = 0;
+      const image = (<HTMLInputElement>document.getElementById('fileSelector')).files![0];
+      uploadImage(image);
+    };
+
+    const getFile = () => {
+      document.getElementById('fileSelector')?.click();
+    };
+
+    const showitnow = () => {
+      process.value = 1;
+      const image = (<HTMLInputElement>document.getElementById('fileSelector')).files![0];
+      const objectURL = window.URL.createObjectURL(image);
+      const img = document.getElementById('pleaseWork');
+      console.log(img);
+      img?.setAttribute('src', objectURL);
     };
 
     return {
@@ -434,11 +415,12 @@ export default {
 
       // auth token
       token,
-
       logout,
       process,
       getFile,
-      showitnow
+      showitnow,
+
+      downloadURL,
     };
   },
 };
