@@ -30,13 +30,14 @@ export const prescriptionRequests = ref<Record<string, PrescriptionRequest>>({})
 export const numPrescriptionRequests = computed(() => Object.keys(prescriptionRequests.value).length);
 
 const updatePrescriptionRequests = async (data: db.DataSnapshot) => {
-  const raw: Record<string, { prescriptionRequests: PrescriptionRequest }> = data.val() ?? {};
+  const raw: Record<string, { prescription: PrescriptionRequest }> = data.val() ?? {};
   const transformed: Record<string, PrescriptionRequest> = {};
 
   Object.keys(raw).map((id) => {
     // Only put in transformed if prescription request is does not have FAILED status:
-    if (raw[id].prescriptionRequests.status !== 'FAILED') {
-      transformed[id] = raw[id].prescriptionRequests;
+    if (!raw[id].prescription) return;
+    if (raw[id].prescription.status !== 'FAILED') {
+      transformed[id] = raw[id].prescription;
       transformed[id].userId = id;
     }
   });
