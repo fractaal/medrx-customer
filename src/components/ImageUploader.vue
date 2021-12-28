@@ -45,7 +45,7 @@ export default defineComponent({
 
     const showitnow = () => {
       process.value = 1;
-      const image = (<HTMLInputElement>document.getElementById('fileSelector')).files[0];
+      const image = document.getElementById('fileSelector').files[0];
       const objectURL = window.URL.createObjectURL(image);
       const img = document.getElementById('pleaseWork');
       console.log(img);
