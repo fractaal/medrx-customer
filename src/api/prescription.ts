@@ -5,6 +5,7 @@ import { database } from './firebase';
 import { firstName, middleName, lastName } from './settings';
 import { Notify, Dialog } from 'quasar';
 import { api } from 'src/boot/axios';
+import * as deliveryLocation from 'src/api/delivery-location';
 
 export enum PrescriptionRequestStatus {
   IN_QUEUE = 'IN_QUEUE',
@@ -71,13 +72,23 @@ export const revokePrescriptionRequest = () => {
 };
 
 export const getLatestPrescription = async () => {
-  const { data } = await api.get('/prescription/latest');
-  return data.data;
+  const result = await api.get('/prescription/latest');
+  console.log(result);
+  return result.data.data;
 };
 
 export const confirmLatestPrescription = async () => {
   try {
-    const { data } = await api.patch('/prescription/confirm');
+    const location = await deliveryLocation.getOrPromptForDeliveryLocation();
+    console.log(location);
+    if (location === null) {
+      Notify.create({
+        type: 'negative',
+        message: "We can't confirm your prescription if you don't have a delivery location set!",
+      });
+      return;
+    }
+    const { data } = await api.patch('/prescription/confirm', location);
     console.log('Prescription confirmed - ', data);
   } catch (err) {
     Notify.create({

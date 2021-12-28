@@ -56,6 +56,7 @@ export default defineComponent({
     onMounted(async () => {
       isLoading.value = true;
       const x = await prescription.getLatestPrescription();
+      console.log('prescription is ', x);
       if (!x.isValid) {
         router.push('/home');
         Dialog.create({

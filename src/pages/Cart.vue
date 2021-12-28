@@ -74,7 +74,17 @@
         <template v-slot:prepend></template>
       </q-select>
       <div class="row justify-center">
-        <q-btn @click="reset()" class="mt-10" unelevated rounded color="primary" label="Place Order" />
+        <q-btn
+          @click="
+            reset();
+            $router.push('/tracking');
+          "
+          class="mt-10"
+          unelevated
+          rounded
+          color="primary"
+          label="Place Order"
+        />
       </div>
     </div>
   </div>

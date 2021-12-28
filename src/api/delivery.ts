@@ -11,7 +11,7 @@ export const activeDeliveryLocation = ref<Location>(null);
 export const deliveryLogs = ref<DeliveryLog[]>([]);
 
 db.onValue(
-  db.ref(database, `${token.value.claims.region}/${token.value.claims.city}/${getAuth().currentUser.uid}/deliveries`),
+  db.ref(database, `${token.value.claims.region}/${token.value.claims.city}/${getAuth().currentUser.uid}/delivery`),
   (snapshot) => {
     const data = snapshot.val();
     console.log(data);
