@@ -20,7 +20,7 @@
           {{ $t('none') }}
           <q-btn class="p-0 -mt-1" padding="none" dense flat no-caps to="/register" outline>Sign up!</q-btn>
         </p>
-        <q-btn flat round @click="chlang = true">
+        <q-btn flat round @click="chlang = true" v-if="false">
           <q-dialog v-model="chlang">
             <q-card>
               <q-list bordered separator>

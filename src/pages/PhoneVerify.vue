@@ -34,13 +34,7 @@
       <div class="px-10 text-sm font-semibold">It should be 6 digits long.</div>
       <div class="gap-4 px-10 grid-cols-1 grid">
         <div class="mt-3">
-          <q-input
-            class="text-4xl"
-            v-model="verificationCode"
-            outlined
-            label="Verification Code"
-            maxlength="6"
-          />
+          <q-input class="text-4xl" v-model="verificationCode" outlined label="Verification Code" maxlength="6" />
         </div>
         <div>
           <q-btn
@@ -60,7 +54,8 @@
             class="px-8 py-2 font-black bg-gradient-to-tr from-medrx to-green-200"
             color="none"
             unelevated
-          >Send a new code ({{ timer }}s)</q-btn>
+            >Send a new code ({{ timer }}s)</q-btn
+          >
         </div>
       </div>
     </div>
@@ -160,7 +155,22 @@ export default defineComponent({
         console.log('Phone numbers linked!');
         router.push('/home');
       } catch (err) {
-        quasar.notify({ type: 'negative', message: 'The code was invalid. Try again!' });
+        console.log(err);
+        if (err.code.includes('different-credential')) {
+          quasar.notify({
+            type: 'negative',
+            message: 'You already have an existing MedRx account! Sign in with that one instead.',
+          });
+        } else if (err.code.includes('code-expired')) {
+          quasar.notify({
+            type: 'negative',
+            message: 'Your code seems to have expired. Reload this page and try again!',
+          });
+        } else if (err.code.includes('invalid-verification-code')) {
+          quasar.notify({ type: 'negative', message: 'The code was invalid. Try again!' });
+        } else {
+          quasar.notify({ type: 'negative', message: 'Something weird happened. Reload and try again!' });
+        }
       } finally {
         quasar.loading.hide();
       }

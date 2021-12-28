@@ -354,6 +354,7 @@ export default {
       console.log('Uploaded oten');
       picturechange.value = false;
       process.value = 0;
+      // @ts-ignore
       const image = (<HTMLInputElement>document.getElementById('fileSelector')).files![0];
       uploadImage(image);
     };
@@ -364,6 +365,7 @@ export default {
 
     const showitnow = () => {
       process.value = 1;
+      // @ts-ignore
       const image = (<HTMLInputElement>document.getElementById('fileSelector')).files![0];
       const objectURL = window.URL.createObjectURL(image);
       const img = document.getElementById('pleaseWork');

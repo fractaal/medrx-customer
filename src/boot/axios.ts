@@ -84,7 +84,8 @@ const getIdToken = async (auth: Auth) => {
 
 const init = () => {
   return new Promise<boolean>((resolve) => {
-    if (process.env.DEV) {
+    // if (process.env.DEV) {
+    if (false) {
       api.defaults.baseURL = 'http://localhost:3000';
     } else {
       api.defaults.baseURL = getString(getRemoteConfig(), 'serverAddress');

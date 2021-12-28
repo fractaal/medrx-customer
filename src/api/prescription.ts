@@ -126,7 +126,7 @@ export const cancelLatestPrescription = async () => {
     const _customMessage = data.customMessage ?? '';
     customMessage.value = _customMessage;
     requestStatus.value = status;
-    if (data.__dummy && data.status === null) {
+    if (data.status === null || data.status === undefined) {
       requestStatus.value = PrescriptionRequestStatus.IN_QUEUE;
     }
   });
