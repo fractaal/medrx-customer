@@ -1,11 +1,9 @@
 <template>
   <q-page>
     <div>
-      <q-img
-        class="top rounded-b-2xl"
+      <q-img class="top rounded-b-2xl"
         src="https://64.media.tumblr.com/85ac3c19f74c65386969162b12e24f46/tumblr_inline_o29dnbbdq41rtb73a_1280.jpg"
-        style="height: 130px"
-      >
+        style="height: 130px">
         <div class="absolute-bottom bg-transparent">
           <q-btn round dense flat>
             <q-avatar color="primary" size="70px" @click="randomizeSeed" class="shadow-xl">
@@ -98,28 +96,17 @@
             </q-card-section>
 
             <q-card-actions align="right" class="text-primary">
-              <q-btn
-                flat
-                label="Cancel"
-                v-close-popup
-                @click="
-                  pageNum = 0;
-                  phonechange = false;
-                "
-              />
+              <q-btn flat label="Cancel" v-close-popup @click="
+                pageNum = 0;
+              phonechange = false;
+              " />
               <q-btn flat label="Update" v-close-popup @click="updatePhone()" />
             </q-card-actions>
           </q-card>
         </q-dialog>
 
-        <list-item
-          id="addressAndLocation"
-          @click="addressAndLocationChange = true"
-          color="primary"
-          name="home"
-          size="2rem"
-          >Delivery Address & Location</list-item
-        >
+        <list-item id="addressAndLocation" @click="addressAndLocationChange = true" color="primary" name="home"
+          size="2rem">Delivery Address & Location</list-item>
 
         <q-dialog v-model="addressAndLocationChange">
           <q-card>
@@ -196,32 +183,23 @@
 
         <q-item-label header overline class="font-black">USER CONTROLS</q-item-label>
 
-        <list-item @click="chlang = true" color="primary" name="language" size="2rem"
-          >Current Language: {{ locale }}</list-item
-        >
+        <list-item @click="chlang = true" color="primary" name="language" size="2rem">Current Language: {{ locale
+        }}</list-item>
 
         <q-dialog v-model="chlang">
           <q-card>
             <q-list bordered separator>
               <q-item clickable v-ripple>
-                <q-item-section
-                  v-model="locale"
-                  @click="
-                    locale = 'TGL';
-                    chlang = false;
-                  "
-                  >Filipino</q-item-section
-                >
+                <q-item-section v-model="locale" @click="
+                  locale = 'TGL';
+                chlang = false;
+                ">Filipino</q-item-section>
               </q-item>
               <q-item clickable v-ripple>
-                <q-item-section
-                  v-model="locale"
-                  @click="
-                    locale = 'en-US';
-                    chlang = false;
-                  "
-                  >English</q-item-section
-                >
+                <q-item-section v-model="locale" @click="
+                  locale = 'en-US';
+                chlang = false;
+                ">English</q-item-section>
               </q-item>
             </q-list>
           </q-card>
@@ -248,9 +226,8 @@
         <div v-if="token && token.claims.roles && token.claims.roles.includes('pharmacist')">
           <q-item-label header overline class="font-black">SPECIAL</q-item-label>
 
-          <list-item color="primary" name="dashboard" size="2rem" @click="$router.push('/pharmacist')"
-            >Pharmacist Interface</list-item
-          >
+          <list-item color="primary" name="dashboard" size="2rem" @click="$router.push('/pharmacist')">Pharmacist
+            Interface</list-item>
         </div>
       </q-list>
     </div>
@@ -354,6 +331,7 @@ export default {
       console.log('Uploaded oten');
       picturechange.value = false;
       process.value = 0;
+      //@ts-expect-error
       const image = document.getElementById('fileSelector').files![0];
       uploadImage(image);
     };
@@ -364,6 +342,7 @@ export default {
 
     const showitnow = () => {
       process.value = 1;
+      //@ts-expect-error
       const image = document.getElementById('fileSelector').files![0];
       const objectURL = window.URL.createObjectURL(image);
       const img = document.getElementById('pleaseWork');

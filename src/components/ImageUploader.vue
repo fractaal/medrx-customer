@@ -45,6 +45,7 @@ export default defineComponent({
 
     const showitnow = () => {
       process.value = 1;
+      //@ts-expect-error
       const image = document.getElementById('fileSelector').files[0];
       const objectURL = window.URL.createObjectURL(image);
       const img = document.getElementById('pleaseWork');
